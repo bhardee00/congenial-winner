@@ -1,12 +1,12 @@
 """Narration: reads work/lines.json (list of strings) and writes work/voice.wav + timed work/lines_timed.json.
-Voice: Kokoro am_adam, sped up and pitched up (formants shifted, like CapCut's pitch slider) to the channel's sound.
+Voice: Kokoro am_adam at its natural pitch, sped up 1.5x from the 1.1 base.
 Override with env SHORTS_VOICE / SHORTS_SPEED / SHORTS_PITCH."""
 import os, json, subprocess, numpy as np, soundfile as sf
 from kokoro_onnx import Kokoro
 W = os.environ.get('SHORTS_WORK', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'work')) + '/'
 VOICE = os.environ.get("SHORTS_VOICE", "am_adam")
 SPEED = float(os.environ.get("SHORTS_SPEED", 1.65))  # 1.1 x 1.5
-PITCH = float(os.environ.get("SHORTS_PITCH", 1.403))  # am_adam ~119 Hz -> ~167 Hz
+PITCH = float(os.environ.get("SHORTS_PITCH", 1.0))  # >1 raises pitch (formants shifted, like CapCut's slider)
 GAP = 0.3
 
 k = Kokoro(W + "tts/kokoro.onnx", W + "tts/voices.bin")
@@ -20,7 +20,8 @@ for x in lines:
 raw = W + "voice_raw.wav"
 sf.write(raw, np.concatenate(au), sr)
 # rubberband keeps the duration, so the line timings above stay valid
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", f"rubberband=pitch={PITCH}:formant=shifted,loudnorm=I=-16:TP=-1.5",
+pitch = f"rubberband=pitch={PITCH}:formant=shifted," if PITCH != 1.0 else ""
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", pitch + "loudnorm=I=-16:TP=-1.5",
                 "-ar", "48000", W + "voice.wav"], check=True)
 json.dump(out, open(W + "lines_timed.json", "w"), indent=1)
 print("narration seconds:", round(t, 2))
