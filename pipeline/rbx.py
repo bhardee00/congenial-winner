@@ -120,6 +120,7 @@ def read_rbxm(data):
                     zs = [_rfloat(v) for v in _deinterleave(body[q + 8 * n:q + 12 * n], n)]
                     vals = [(pos, r) for pos, r in zip(zip(xs, ys, zs), rots)]
                 elif t == 0x12: vals = _deinterleave(body[q:q + 4 * n], n)
+                elif t == 0x0B: vals = _deinterleave(body[q:q + 4 * n], n)  # BrickColor number
                 elif t == 0x1A:
                     vals = list(zip(body[q:q + n], body[q + n:q + 2 * n], body[q + 2 * n:q + 3 * n]))
             except Exception:
@@ -137,6 +138,44 @@ def read_rbxm(data):
     return [i for i in insts.values() if i.parent is None]
 
 
+def read_xml(data):
+    """Older .rbxm/.rbxmx files are XML; returns the same Inst trees as read_rbxm, props in the same shapes."""
+    import xml.etree.ElementTree as ET
+    root = ET.fromstring(data.decode("utf-8", "replace"))
+    def num(e, k, d=0.0):
+        c = e.find(k); return float(c.text) if c is not None and c.text else d
+    def prop(e):
+        t = e.tag
+        if t == "CoordinateFrame":
+            return ((num(e, "X"), num(e, "Y"), num(e, "Z")), [num(e, f"R{i}{j}", float(i == j)) for i in range(3) for j in range(3)])
+        if t == "Vector3": return (num(e, "X"), num(e, "Y"), num(e, "Z"))
+        if t == "Color3uint8":
+            v = int(e.text or 0); return ((v >> 16) & 255, (v >> 8) & 255, v & 255)
+        if t == "Color3": return (num(e, "R"), num(e, "G"), num(e, "B"))
+        if t in ("int", "token", "BrickColor", "int64"): return int(float(e.text or 0))
+        if t in ("float", "double"): return float(e.text or 0)
+        if t == "bool": return (e.text or "").strip() == "true"
+        if t == "Content":
+            u = e.find("url"); return u.text.strip() if u is not None and u.text else ""
+        if t in ("string", "ProtectedString"): return e.text or ""
+        return None
+    def item(e, parent):
+        i = Inst(e.get("class"), e.get("referent")); i.parent = parent
+        ps = e.find("Properties")
+        if ps is not None:
+            for c in ps:
+                v = prop(c)
+                if v is not None: i.props[c.get("name")] = v
+        for c in e.findall("Item"): i.children.append(item(c, i))
+        return i
+    return [item(e, None) for e in root.findall("Item")]
+
+
+def read_model(data):
+    if data[:2] == b'\x1f\x8b': data = gzip.decompress(data)
+    return read_rbxm(data) if data[:8] == b'<roblox!' else read_xml(data)
+
+
 def read_mesh(data):
     """Returns (verts[(x,y,z)], uvs[(u,v)], faces[(a,b,c)]) using the highest LOD."""
     if data[:2] == b'\x1f\x8b': data = gzip.decompress(data)
@@ -149,7 +188,7 @@ def read_mesh(data):
         V, U, F = [], [], []
         for k in range(nf * 3):
             b = nums[k * 9:k * 9 + 9]
-            V.append((b[0] * sc, b[1] * sc, b[2] * sc)); U.append((b[6], 1 - b[7]))
+            V.append((b[0] * sc, b[1] * sc, b[2] * sc)); U.append((b[6], b[7]))  # v1 UVs are already bottom-up
         F = [(3 * i, 3 * i + 1, 3 * i + 2) for i in range(nf)]
         return V, U, F
     d = rest; p = 0
