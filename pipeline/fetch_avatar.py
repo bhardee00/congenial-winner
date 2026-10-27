@@ -11,7 +11,12 @@ def get(url):
     return gzip.decompress(b) if b[:2] == b'\x1f\x8b' else b
 
 def asset(i):
+    # Open Cloud returns a temporary CDN link (needs legacy-asset:manage); the legacy route only serves older items.
     try:
+        if KEY:
+            loc = json.loads(get(f"https://apis.roblox.com/asset-delivery-api/v1/assetId/{i}"))["location"]
+            b = urllib.request.urlopen(loc, timeout=60).read()
+            return gzip.decompress(b) if b[:2] == b'\x1f\x8b' else b
         return get(f"https://assetdelivery.roblox.com/v1/asset/?id={i}")
     except Exception as e:
         return b'{"error":"%s"}' % str(e).encode()
