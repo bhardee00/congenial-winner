@@ -21,15 +21,16 @@ def asset(i):
     except Exception as e:
         return b'{"error":"%s"}' % str(e).encode()
 
-uid = sys.argv[1]
-av = json.loads(get(f"https://avatar.roblox.com/v1/users/{uid}/avatar"))
-json.dump(av, open(W + "avatar.json", "w"), indent=1)
-for a in av["assets"]:
-    b = asset(a["id"]); kind = a["assetType"]["name"]
-    open(W + f"{kind}_{a['id']}.rbxm", "wb").write(b)
-    ok = b[:7] in (b'<roblox', b'<roblox!'[:7])
-    print(("OK   " if ok else "FAIL ") + kind, a["name"])
-    if kind in ("Shirt", "Pants") and ok:
-        tid = re.findall(rb"id=(\d+)", b)[-1].decode()
-        from PIL import Image
-        Image.open(io.BytesIO(asset(tid))).save(W + f"{kind}_template.png")
+if __name__ == "__main__":
+    uid = sys.argv[1]
+    av = json.loads(get(f"https://avatar.roblox.com/v1/users/{uid}/avatar"))
+    json.dump(av, open(W + "avatar.json", "w"), indent=1)
+    for a in av["assets"]:
+        b = asset(a["id"]); kind = a["assetType"]["name"]
+        open(W + f"{kind}_{a['id']}.rbxm", "wb").write(b)
+        ok = b[:7] in (b'<roblox', b'<roblox!'[:7])
+        print(("OK   " if ok else "FAIL ") + kind, a["name"])
+        if kind in ("Shirt", "Pants") and ok:
+            tid = re.findall(rb"id=(\d+)", b)[-1].decode()
+            from PIL import Image
+            Image.open(io.BytesIO(asset(tid))).save(W + f"{kind}_template.png")
