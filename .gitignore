@@ -3,3 +3,4 @@ work/
 *.blend
 *.blend1
 __pycache__/
+!render/*.blend
