@@ -187,10 +187,8 @@ for o in bpy.data.objects:
     if o.animation_data and o.animation_data.action:
         for fc in o.animation_data.action.fcurves:
             for kp in fc.keyframe_points: kp.interpolation = 'BEZIER'; kp.easing = 'AUTO'
-# swap face to shock at freeze
-for f, smile in ((0, True), (95, True), (96, False)):
-    FACES["smile"].hide_render = not smile; FACES["smile"].keyframe_insert("hide_render", frame=f)
-    FACES["shock"].hide_render = smile; FACES["shock"].keyframe_insert("hide_render", frame=f)
+# reactions: curious about the remote, then big eyes when the world freezes
+avatar.react(av, "suspicious", 30); avatar.react(av, "grin", 60); avatar.react(av, "big_eyes", 96)
 
 # ---------------- cameras (cuts via markers) ----------------
 def camera(name, loc, target, lens, f0, fstop=2.8, focus=None, move=None):

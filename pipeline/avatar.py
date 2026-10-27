@@ -2,9 +2,11 @@
 build(D) returns {"root", pivot name -> empty ("torso", "waist", "head", "la", "la_elbow", ..., "rl_ankle"),
 "faces": {"smile", "shock"}, "grips": {"la", "ra"} -> empties in the hands to parent props to}.
 Rotating a pivot bends that joint; pivots have no rotation at rest so (-80, 0, 50) on "ra" raises the right arm."""
-import json, math
+import json, math, os, glob
 import bpy, bmesh
 from mathutils import Vector
+
+ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets") + "/"
 
 
 def _lin(c): return tuple(((x / 255 + 0.055) / 1.055) ** 2.4 if x / 255 > 0.04045 else x / 255 / 12.92 for x in c) + (1,)
@@ -74,18 +76,74 @@ def build(D, name="me"):
     bpy.ops.object.transform_apply(scale=True)
     bv = h.modifiers.new("b", "BEVEL"); bv.width = 0.32; bv.segments = 5; bv.limit_method = 'NONE'
     for p in h.data.polygons: p.use_smooth = True
-    h.data.materials.append(_material("av_skin", D, None, rig["skin"]))
+    # skin colour can blend towards red (angry) or pale blue (cold) via the "flush" mix factor
+    sm = _material("av_skin", D, None, rig["skin"]); nn = sm.node_tree.nodes
+    mix = nn.new("ShaderNodeMixRGB"); mix.name = "flush"; mix.inputs["Fac"].default_value = 0
+    mix.inputs["Color1"].default_value = _lin(rig["skin"]); mix.inputs["Color2"].default_value = _lin((235, 40, 30))
+    sm.node_tree.links.new(mix.outputs["Color"], nn["Principled BSDF"].inputs["Base Color"])
+    h.data.materials.append(sm)
     faces = {}
-    for k in ("smile", "shock"):
+    for k in sorted(os.path.basename(f)[5:-4] for f in glob.glob(ASSETS + "face_*.png")):
         m = bpy.data.materials.new("face_" + k); m.use_nodes = True; m.blend_method = 'CLIP'; m.shadow_method = 'CLIP'
-        nn = m.node_tree.nodes; img = nn.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(D + f"face_{k}.png")
+        nn = m.node_tree.nodes; img = nn.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(ASSETS + f"face_{k}.png")
         pb = nn["Principled BSDF"]; pb.inputs["Roughness"].default_value = 0.5
         m.node_tree.links.new(img.outputs["Color"], pb.inputs["Base Color"]); m.node_tree.links.new(img.outputs["Alpha"], pb.inputs["Alpha"])
         bpy.ops.mesh.primitive_plane_add(size=s[0] * 0.88, location=hc + Vector((0, -s[2] / 2 - 0.012, 0)), rotation=(math.radians(90), 0, 0))
         fo = bpy.context.active_object; fo.name = "face_" + k; fo.data.materials.append(m); fo.parent = head
         fo.location = hc + Vector((0, -s[2] / 2 - 0.012, 0))
         faces[k] = fo
-    faces["shock"].hide_render = True; faces["shock"].hide_viewport = True
+    for k, fo in faces.items(): fo.hide_render = fo.hide_viewport = k != "smile"
 
     grips = {k: _empty("grip_" + k, Vector(g) - Vector(J[k + "_wrist"]), piv[k + "_wrist"]) for k, g in rig["grips"].items()}
-    return {"root": root, **piv, "faces": faces, "grips": grips}
+    return {"root": root, **piv, "faces": faces, "grips": grips, "skin": sm, "face_pos": faces["smile"].location.copy(),
+            "eyes": [hc + Vector((x, -s[2] / 2 - 0.03, 0.06)) for x in (-0.22, 0.22)], "reacts": []}
+
+
+def react(av, face, f0, f1=None):
+    """Switch to an expression at frame f0 (held until the next react). Some faces add effects up to f1:
+    shock / big_eyes pop the face bigger, angry flushes the head red and shakes it, cry drips tears.
+    Faces: see faces.py (smile, shock, big_eyes, happy, grin, sad, cry, angry, annoyed, suspicious, nervous, ...)."""
+    f1 = f1 if f1 is not None else f0 + 45
+    prev = av["reacts"][-1][1] if av["reacts"] else "smile"
+    for k, fo in av["faces"].items():
+        if not av["reacts"]: _vis(fo, k == "smile", 0)
+        _vis(fo, k == prev, f0 - 1); _vis(fo, k == face, f0)
+    av["reacts"].append((f0, face))
+    fo = av["faces"][face]
+    if face in ("shock", "big_eyes"):
+        for f, sc in ((f0 - 1, 1.0), (f0 + 3, 1.28), (f0 + 8, 1.0)):
+            fo.scale = (sc, sc, sc); fo.keyframe_insert("scale", frame=f)
+        h = av["head"]; base = h.rotation_euler.copy()
+        for f, dx in ((f0, 0), (f0 + 3, -9), (f0 + 9, 0)):
+            h.rotation_euler = (base.x + math.radians(dx), base.y, base.z); h.keyframe_insert("rotation_euler", frame=f)
+    if face == "angry":
+        fac = av["skin"].node_tree.nodes["flush"].inputs["Fac"]
+        for f, v in ((f0, 0), (f0 + 10, 0.55), (f1 - 8, 0.55), (f1, 0)):
+            fac.default_value = v; fac.keyframe_insert("default_value", frame=f)
+        h = av["head"]; base = h.rotation_euler.copy()
+        for i, f in enumerate(range(f0 + 6, min(f1, f0 + 30), 2)):  # quick shake
+            h.rotation_euler = (base.x, base.y + math.radians(4 if i % 2 else -4), base.z); h.keyframe_insert("rotation_euler", frame=f)
+        h.rotation_euler = base; h.keyframe_insert("rotation_euler", frame=min(f1, f0 + 32))
+    if face == "cry":
+        _tears(av, f0, f1)
+
+
+def _vis(o, on, f):
+    o.hide_render = not on; o.keyframe_insert("hide_render", frame=f)
+    o.hide_viewport = not on; o.keyframe_insert("hide_viewport", frame=f)
+
+
+def _tears(av, f0, f1, every=7):
+    m = bpy.data.materials.get("tear") or _material("tear", "", None, (110, 185, 255))
+    m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.05
+    for i, f in enumerate(range(f0 + 4, f1 - 10, every)):
+        eye = av["eyes"][i % 2]
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.055, segments=12, ring_count=8)
+        t = bpy.context.active_object; t.name = "tear"; t.data.materials.append(m); t.parent = av["head"]
+        t.scale = (0.8, 0.8, 1.3)
+        for fr, off, vis in ((f - 1, 0, False), (f, 0, True), (f + 12, -0.75, True), (f + 13, -0.75, False)):
+            t.location = eye + Vector((0, -0.02, off)); t.keyframe_insert("location", frame=fr)
+            t.hide_render = not vis; t.keyframe_insert("hide_render", frame=fr)
+        for fc in t.animation_data.action.fcurves:
+            for kp in fc.keyframe_points: kp.interpolation = 'QUAD' if fc.data_path == "location" else 'CONSTANT'
+        t.hide_render = True
