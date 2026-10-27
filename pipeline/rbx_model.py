@@ -80,7 +80,8 @@ def convert(asset_id):
             if alpha < 0.05: continue
             size = np.array(x.props.get("size") or x.props.get("Size") or (1, 1, 1), float)
             M = cf(x.props["CFrame"]); base = {"color": color(x), "alpha": alpha,
-                                               "mat": MAT.get(x.props.get("Material"), "plastic")}
+                                               "mat": MAT.get(x.props.get("Material"), "plastic"),
+                                               "rpos": list(map(float, x.props["CFrame"][0])), "rsize": size.tolist()}
             shape = {"WedgePart": "wedge", "CornerWedgePart": "wedge", "TrussPart": "box"}.get(x.cls) or \
                     {0: "ball", 1: "box", 2: "cyl", 3: "wedge"}.get(x.props.get("shape", x.props.get("Shape", 1)), "box")
             sm = next((c for c in x.children if c.cls in ("SpecialMesh", "BlockMesh", "CylinderMesh", "FileMesh")), None)

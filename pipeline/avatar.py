@@ -34,7 +34,17 @@ def _material(name, D, tex, color, alpha=False):
     return m
 
 
-def build(D, name="me"):
+def _npc_color(n, look):
+    """Plain-coloured outfit for side characters: shirt on torso/arms, pants on legs, shoes on feet."""
+    if n == "UpperTorso" or "Arm" in n: return look.get("shirt", (90, 90, 90))
+    if n == "LowerTorso" or "UpperLeg" in n or "LowerLeg" in n: return look.get("pants", (40, 40, 60))
+    if "Foot" in n: return look.get("shoes", (30, 30, 30))
+    return look.get("skin", (204, 142, 105))
+
+
+def build(D, name="me", look=None):
+    """look=None is the channel avatar. For side characters pass look={"shirt", "pants", "shoes", "skin": rgb,
+    "hair": bool (Pal Hair, tinted by "hair_color"), "scale": float} - no crown, plain clothes."""
     rig = json.load(open(D + "avatar/rig.json"))
     J = rig["joints"]
     root = _empty(name, (0, 0, 0))
@@ -50,6 +60,9 @@ def build(D, name="me"):
 
     mats = {}
     for m in rig["meshes"]:
+        if look is not None:
+            if "UL" not in m and not (look.get("hair") and "Hair" in m["name"]): continue  # no crown / hair
+            m = {**m, "tex": None, "color": look.get("hair_color", (60, 40, 25)) if "Hair" in m["name"] else _npc_color(m["name"], look)}
         key = (m["tex"], tuple(m["color"]))
         if key not in mats: mats[key] = _material("av_" + (m["tex"] or "plain"), D, m["tex"], m["color"], alpha=bool(m["tex"]))
         me = bpy.data.meshes.new(m["name"])
@@ -77,9 +90,10 @@ def build(D, name="me"):
     bv = h.modifiers.new("b", "BEVEL"); bv.width = 0.32; bv.segments = 5; bv.limit_method = 'NONE'
     for p in h.data.polygons: p.use_smooth = True
     # skin colour can blend towards red (angry) or pale blue (cold) via the "flush" mix factor
-    sm = _material("av_skin", D, None, rig["skin"]); nn = sm.node_tree.nodes
+    skin = look.get("skin", rig["skin"]) if look else rig["skin"]
+    sm = _material("av_skin", D, None, skin); nn = sm.node_tree.nodes
     mix = nn.new("ShaderNodeMixRGB"); mix.name = "flush"; mix.inputs["Fac"].default_value = 0
-    mix.inputs["Color1"].default_value = _lin(rig["skin"]); mix.inputs["Color2"].default_value = _lin((235, 40, 30))
+    mix.inputs["Color1"].default_value = _lin(skin); mix.inputs["Color2"].default_value = _lin((235, 40, 30))
     sm.node_tree.links.new(mix.outputs["Color"], nn["Principled BSDF"].inputs["Base Color"])
     h.data.materials.append(sm)
     faces = {}
@@ -95,6 +109,7 @@ def build(D, name="me"):
     for k, fo in faces.items(): fo.hide_render = fo.hide_viewport = k != "smile"
 
     grips = {k: _empty("grip_" + k, Vector(g) - Vector(J[k + "_wrist"]), piv[k + "_wrist"]) for k, g in rig["grips"].items()}
+    if look and look.get("scale"): root.scale = (look["scale"],) * 3
     return {"root": root, **piv, "faces": faces, "grips": grips, "skin": sm, "face_pos": faces["smile"].location.copy(),
             "eyes": [hc + Vector((x, -s[2] / 2 - 0.03, 0.06)) for x in (-0.22, 0.22)], "reacts": []}
 
