@@ -1,0 +1,196 @@
+{
+ "title": "I Grabbed the Balloon Nobody Can Let Go Of 🎈",
+ "slug": "I_Grabbed_the_Balloon_Nobody_Can_Let_Go_Of",
+ "module": "balloon",
+ "lines": [
+  [
+   "narrator",
+   "At the parade, a kid let go of his balloon and I caught the string."
+  ],
+  [
+   "narrator",
+   "His dad shook my hand for a full minute."
+  ],
+  [
+   "dad",
+   "Thank you. He's been holding that since kindergarten."
+  ],
+  [
+   "narrator",
+   "The kid was twenty-six."
+  ],
+  [
+   "narrator",
+   "I sweep the street after the parade. I was reaching for a gum wrapper."
+  ],
+  [
+   "narrator",
+   "The kid ran off to finally have a childhood."
+  ],
+  [
+   "narrator",
+   "The balloon looked down at me."
+  ],
+  [
+   "narrator",
+   "Then it went up. So did I."
+  ],
+  [
+   "narrator",
+   "By noon I was over the stadium. They were doing the wave. I did it too."
+  ],
+  [
+   "narrator",
+   "A news helicopter pulled up next to me. The pilot leaned out."
+  ],
+  [
+   "pilot",
+   "Sir, do you need help?"
+  ],
+  [
+   "narrator",
+   "I said, \"Yes.\""
+  ],
+  [
+   "pilot",
+   "Great, we're live."
+  ],
+  [
+   "narrator",
+   "Over Canada, a goose joined me. It wasn't going my way. It came anyway."
+  ],
+  [
+   "narrator",
+   "Over the ocean, a cruise ship threw me a sandwich. It was a great throw."
+  ],
+  [
+   "narrator",
+   "In London, I sat on top of Big Ben for one minute. It was a long minute."
+  ],
+  [
+   "narrator",
+   "In Paris, a mime pretended to pull me down. It almost worked."
+  ],
+  [
+   "narrator",
+   "I tried everything."
+  ],
+  [
+   "narrator",
+   "I let go with one hand. The balloon held on with both."
+  ],
+  [
+   "narrator",
+   "I tied the string to a truck. Now I have a truck."
+  ],
+  [
+   "narrator",
+   "I asked a bird to pop it. The bird asked for a ride."
+  ],
+  [
+   "narrator",
+   "I ate breakfast in a cloud. I paid rent to a weather balloon."
+  ],
+  [
+   "narrator",
+   "My mom called."
+  ],
+  [
+   "mom",
+   "Are you eating?"
+  ],
+  [
+   "narrator",
+   "I said, \"Mostly rain.\""
+  ],
+  [
+   "narrator",
+   "Then I figured out the rule."
+  ],
+  [
+   "narrator",
+   "The kid never let go because he was tired."
+  ],
+  [
+   "narrator",
+   "He let go because somebody laughed at the parade."
+  ],
+  [
+   "narrator",
+   "The balloon only lets go when someone laughs harder than the person holding it."
+  ],
+  [
+   "narrator",
+   "Nobody had laughed at that kid in twenty years."
+  ],
+  [
+   "narrator",
+   "So I needed one laugh. From a mile up."
+  ],
+  [
+   "narrator",
+   "I spelled jokes with geese. Nobody looked up."
+  ],
+  [
+   "narrator",
+   "Then I heard drums. The parade. One year later."
+  ],
+  [
+   "narrator",
+   "I came down over row one. Beard full of birds. A goose on my head. A truck on my string."
+  ],
+  [
+   "narrator",
+   "A little girl looked up at me."
+  ],
+  [
+   "narrator",
+   "She laughed so hard she dropped her ice cream."
+  ],
+  [
+   "narrator",
+   "The balloon let go. I fell into a tuba."
+  ],
+  [
+   "narrator",
+   "The string landed in her hand."
+  ],
+  [
+   "narrator",
+   "She wasn't scared. She was eight. It was the best day of her life."
+  ],
+  [
+   "narrator",
+   "Her dad grabbed the string to stop her."
+  ],
+  [
+   "narrator",
+   "His daughter shook his hand for a full minute."
+  ],
+  [
+   "girl",
+   "Thank you, Dad."
+  ],
+  [
+   "narrator",
+   "He's somewhere over Iceland now. Every morning she waves."
+  ],
+  [
+   "narrator",
+   "Every morning, a goose waves back."
+  ]
+ ],
+ "voice_files": {
+  "narrator": "assets/voice/balloon_narrator_1.33x.wav",
+  "others": "assets/voice/balloon_others_1.68x.wav",
+  "others_order": [
+   "dad",
+   "pilot",
+   "pilot",
+   "mom",
+   "girl"
+  ]
+ },
+ "models": {},
+ "synth_music": true
+}
