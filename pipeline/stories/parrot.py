@@ -184,7 +184,8 @@ def build(ctx):
         out_l = bpy.data.objects.new("porch_light", bpy.data.lights.new("porch_light", "POINT")); hs.link(out_l)
         out_l.location = (17, 3, 7); out_l.data.energy = 0; out_l.data.color = (1, 0.85, 0.6)
     # ---- porch flashback (sunset, faded warm)
-    pc = Set("porch", sky=(255, 160, 120), horizon=(255, 215, 170), sun=(72, 0, -55), sun_energy=3.8, sun_color=(255, 205, 160))
+    pc = Set("porch", sky=(255, 160, 120), horizon=(255, 215, 170), sun=(62, 0, -55), sun_energy=2.6, sun_color=(255, 205, 160))
+    pc.scene.view_settings.exposure = -0.45
     with pc:
         prim("box", (300, 300, 0.2), (0, 0, -0.1), mat((110, 175, 90), 0.9))
         toys.house(0, 7.5, 0, w=18, d=9, h=9, color=(250, 235, 200), roof=(150, 70, 60))
@@ -195,7 +196,7 @@ def build(ctx):
         swing = empty("swing", (-3.5, 1.8, 0))
         prim("box", (5, 1.6, 0.3), (0, 0, 2.2), mat((150, 100, 60), 0.6), parent=swing); prim("box", (5, 0.3, 1.6), (0, 0.7, 3.1), mat((150, 100, 60), 0.6), parent=swing)
         for sx in (-2.4, 2.4): prim("box", (0.08, 0.08, 4.9), (sx, 0.1, 4.6), mat((90, 90, 95), 0.4), parent=swing)
-        rt2 = toys.router(); rt2.location = (5.0, 2.7, 3.2); prim("box", (3, 0.2, 2.5), (5.0, 3.1, 3.6), mat((255, 245, 200), 0.3, emit=0.5))
+        rt2 = toys.router(); rt2.location = (5.0, 2.7, 3.2); prim("box", (3, 0.2, 2.5), (5.0, 3.1, 3.6), mat((120, 150, 190), 0.3, emit=0.15))
         for x in range(-30, 31, 12): toys.tree(x, 24, 1.1)
         toys.clouds(8, (-60, 40, 25), (60, 100, 45), 3, 6)
         gp = npc(ctx, "grandpa", GRANDPA, (0, 0, 0)); glasses(gp); sit(gp, 0, 2.35, (-2.3, 1.7), 0, ease=1)
@@ -496,7 +497,7 @@ def build(ctx):
     sh(rc, a, s1, (0, -9, 0), (0, 0.6, 0), 34, dl=(0, 1.5, 0), cap="low"); ctx.sfx("tick", a, 1.0)
     sh(rc, s1, s2, (1.2, -6.5, 0.4), (0, 0.6, 0.2), 34, dl=(-0.6, 1.0, 0), cap="low"); ctx.sfx("heartbeat", s1, 0.7)
     react(me, "determined", s2); sh(hs, s2, s3, (0.5, 0.0, 4.7), (0, -1.4, 4.6), 40, dl=(0, -0.25, 0))
-    sh(hs, s3, b, (0.3, -0.4, 4.4), (0, 1.2, 4.3), 40, dl=(0, 0.25, 0)); toys.lids(cap, s3, False)
+    sh(hs, s3, b, (0.3, -0.5, 4.6), (0, 1.2, 4.7), 32, dl=(0, 0.25, 0)); toys.lids(cap, s3, False)
     # 35: "Then the doorbell rang. It was my cousin Derek. Grandpa's other grandson."
     (a, s1), (_, s2), (_, b) = seg(35, "it", "grandpa's")
     ctx.sfx("doorbell", a + 2, 0.9); react(me, "shock", a + 4); turn(me, a + 6, (14, 3), 6)
@@ -505,29 +506,29 @@ def build(ctx):
     at(der, s1, (16.5, 3, 0), -90, ease=1); react(der, "smug", s1); ctx.sfx("whoosh", s1 + 2, 0.5)
     sh(hs, s1, s2, (8, 1.4, 3.0), (15, 3, 4.6), 22, dl=(0.6, 0.2, 0))
     walk(der, s2, min(s2 + 30, L(36)[0] - 2), (16.5, 3, 0), (3.0, 1.8, 0), 6, 30)
-    sh(hs, s2, b, (5.0, 0.4, 3.4), (12, 3, 4.6), 22, dt=(-6, -0.6, 0)); react(me, "annoyed", s2)
+    sh(hs, s2, b, (4.0, -1.6, 3.8), (12, 3, 4.6), 22, dt=(-6, -0.6, 0)); react(me, "annoyed", s2)
     # 36-37: Derek: "Hey, Captain! Say 'Derek is the best'!" / "Come on, buddy... Say Derek!"
-    a, b = L(36); at(der, a, (2.4, 2.4, 0), (0, 1.2), ease=1); pose(der, a, 4, waist=(20, 0, 0)); react(der, "grin", a); talk_nod(der, a, b, 8, 8)
-    sh(hs, a, b, (-1.4, 0.4, 4.6), (2.4, 2.4, 4.7), 24, dl=(0.2, 0.3, 0))
+    a, b = L(36); turn(me, a, (0, 1.2), 6); at(der, a, (2.4, 2.4, 0), (0, 1.2), ease=1); pose(der, a, 4, waist=(20, 0, 0)); react(der, "grin", a); talk_nod(der, a, b, 8, 8)
+    sh(hs, a, b, (0.9, 0.2, 4.6), (2.4, 2.4, 4.7), 24, dl=(0.1, 0.2, 0))
     a, b = L(37); gold = toys.box_prop(A + "cracker_gold.png", 0.8, 0.35, 1.05, (250, 200, 40)); hold(der, gold, "ra", (0, -0.4, 0.3), (90, 0, 0))
     show_between(gold, a, L(39)[0]); pose(der, a, 4, ra=(-100, 0, -30)); react(der, "happy", a); talk_nod(der, a, b, 8, 8)
     for k, f in enumerate(range(a + 4, b, 6)): pose(der, f, 2, ra=(-100 if k % 2 else -85, 0, -30))
-    sh(hs, a, b, (-0.8, 0.8, 3.6), (1.8, 2.0, 4.6), 22, dl=(0.2, 0.3, 0)); toys.tilt(cap, a + 6, 10, 6, axis=2)
+    sh(hs, a, b, (1.4, -0.2, 3.8), (2.0, 2.2, 4.6), 22, dl=(0.1, 0.2, 0)); toys.tilt(cap, a + 6, 10, 6, axis=2)
     # 38: "Derek wanted the money too. He even brought crackers. The good ones."
     (a, s1), (_, s2), (_, b) = seg(38, "he", "the")
     react(me, "suspicious", a); sh(hs, a, s1, (-1.8, 0.4, 4.6), (0, -1.4, 4.7), 26, dl=(0.2, 0.2, 0))
-    sh(hs, s1, s2, (0.2, 0.6, 4.4), (1.6, 1.9, 4.8), 34, dl=(0.3, 0.2, 0)); ctx.sfx("sparkle", s1 + 2, 0.7)
+    sh(hs, s1, s2, (0.6, 0.4, 4.4), (2.0, 2.0, 4.4), 30, dl=(0.2, 0.2, 0)); ctx.sfx("sparkle", s1 + 2, 0.7)
     react(der, "smug", s2); sh(hs, s2, b, (-0.2, 0.2, 5.4), (2.4, 2.4, 5.4), 28, pz=s2 + 2, amount=1.15)
     # 39: "Captain opened his beak. I couldn't breathe."
     (a, s1), (_, b) = seg(39, "i")
     toys.beak_open(cap, s1 - 2, 30, 14); ctx.sfx("heartbeat", a, 0.8)
-    sh(hs, a, s1, (0.1, -0.6, 4.3), (0, 1.2, 4.4), 34, dl=(0, 0.6, 0), cap="top")
+    sh(hs, a, s1, (0.2, -0.5, 4.6), (0, 1.2, 4.7), 28, dl=(0, 0.5, 0), cap="top")
     react(me, "terrified", s1); react(der, "starstruck", s1)
     sh(hs, s1, b, (0.4, 0.6, 4.6), (0, -1.4, 4.6), 40, dl=(0, 0.35, 0))
     # 40: "Then he closed it, flew across the room, and landed on my shoulder."
     (a, s1), (_, s2), (_, b) = seg(40, "flew", "landed")
     j = cap["jaw"]; j.keyframe_insert("rotation_euler", frame=a + 2); j.rotation_euler = (0, 0, 0); j.keyframe_insert("rotation_euler", frame=a + 6)
-    sh(hs, a, s1, (0.2, -0.4, 4.4), (0, 1.2, 4.4), 34, pz=a + 5, amount=1.15); ctx.sfx("click", a + 5, 0.4)
+    sh(hs, a, s1, (0.2, -0.5, 4.6), (0, 1.2, 4.7), 28, pz=a + 5, amount=1.15); ctx.sfx("click", a + 5, 0.4)
     shoulder = empty("shoulder", (-0.62, 0.05, 2.02), me["waist"])
     land = s2 + 6
     for f, p in ((s1, (0, 1.2, 3.2)), (s1 + (land - s1) // 2, (-4.0, -4.0, 8.0)), (land, (-0.6, -1.4, 4.0))):
@@ -573,7 +574,7 @@ def build(ctx):
     sh(hs, a, s1, (0.6, 0.6, 4.6), (-0.1, -1.4, 4.8), 36, dl=(0, 0.25, 0))
     react(gp, "happy", s1); react(kid, "happy", s1)
     sh(pc, s1, s2, (-3.5, -9.0, 3.2), (-3.5, 1.7, 3.8), 26, dl=(0, 2.0, 0.2), look="flashback")
-    react(yder, "blank", s2); sh(pc, s2, s3, (2.2, -3.6, 1.6), (4.6, -0.5, 2.0), 26, dl=(0.3, 0.4, 0), look="flashback")
+    react(yder, "blank", s2); sh(pc, s2, s3, (3.0, -4.5, 2.6), (4.6, -0.5, 2.2), 26, dl=(0.3, 0.4, 0), look="flashback")
     sh(pc, s3, b, (4.2, 0.4, 3.0), (5.0, 2.7, 3.3), 30, dl=(0.1, 0.4, 0), look="flashback"); ctx.sfx("ding", s3 + 2, 0.4)
     # 48: "Grandpa always told me, 'Anybody can talk. Not everybody listens.'"
     (a, s1), (_, b) = seg(48, "anybody")
@@ -602,7 +603,7 @@ def build(ctx):
     for m in mourners + [f_law, f_der]: react(m, "smile", a52)
     react(f_me, "blank", a52)
     f_cap["root"].keyframe_insert("location", frame=a52)
-    sh(fun, a52, b52, (8, -14, 3.4), (-2, 5, 4.0), 22, dl=(-1.0, 3.0, 0))
+    sh(fun, a52, b52, (0, -17, 5.0), (0, 6, 4.0), 22, dl=(0, 4.0, -0.4))
     # 53: "Password one two three!"
     a, b = L(53); toys.beak(f_cap, a + 2, b - 4, 4); ctx.sfx("squawk", a, 0.9); toys.tilt(f_cap, a, -10, 4, axis=0)
     for m in mourners + [f_law, f_der]: react(m, "shock", a + random.randint(2, 6))

@@ -378,8 +378,8 @@ class Short:
             s.scene_camera = st.cams[cam] if isinstance(cam, str) else cam
             s.color_saturation = 1.25  # bright and colourful
             if self.shot_opts.get((st.name, f0), {}).get("look") == "flashback":  # warm, faded memory
-                s.color_saturation = 0.35
-                fb = s.modifiers.new("memory", 'COLOR_BALANCE'); fb.color_balance.gain = (1.12, 1.0, 0.8); fb.color_balance.lift = (1.05, 1.02, 0.98)
+                s.color_saturation = 0.55
+                fb = s.modifiers.new("memory", 'COLOR_BALANCE'); fb.color_balance.gain = (1.08, 1.0, 0.82); fb.color_balance.lift = (1.02, 1.0, 0.97)
             if frozen:  # the paused world: just a hint of cool, colour stays full
                 cb = s.modifiers.new("cool", 'COLOR_BALANCE'); cb.color_balance.gain = (0.98, 1.0, 1.04)
         se.sequences.new_sound("voice", voice, 30, 1)
