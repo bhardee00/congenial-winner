@@ -367,8 +367,8 @@ def build(ctx):
     ctx.sfx("snore", a + 2, 0.6)
     sh(hs, a, s1, (-2.6, 0.4, 4.8), (0, 3, 5.4), 24, dl=(0.3, 0.3, 0))
     at(me, s1, (0.9, 1.0, 0), (0, 3), ease=1); pose(me, s1, 6, waist=(18, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
-    sh(hs, s1, s2, (-3.2, 0.2, 4.9), (0.6, 1.4, 4.8), 26, dl=(0.3, 0.2, 0))
-    react(me, "big_eyes", s2); sh(hs, s2, b, (-2.8, 0.6, 4.8), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
+    sh(hs, s1, s2, (3.4, 2.0, 4.8), (0.9, 1.0, 4.8), 26, dl=(-0.3, 0.1, 0))
+    react(me, "big_eyes", s2); turn(me, s2, (-2.8, 0.6), 4); sh(hs, s2, b, (-2.8, 0.6, 4.8), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
     # 17: "Don't tell my grandson about the money in the freezer."
     (a, s1), (_, b) = seg(17, "money")
     ctx.music(a, "paused")
@@ -396,7 +396,7 @@ def build(ctx):
     pose(me, a, 4, ra=(-80, 0, 0)); react(me, "embarrassed", a); turn(me, a, (-18, 0), 4)
     sh(hs, a, s1, (-18.2, 0.6, 4.8), (-19.2, 3.6, 4.8), 28, dl=(0.2, 0.4, 0))
     pose(me, s1, 4, ra=(-150, 0, 20)); react(me, "happy", s1 + 2); ctx.sfx("nom", s1 + 4, 0.9)
-    sh(hs, s1, b, (-18.0, 0.6, 5.4), (-19.2, 3.6, 4.9), 26, pz=s1 + 4, amount=1.2)
+    sh(hs, s1, b, (-18.2, 0.8, 4.6), (-19.2, 3.6, 4.7), 26, pz=s1 + 4, amount=1.2)
     rest(me, b, "ra", "la")
     stopwatch_gag(21)
 
@@ -558,7 +558,7 @@ def build(ctx):
     (a, s1), (_, b) = seg(43, "i")
     at(der, a, (2.4, 2.4, -1.2), (0, -1.4), ease=4); pose(der, a, 4, ll_knee=(90, 0, 0), rl_knee=(90, 0, 0), la=(-150, 0, 20), ra=(-150, 0, -20))
     react(der, "cry", a, b + 20); ctx.sfx("cry", a + 4, 0.6)
-    sh(hs, a, s1, (5.5, -2.0, 3.6), (2.4, 2.4, 3.0), 24, dl=(-0.3, 0.3, 0))
+    sh(hs, a, s1, (0.8, -0.2, 3.4), (2.4, 2.4, 3.2), 24, dl=(-0.2, 0.2, 0))
     react(me, "starstruck", s1); sh(hs, s1, b, (1.3, 0.8, 4.6), (-0.2, -1.4, 4.8), 28, pz=s1 + 2, amount=1.1)
     # 44: "Why did you stay quiet, Captain?"
     a, b = L(44); react(me, "smile", a); pose(me, a, 6, head=(0, 0, -25))
@@ -588,7 +588,7 @@ def build(ctx):
     ctx.music(a, "normal"); react(me, "relieved", a)
     toys.tilt(cap, a, 0, 6, axis=0); toys.tilt(cap, a + 2, -30, 8, axis=2)
     sh(hs, a, s1, (1.6, 0.8, 4.8), (0.2, -1.4, 4.8), 26, dl=(-0.2, 0.2, 0))
-    react(me, "smile", s1); sh(hs, s1, b, (6, 3, 4.6), (0.2, -1.4, 4.4), 22, dl=(-1.0, -0.4, 0))
+    react(me, "smile", s1); sh(hs, s1, b, (-5, 2.5, 4.6), (0.2, -1.4, 4.4), 22, dl=(1.0, -0.4, 0))
     # 50: "Then the lawyer cleared his throat."
     a, b = L(50); react(law, "smug", a); ctx.sfx("ahem", a + 6, 0.9); pose(law, a + 4, 4, ra=(-130, 0, 40))
     sh(hs, a, b, (1.2, -1.9, 4.6), (3.4, -2.6, 4.6), 30, pz=a + 8, amount=1.15); rest(law, b, "ra")
