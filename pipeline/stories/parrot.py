@@ -10,7 +10,7 @@ from mathutils import Vector
 import shortkit as K
 from shortkit import Set, prim, mat, empty, vis, show_between, camera, punch, shake, pose, rest, at, turn, walk, sit, idle, lin
 import blocky, toys
-from avatar import react
+from avatar import react, talk
 from anim import value
 
 random.seed(7)
@@ -59,17 +59,18 @@ def hold(av, obj, hand="ra", loc=(0, -0.15, 0), rot=(0, 0, 0)):
     obj.parent = av["grips"][hand]; obj.location = loc; obj.rotation_euler = [math.radians(a) for a in rot]; return obj
 
 
-def talk_nod(av, f0, f1, every=14, amt=6):
-    """Small head nods while someone talks (R6 faces don't lip-sync, the reference channel nods instead)."""
-    h = av["head"]; base = value(h, "rotation_euler", f0)
-    for k, f in enumerate(range(f0, f1, every)):
-        h.rotation_euler = (base[0] + math.radians(amt if k % 2 else -amt * 0.4), base[1], base[2]); h.keyframe_insert("rotation_euler", frame=f)
-    h.rotation_euler = base; h.keyframe_insert("rotation_euler", frame=f1)
+TIMED = []; SHORT = []  # filled by build(): word timings for talk_nod
+
+
+def talk_nod(av, f0, f1, every=None, amt=None, amount=1.0):
+    """Head motion while someone talks between f0 and f1: a nod on every spoken word (avatar.talk)."""
+    S = SHORT[0]; fr = [S.frame(w[1]) for l in TIMED for w in l.get("words", []) if f0 <= S.frame(w[1]) < f1]
+    talk(av, fr or list(range(f0, f1, 7)), amount)
 
 
 def build(ctx):
     S, L, A = ctx.short, ctx.L, ctx.A
-    timed = ctx.timed
+    timed = ctx.timed; TIMED[:] = timed; SHORT[:] = [S]
 
     def norm(w): return w.strip('.,?!"').lower()
 
@@ -615,4 +616,13 @@ def build(ctx):
     react(f_me, "annoyed", a); sh(fun, a, s1, (-5.2, 2.6, 5.1), (-6.5, 5.7, 5.3), 30, dl=(0.2, 0.3, 0))
     toys.tilt(f_cap, s1 + 2, 20, 6, axis=2); toys.beak(f_cap, s1 + 6, s1 + 16, 5); ctx.sfx("tweet", s1 + 6, 0.6)
     sh(fun, s1, b, (2.4, -1.5, 3.2), (-1.5, 5.4, 4.8), 22, dl=(-0.6, 0.8, 0.4))
+
+    # ======================= head motion on every spoken line =======================
+    # dialogue: the speaker's head nods on each word; narration: lighter, on whichever "me" is on screen
+    speakers = {i: law for i in (4, 6, 13, 14, 21, 28, 32, 42, 51)}; speakers.update({26: nb, 36: der, 37: der})
+    for i, (who, _) in enumerate(ctx.story["lines"]):
+        a, b = L(i)
+        if i in speakers: talk_nod(speakers[i], a, b)
+        elif who == "narrator" and i not in (47, 48): talk_nod(f_me if i in (0, 2, 52, 54) else me, a, b, amount=0.6)
+    talk_nod(gp, *seg(48, "anybody")[1])
     hs.__exit__(None, None, None)

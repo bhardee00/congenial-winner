@@ -62,6 +62,10 @@ Drafts: pipeline/stories/ideas/.
 - react() adds the extras automatically: an emote pop (! ? sweat anger steam hearts zzz stars; `emote_kind="bulb"`
   for ideas), a head squash on shock, a red flush and shake on anger, a droop on sad, a shake on laugh, tears on cry.
   Every character blinks on its own.
+- **Head motion (every short from the parrot short on):** heads move whenever someone talks and whenever their
+  expression changes. react() plays a head gesture for each emotion on the neck pivot (shock jerks back, laugh bobs,
+  cry shakes, suspicious tilts, angry shakes, and so on). avatar.talk() nods on every spoken word with a slow sway:
+  dialogue at full strength, narration lighter on the narrator who's on screen. These add to the story's own head poses.
 - Big emotional beats get a punch-in on the face.
 - Emote pops are OFF by default (the reference has none); use `emote_kind=` only for a deliberate gag.
 - Captions place themselves per shot (auto: low, else top, else middle, wherever no face is on screen).

@@ -121,6 +121,85 @@ def build(D, name="me", look=None):
 EMOTES = {"angry": "anger", "furious": "steam", "nervous": "sweat", "worried": "sweat", "embarrassed": "sweat",
           "shock": "exclaim", "big_eyes": "exclaim", "terrified": "exclaim", "scream": "exclaim",
           "suspicious": "question", "confused": "question", "love": "hearts", "sleepy": "zzz", "dizzy": "stars"}
+GESTURES = True  # head moves with every expression (set False to rebuild an older short exactly as it was)
+# head gesture per expression on the neck pivot: (frames after the change, (pitch, roll, yaw) degrees); pitch + looks
+# down. A trailing "hold" keeps the last pose until the expression's end (f1) instead of settling back.
+GESTURE = {
+    "shock": [(3, (-14, 0, 0)), (9, (-6, 0, 0)), (18, (0, 0, 0))],
+    "big_eyes": [(3, (-16, 0, 0)), (10, (-8, 0, 0)), (20, (0, 0, 0))],
+    "terrified": [(3, (-12, 0, 0)), (6, (-10, 0, 5)), (9, (-12, 0, -5)), (12, (-10, 0, 5)), (15, (-12, 0, -5)), (18, (-10, 0, 3)), (21, (-12, 0, -3)), "hold"],
+    "scream": [(3, (-20, 0, 0)), (6, (-18, 0, 4)), (9, (-20, 0, -4)), (12, (-18, 0, 0)), "hold"],
+    "happy": [(4, (9, 0, 0)), (8, (-2, 0, 0)), (12, (7, 0, 0)), (18, (0, 0, 0))],
+    "laugh": [(4, (-14, 0, 0)), (8, (-5, 0, 0)), (12, (-14, 0, 0)), (16, (-5, 0, 0)), (20, (-13, 0, 0)), (24, (-5, 0, 0)), (30, (0, 0, 0))],
+    "smile": [(5, (6, 0, 0)), (12, (0, 4, 0)), "hold"],
+    "grin": [(6, (-6, 9, 0)), "hold"],
+    "smug": [(8, (-9, 11, 7)), "hold"],
+    "sad": [(12, (17, 0, 0)), "hold"],
+    "cry": [(8, (15, 0, 0)), (13, (15, 0, 7)), (18, (15, 0, -7)), (23, (15, 0, 7)), (28, (15, 0, -7)), (34, (15, 0, 0)), "hold"],
+    "worried": [(8, (9, -7, -8)), "hold"],
+    "angry": [(4, (9, 0, 0)), (7, (9, 0, 9)), (10, (9, 0, -9)), (13, (9, 0, 9)), (16, (9, 0, -9)), (21, (7, 0, 0)), "hold"],
+    "furious": [(3, (12, 0, 0)), (5, (12, 0, 11)), (7, (12, 0, -11)), (9, (12, 0, 11)), (11, (12, 0, -11)), (13, (12, 0, 11)), (15, (12, 0, -11)), (20, (10, 0, 0)), "hold"],
+    "annoyed": [(8, (4, 0, 14)), (16, (-7, 0, 10)), "hold"],
+    "suspicious": [(8, (5, 13, -9)), "hold"],
+    "confused": [(6, (0, 17, 0)), (14, (0, -13, 0)), "hold"],
+    "nervous": [(4, (5, 0, 7)), (8, (5, 0, -7)), (12, (5, 0, 7)), (16, (5, 0, -7)), (21, (5, 0, 0)), "hold"],
+    "embarrassed": [(10, (13, 0, -15)), "hold"],
+    "determined": [(4, (11, 0, 0)), (9, (3, 0, 0)), "hold"],
+    "relieved": [(8, (-11, 0, 0)), (18, (6, 0, 0)), (26, (0, 0, 0))],
+    "love": [(8, (0, 13, 0)), (18, (0, -13, 0)), (28, (0, 11, 0)), "hold"],
+    "starstruck": [(4, (-11, 0, 0)), (10, (-6, 9, 0)), "hold"],
+    "blank": [(12, (0, -4, 0)), "hold"],
+    "sleepy": [(20, (19, 0, 0)), "hold"],
+    "dizzy": [(6, (6, 9, 0)), (12, (-6, 0, 0)), (18, (6, -9, 0)), (24, (-6, 0, 0)), (30, (0, 0, 0))],
+    "disgusted": [(6, (-9, 0, -17)), "hold"],
+}
+
+
+def _clear_after(o, path, f):
+    """Drop o's keys on path after frame f, so a new gesture replaces the end of the previous one."""
+    act = o.animation_data.action if o.animation_data else None
+    if not act: return
+    for fc in act.fcurves:
+        if fc.data_path == path:
+            for kp in [k for k in fc.keyframe_points if k.co[0] > f][::-1]: fc.keyframe_points.remove(kp)
+
+
+def gesture(av, face, f0, f1):
+    """Move the head with the expression (neck pivot, so it adds to the story's own head poses)."""
+    n = av.get("neck"); seq = GESTURE.get(face)
+    if n is None or not seq or not GESTURES: return
+    _clear_after(n, "rotation_euler", f0)
+    key(n, "rotation_euler", f0, tuple(value(n, "rotation_euler", f0)))
+    last = (0, 0, 0)
+    for st in seq:
+        if st == "hold":
+            key(n, "rotation_euler", max(f1, f0 + st_f + 4) - 4, tuple(math.radians(v) for v in last))
+            key(n, "rotation_euler", max(f1, f0 + st_f + 4) + 6, (0, 0, 0)); return
+        st_f, last = st
+        key(n, "rotation_euler", f0 + st_f, tuple(math.radians(v) for v in last))
+
+
+def talk(av, frames, amount=1.0):
+    """Head motion while someone speaks: a little nod on every word plus a slow side-to-side sway (nod pivot).
+    frames: the frames each word starts on."""
+    n = av.get("nod")
+    if n is None or not frames or not GESTURES: return
+    import random
+    rnd = random.Random(sum(map(ord, av.get("name", ""))) + frames[0])
+    f0, f1 = frames[0], frames[-1] + 10
+    _clear_after(n, "rotation_euler", f0 - 4)
+    key(n, "rotation_euler", f0 - 4, (0, 0, 0))
+    sway = rnd.choice((-1, 1))
+    for k, f in enumerate(frames):
+        if k and f - frames[k - 1] < 4: continue
+        if k % 4 == 0: sway = -sway
+        down = math.radians(rnd.uniform(4, 8) * amount)
+        yaw = math.radians(sway * rnd.uniform(3, 7) * amount); roll = math.radians(sway * rnd.uniform(1, 4) * amount)
+        key(n, "rotation_euler", f, (down, roll, yaw))
+        key(n, "rotation_euler", f + 3, (down * 0.2, roll, yaw))
+    key(n, "rotation_euler", f1, (0, 0, 0))
+
+
 AUTO_EMOTES = False  # the reference style has no floating icons; pass emote_kind="..." to pop one on purpose
 POP = ("shock", "big_eyes", "terrified", "scream", "starstruck")
 
@@ -183,32 +262,35 @@ def react(av, face, f0, f1=None, emote_kind=None):
     if face in POP and _free(h, "scale", f0 - 2, f0 + 12):  # cartoon squash and stretch on the whole head
         for f, sc in ((f0 - 1, (1, 1, 1)), (f0 + 2, (0.9, 0.9, 1.22)), (f0 + 5, (1.1, 1.1, 0.92)), (f0 + 9, (1, 1, 1))):
             h.scale = sc; h.keyframe_insert("scale", frame=f)
-    if face in ("sad", "cry", "worried", "blank") and _free(h, "rotation_euler", f0 + 1, f1 + 6):
+    if not GESTURES and face in ("sad", "cry", "worried", "blank") and _free(h, "rotation_euler", f0 + 1, f1 + 6):
         base = value(h, "rotation_euler", f0)
         key(h, "rotation_euler", f0, base); key(h, "rotation_euler", f0 + 10, (base[0] + math.radians(-14), base[1], base[2]))
         key(h, "rotation_euler", f1 - 4, (base[0] + math.radians(-14), base[1], base[2])); key(h, "rotation_euler", f1 + 4, base)
-    if face in ("laugh", "happy") and _free(h, "rotation_euler", f0 + 1, f0 + 30):
+    if not GESTURES and face in ("laugh", "happy") and _free(h, "rotation_euler", f0 + 1, f0 + 30):
         base = value(h, "rotation_euler", f0); n = 6 if face == "laugh" else 2
         key(h, "rotation_euler", f0, base)
         for i in range(n): key(h, "rotation_euler", f0 + 3 + i * 4, (base[0] + math.radians(12 if i % 2 == 0 else 4), base[1], base[2]))
         key(h, "rotation_euler", f0 + 5 + n * 4, base)
+    gesture(av, face, f0, f1)
     em = emote_kind if emote_kind is not None else (EMOTES.get(face) if AUTO_EMOTES else None)
     if em: emote(av, em, f0, min(f1, f0 + 40))
     if face in ("shock", "big_eyes"):
         for f, sc in ((f0 - 1, 1.0), (f0 + 3, 1.28), (f0 + 8, 1.0)):
             fo.scale = (sc, sc, sc); fo.keyframe_insert("scale", frame=f)
-        h = av["head"]; base = value(h, "rotation_euler", f0)
-        for f, dx in ((f0, 0), (f0 + 3, -9), (f0 + 9, 0)):
-            key(h, "rotation_euler", f, (base[0] + math.radians(dx), base[1], base[2]))
+        if not GESTURES:  # older shorts: a small jerk on the head pivot (gesture() covers this now)
+            h = av["head"]; base = value(h, "rotation_euler", f0)
+            for f, dx in ((f0, 0), (f0 + 3, -9), (f0 + 9, 0)):
+                key(h, "rotation_euler", f, (base[0] + math.radians(dx), base[1], base[2]))
     if face in ("angry", "furious"):
         fac = av["skin"].node_tree.nodes["flush"].inputs["Fac"]
         r = 0.55 if face == "angry" else 0.8
         for f, v in ((f0, 0), (f0 + 10, r), (f1 - 8, r), (f1, 0)):
             fac.default_value = v; fac.keyframe_insert("default_value", frame=f)
-        h = av["head"]; base = value(h, "rotation_euler", f0 + 6)
-        for i, f in enumerate(range(f0 + 6, min(f1, f0 + 30), 2)):  # quick shake
-            key(h, "rotation_euler", f, (base[0], base[1] + math.radians(4 if i % 2 else -4), base[2]))
-        key(h, "rotation_euler", min(f1, f0 + 32), base)
+        if not GESTURES:
+            h = av["head"]; base = value(h, "rotation_euler", f0 + 6)
+            for i, f in enumerate(range(f0 + 6, min(f1, f0 + 30), 2)):  # quick shake
+                key(h, "rotation_euler", f, (base[0], base[1] + math.radians(4 if i % 2 else -4), base[2]))
+            key(h, "rotation_euler", min(f1, f0 + 32), base)
     if face == "cry":
         _tears(av, f0, f1)
 

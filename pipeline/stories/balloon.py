@@ -9,6 +9,8 @@ import shortkit as K
 from shortkit import Set, prim, mat, empty, vis, show_between, camera, orbit, punch, shake, pose, rest, at, turn, walk, sit, idle
 import blocky, toys
 from avatar import react
+import avatar
+avatar.GESTURES = False  # approved before head gestures existed: keep its motion exactly as reviewed
 from anim import value
 
 random.seed(5)

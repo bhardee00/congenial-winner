@@ -68,7 +68,9 @@ def build(D, name="me", look=None):
     skin = (look or {}).get("skin", tuple(rig["skin"]))
     root = _empty(name, (0, 0, 0))
     waist = _empty(name + "_waist", (0, 0, 2.0), root)          # hips: upper body bends here
-    head = _empty(name + "_head", (0, 0, 2.0), waist)           # neck (z 4 in the world)
+    neck = _empty(name + "_neck", (0, 0, 2.0), waist)           # neck (z 4 in the world): emotion gestures (avatar.gesture)
+    nod = _empty(name + "_nod", (0, 0, 0), neck)                # talking head motion (avatar.talk)
+    head = _empty(name + "_head", (0, 0, 0), nod)               # posed by the story (pose(head=...))
     la = _empty(name + "_la", (1.5, 0, 1.5), waist); ra = _empty(name + "_ra", (-1.5, 0, 1.5), waist)
     ll = _empty(name + "_ll", (0.5, 0, 2.0), root); rl = _empty(name + "_rl", (-0.5, 0, 2.0), root)
     # joints the R15 helpers expect; blocky limbs don't bend there, so they are just carried along
@@ -156,7 +158,8 @@ def build(D, name="me", look=None):
     s = look.get("scale", 1.0) if look else 1.0
     eyes = [hc + Vector((x, -hs * 0.5 - 0.03, 0.06)) for x in (-0.22, 0.22)]
     av = {"root": root, **piv, "faces": faces, "grips": grips, "skin": sm, "reacts": [], "eyes": eyes,
-          "joints": {"ll": [0.5, 0, 2.0]}, "scale": s, "face_pos": faces["smile"].location.copy(), "name": name}
+          "joints": {"ll": [0.5, 0, 2.0]}, "scale": s, "face_pos": faces["smile"].location.copy(), "name": name,
+          "neck": neck, "nod": nod}
     avatar.ALL.append(av)
     return av
 
