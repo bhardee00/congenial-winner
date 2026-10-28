@@ -366,7 +366,7 @@ def build(ctx):
     # 16: "He fell asleep, all right. Then he started sleep talking. In Grandpa's voice."
     (a, s1), (_, s2), (_, b) = seg(16, "then", "in")
     ctx.sfx("snore", a + 2, 0.6)
-    sh(hs, a, s1, (-2.6, 0.4, 4.8), (0, 3, 5.4), 24, dl=(0.3, 0.3, 0))
+    sh(hs, a, s1, (-4.6, -1.6, 4.8), (0.2, 2.0, 4.9), 22, dl=(0.4, 0.4, 0))
     at(me, s1, (0.9, 1.0, 0), (0, 3), ease=1); pose(me, s1, 6, waist=(18, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
     sh(hs, s1, s2, (3.4, 2.0, 4.8), (0.9, 1.0, 4.8), 26, dl=(-0.3, 0.1, 0))
     react(me, "big_eyes", s2); turn(me, s2, (-2.8, 0.6), 4); sh(hs, s2, b, (-2.8, 0.6, 4.8), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
@@ -379,7 +379,7 @@ def build(ctx):
     ctx.sfx("sparkle", wf(17, "freezer"), 0.7)
     # 18: "I froze. Then I ran to the freezer."
     (a, s1), (_, b) = seg(18, "then")
-    ctx.music(a, "normal"); react(me, "shock", a)
+    ctx.music(a, "normal"); react(me, "shock", a); rest(me, a, "waist", "head", ease=4)  # stand up straight again
     sh(hs, a, s1, (-2.8, -2.0, 4.8), (0.9, 1.0, 4.8), 30); ctx.sfx("freeze", a, 0.6)
     walk(me, s1, b - 1, (0.9, 0.0, 0), (-19.2, 3.6, 0), 5, 40); react(me, "determined", s1)
     sh(hs, s1, b, (-19.5, 1.0, 3.0), (-8, 2.2, 4.4), 22, dt=(-6, 1.2, 0)); ctx.sfx("step", s1 + 3); ctx.sfx("step", s1 + 8); ctx.sfx("step", s1 + 13)
@@ -388,7 +388,7 @@ def build(ctx):
     at(me, a, (-19.2, 3.6, 0), (-20.2, 7.2), ease=1); pose(me, a, 4, la=(-100, 0, 30))
     fz.keyframe_insert("rotation_euler", frame=a); fz.rotation_euler = (0, 0, math.radians(105)); fz.keyframe_insert("rotation_euler", frame=a + 8)
     ctx.sfx("freeze", a + 2, 0.7); react(me, "starstruck", a + 4)
-    sh(hs, a, s1, (-16.4, 1.4, 4.8), (-19.6, 5.6, 5.0), 22, dl=(-0.4, 0.4, 0))
+    sh(hs, a, s1, (-21.5, 3.0, 5.0), (-19.8, 6.4, 5.3), 22, dl=(0.2, 0.4, 0))
     sh(hs, s1, s2, (-20.2, 4.6, 5.4), (-20.2, 7.0, 5.05), 30, dl=(0, 0.5, -0.05)); react(me, "blank", s2)
     sh(hs, s2, b, (-20.4, 5.2, 5.5), (-20.4, 7.6, 5.35), 34, pz=s2 + 2, amount=1.2); ctx.sfx("sad", s2 + 2, 0.5)
     # 20: "I'm not proud of it. I ate the nugget."

@@ -227,5 +227,103 @@
  "models": {},
  "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
  "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
- "synth_music": false
+ "synth_music": false,
+ "voice_files": {
+  "narrator": "assets/voice/parrot_narrator_1.33x.wav",
+  "others": "assets/voice/parrot_others_1.68x.wav",
+  "others_order": [
+   "parrot",
+   "lawyer",
+   "lawyer",
+   "parrot",
+   "lawyer",
+   "lawyer",
+   "parrot",
+   "lawyer",
+   "neighbor",
+   "lawyer",
+   "parrot",
+   "lawyer",
+   "derek",
+   "derek",
+   "lawyer",
+   "parrot",
+   "lawyer",
+   "parrot"
+  ],
+  "others_spans": [
+   [
+    0.04,
+    0.82
+   ],
+   [
+    0.99,
+    1.96
+   ],
+   [
+    1.97,
+    2.24
+   ],
+   [
+    2.45,
+    2.97
+   ],
+   [
+    2.99,
+    3.39
+   ],
+   [
+    3.82,
+    4.27
+   ],
+   [
+    4.73,
+    6.13
+   ],
+   [
+    6.3,
+    6.8
+   ],
+   [
+    7.1,
+    8.23
+   ],
+   [
+    8.51,
+    10.01
+   ],
+   [
+    10.21,
+    10.51
+   ],
+   [
+    10.73,
+    11.17
+   ],
+   [
+    11.4,
+    13.05
+   ],
+   [
+    13.26,
+    15.35
+   ],
+   [
+    15.65,
+    17.19
+   ],
+   [
+    17.45,
+    17.99
+   ],
+   [
+    18.17,
+    19.69
+   ],
+   [
+    19.94,
+    20.82
+   ]
+  ]
+ }
 }

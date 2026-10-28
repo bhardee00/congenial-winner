@@ -141,10 +141,10 @@ def word_times(text, parts, sentence_spans=None):
     """Spread words over the voiced parts: per aligned sentence when known, else one sentence per part when the
     counts match, else across the whole line."""
     sentences = split_sentences(text)
-    if sentence_spans:
+    if sentence_spans and len(sentence_spans) == len(sentences):
         chunks = [(x.split(), [[max(p0, a), min(p1, b)] for p0, p1 in parts if p1 > a and p0 < b] or [[a, b]])
                   for x, (a, b) in zip(sentences, sentence_spans)]
-    elif len(sentences) == len(parts): chunks = [(x.split(), [p]) for x, p in zip(sentences, parts)]
+    elif len(sentences) == len(parts) and len(sentences) > 1: chunks = [(x.split(), [p]) for x, p in zip(sentences, parts)]
     else: chunks = [(text.split(), parts)]
     out = []
     for words, ps in chunks:
@@ -173,8 +173,21 @@ def main(story_path):
     for i in n_idx:
         sp = [sspans[q] for q, (li, _) in enumerate(sent) if li == i]; spans[i] = sp
         placed[i] = (nar, [[a, b] for a, b in nsegs if b > sp[0][0] + 0.02 and a < sp[-1][1] - 0.02] or [[sp[0][0], sp[-1][1]]])
-    groups = fit_lines(segments(oth), expected_lengths([orig.get(i, lines[i][1]) for i in o_idx]))
-    for i, g in zip(o_idx, groups): placed[i] = (oth, g)
+    # other voices: aligned the same way (DTW against a reference reading of each whole line), which copes with
+    # lines that have pauses inside them; the old length-based split is kept for very short takes
+    if vf.get("others_spans"):  # checked by hand: [start, end] seconds in the others take, one per line in order
+        osegs = segments(oth)
+        for (a0, b0), i in zip(vf["others_spans"], o_idx):
+            spans[i] = [(a0, b0)]
+            placed[i] = (oth, [[max(a, a0), min(b, b0)] for a, b in osegs if b > a0 + 0.02 and a < b0 - 0.02] or [[a0, b0]])
+    elif len(o_idx) >= 4:
+        ospans, osegs = align_sentences(oth, [orig.get(i, lines[i][1]) for i in o_idx])
+        for q, i in enumerate(o_idx):
+            a0, b0 = ospans[q]; spans[i] = [(a0, b0)]
+            placed[i] = (oth, [[a, b] for a, b in osegs if b > a0 + 0.02 and a < b0 - 0.02] or [[a0, b0]])
+    else:
+        groups = fit_lines(segments(oth), expected_lengths([orig.get(i, lines[i][1]) for i in o_idx]))
+        for i, g in zip(o_idx, groups): placed[i] = (oth, g)
     # single lines re-recorded later replace their part of the original take: {"line index": wav}
     for k, path in vf.get("replace", {}).items():
         i = int(k); rep = load(os.path.join(REPO, path)); placed[i] = (rep, segments(rep)); spans.pop(i, None)
