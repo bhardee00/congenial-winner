@@ -35,6 +35,25 @@ KIDS = [{"shirt": c, "pants": p, "skin": s, "hair": h, "scale": 0.75} for c, p, 
     ((230, 60, 90), (40, 60, 120), (234, 190, 150), (150, 90, 40)), ((150, 210, 90), (90, 70, 60), (180, 120, 90), (30, 20, 15)))]
 
 
+def fr(pos, face, head, dist=3.0, ang=0.0, dz=0.15):
+    """Camera in front of a character's face: pos (x, y), facing a point or yaw, head height. ang swings it
+    around the character (degrees, + = to the character's left). Returns (camera location, aim point)."""
+    from mathutils import Matrix
+    yaw = math.radians(K.yaw_to(pos, face))
+    d = Matrix.Rotation(math.radians(ang), 3, 'Z') @ Vector((math.sin(yaw), -math.cos(yaw), 0))
+    return (pos[0] + d.x * dist, pos[1] + d.y * dist, head + dz), (pos[0], pos[1], head)
+
+
+# where people stand in each set: (x, y), facing (point or yaw), head height
+ME_COUCH = ((-4.0, 3.9), 0, 4.8); G_SHELF = ((9.0, 6.4), (-4, 3.9), 4.3); G30H = ((0.0, 2.0), (-4, 3.9), 4.6)
+G20H = ((-6.5, 6.5), (-4, 3.9), 4.6); G10H = ((1.0, 2.6), (-4, 3.9), 3.2); G10PH = ((8.0, 1.6), (8.8, 2.6), 3.2)
+ME_PH = ((7.0, 0.8), (8.8, 2.6), 4.6); ME_PLAN = ((-1.0, 0.0), 0, 4.6); G5 = ((1.5, 1.8), (-1, 0), 2.6); G4 = ((1.5, 1.8), (-1, 0), 2.3)
+G4CART = ((-1.0, 1.0), 0, 2.3); ME_BED = ((-13.4, -3.4), (-15.5, -2.0), 4.8); G4_COLOR = ((-15.0, -2.6), 0, 3.4)
+ME_SIT_BED = ((-13.4, -3.0), (-15.0, -2.6), 4.8); G4_FLOOR = ((-12.6, -5.4), (-13.4, -3.0), 2.3)
+G80B_SHELF = ((9.0, 6.2), (-1, 4), 4.3); ME_SHELF = ((6.8, 4.2), (10.5, 8.5), 4.6)
+ME_C = ((2.2, -1.0), 180, 4.65); G10_C = ((-2.2, -1.0), 180, 3.7)
+
+
 def npc(ctx, name, look, loc=(0, 0, 0), yaw=0):
     a = blocky.build(ctx.D, name, look); at(a, 0, loc, yaw, ease=1); idle(a, ("head",), 0.025, 50); return a
 
@@ -59,6 +78,12 @@ def grandpas(ctx, prefix, keys):
 def build(ctx):
     S, L, A = ctx.short, ctx.L, ctx.A
     kit = Kit(ctx); seg, wf, sh = kit.seg, kit.wf, kit.sh
+
+    def shf(st, f0, f1, who, dist=3.0, ang=0.0, lens=26, push=0.12, dz=0.15, **kw):
+        """Shot of a character's face (who = (pos, facing, head)), easing in by `push` of the distance."""
+        loc, tgt = fr(*who, dist=dist, ang=ang, dz=dz)
+        dl = tuple((t - l) * push for l, t in zip(loc, tgt))
+        return sh(st, f0, f1, loc, tgt, lens, dl=dl, **kw)
     sched = {}  # set name -> [(frame, grandpa key)]; one Grandpa visible at a time per set
 
     def age(st, f, k): sched.setdefault(st.name, []).append((f, k))
@@ -189,13 +214,13 @@ def build(ctx):
     (a, s1), (_, b) = seg(0, "he")
     react(c_me, "blank", a); age(cl, 0, "c_g10")
     walk(c_g10, a, s1 - 2, (-9, 3, 0), (-2.2, -0.2, 0), 6, 22); sit(c_g10, s1, 1.6, (-2.2, -1.0), 180, ease=4)
-    sh(cl, a, s1, (0.0, 4.8, 4.4), (0, -2.5, 3.6), 22, dl=(0, -1.0, 0)); ctx.sfx("step", a + 6); ctx.sfx("step", a + 12)
+    sh(cl, a, s1, (0.0, 5.6, 5.0), (-1.5, -1.5, 3.8), 20, dl=(0, -0.8, 0)); ctx.sfx("step", a + 6); ctx.sfx("step", a + 12)
     react(c_g10, "smile", s1); react(c_me, "big_eyes", s1 + 4)
-    sh(cl, s1, b, (0.0, 1.6, 4.0), (-0.2, -1.0, 4.0), 24, pz=s1 + 4, amount=1.3); ctx.sfx("boing", s1 + 4, 0.6)
+    shf(cl, s1, b, ME_C, 2.6, 20, pz=s1 + 4, amount=1.3); ctx.sfx("boing", s1 + 4, 0.6)
     a, b = L(1); react(teacher, "happy", a); kit.speak(teacher, 1); turn(teacher, a, (-2.2, -1.0), 6)
     sh(cl, a, b, (2.0, 0.5, 4.8), (4.0, 3.5, 4.6), 26, dl=(0.3, 0.3, 0))
     a, b = L(2); react(c_g10, "smug", a); kit.speak(c_g10, 2)
-    sh(cl, a, b, (-1.6, 1.4, 3.6), (-2.2, -1.0, 3.3), 26, pz=wf(2, "pension"), amount=1.3); ctx.sfx("ding", wf(2, "pension"), 0.5)
+    shf(cl, a, b, G10_C, 2.2, -15, pz=wf(2, "pension"), amount=1.3); ctx.sfx("ding", wf(2, "pension"), 0.5)
 
     # ======================= 3-10: the summer, the rule =======================
     a3, b3 = L(3); poof(a3)
@@ -222,12 +247,12 @@ def build(ctx):
     react(h_me, "blank", a); kit.speak(h_me, 6, 0.6, a, s1)
     sh(hs, a, s1, (-3.0, 1.4, 4.8), (-4.0, 3.9, 4.8), 30, pz=wf(6, "bored") + 2, amount=1.2); ctx.sfx("crickets", wf(6, "bored") + 4, 0.4)
     react(hg["g80"], "shock", s1)
-    sh(hs, s1, s2, (6.4, 3.6, 3.6), (9.0, 6.4, 3.8), 26, pz=s1 + 2, amount=1.25); ctx.sfx("crack", s1 + 2, 1.0); shake(hs.cams[list(hs.cams)[-1]], s1 + 2, 8, 0.3)
+    c = shf(hs, s1, s2, G_SHELF, 2.6, 25, pz=s1 + 2, amount=1.25); ctx.sfx("crack", s1 + 2, 1.0); shake(c, s1 + 2, 8, 0.3)
     pose(hg["g80"], s2 + 2, 4, waist=(0, 0, 0)); react(hg["g80"], "starstruck", s2 + 2)
-    sh(hs, s2, b, (7.6, 2.6, 3.0), (9.0, 6.4, 3.6), 22, dl=(0, 0.3, 0.4)); ctx.sfx("crack", s2 + 3, 0.8); ctx.sfx("boing", s2 + 6, 0.5)
+    shf(hs, s2, b, G_SHELF, 3.4, -20, lens=22, dz=-1.0); ctx.sfx("crack", s2 + 3, 0.8); ctx.sfx("boing", s2 + 6, 0.5)
     # 7: "He stood up straight... His gray hair turned brown. He was seventy."
     (a, s1), (_, s2), (_, b) = seg(7, "his", ("he", 1))
-    sh(hs, a, s1, (7.0, 2.0, 4.6), (9.0, 6.4, 4.6), 26, dl=(0.2, 0.3, 0))
+    shf(hs, a, s1, G_SHELF, 3.0, -30)
     age(hs, s2, "g70"); at(hg["g70"], s2, (9.0, 6.4, 0), (-4, 3.9), ease=1); react(hg["g70"], "happy", s2); poof(s2, 0.7)
     sh(hs, s1, s2, (8.2, 4.4, 5.8), (9.0, 6.4, 5.3), 34, dl=(0, 0, 0.3)); ctx.sfx("sparkle", s1 + 2, 0.5)
     react(h_me, "shock", s2)
@@ -277,27 +302,28 @@ def build(ctx):
     pose(g, s1 + 2, 4, ra=(-175, 0, 0), la=(-175, 0, 0)); react(g, "furious", s1 + 6, b); react(mail, "shock", s1 + 10)
     sh(yd, s1, b, (9.0, 1.0, 2.0), (13, 8.4, 6.5), 20, pz=s1 + 11, amount=1.2); ctx.sfx("whoosh", s1 + 3, 0.5); ctx.sfx("clang", s1 + 11, 0.9)
     c = yd.cams[list(yd.cams)[-1]]; shake(c, s1 + 11, 10, 0.4)
+    at(mail, b + 2, (-5, -8.6, 0), 0, ease=1)
     # 13: thirty, motorcycle, jacket, sunglasses inside
     (a, s1), (_, s2), (_, b) = seg(13, "and", ("and", 1))
     age(yd, a, "g30"); g = yg["g30"]; g["root"].parent = moto; sit(g, a, 2.45, (0, 0.5), 0, ease=1); pose(g, a, 1, ra=(-75, 0, 0), la=(-75, 0, 0))
     K._key(moto, "location", a, (8, -2, 0), 1); K._key(moto, "location", s1 + 4, (2, -2, 0))
     react(g, "smug", a); ctx.sfx("rev", a, 0.9)
     sh(yd, a, s1, (-2.0, -9.0, 2.0), (5, -2, 2.6), 20, dt=(-2.5, 0, 0)); ctx.sfx("rev", s1 - 4, 0.6)
-    sh(yd, s1, s2, (2.0, -5.2, 4.6), (2.0, -2, 4.6), 26, pz=s1 + 2, amount=1.15); ctx.sfx("pop", s1 + 2, 0.5)
+    sh(yd, s1, s2, (6.0, -4.5, 4.4), (1.6, -2.0, 4.4), 26, pz=s1 + 2, amount=1.15); ctx.sfx("pop", s1 + 2, 0.5)
     age(hs, s2, "g30"); h30 = hg["g30"]; at(h30, s2, (0.0, 2.0, 0), (-4, 3.9), ease=1); react(h30, "smug", s2)
     rest(h_me, s2, "waist", ease=1); react(h_me, "annoyed", s2)
-    sh(hs, s2, b, (1.4, -2.2, 4.6), (0.0, 2.0, 4.6), 26, dl=(0.2, 0.4, 0)); ctx.sfx("ding", s2 + 2, 0.4)
+    shf(hs, s2, b, G30H, 3.0, 0); ctx.sfx("ding", s2 + 2, 0.4)
     # 14: "Kid, call me Hal."
     a, b = L(14); kit.speak(h30, 14); react(h30, "grin", a); pose(h30, a, 4, ra=(-95, 0, 20))
-    sh(hs, a, b, (-0.8, -0.2, 4.6), (0.0, 2.0, 4.7), 28, pz=wf(14, "hal"), amount=1.25); ctx.sfx("boing", wf(14, "hal"), 0.4)
+    shf(hs, a, b, G30H, 2.2, 15, pz=wf(14, "hal"), amount=1.25); ctx.sfx("boing", wf(14, "hal"), 0.4)
     rest(h30, b, "ra")
     # 15: twenty, Wi-Fi
     (a, s1), (_, s2), (_, b) = seg(15, "there", "so")
     age(hs, a, "g20"); g = hg["g20"]; at(g, a, (-6.5, 6.5, 0), (-4, 3.9), ease=1); react(g, "happy", a); kit.speak(g, 15, 0.6, a, s1)
-    sh(hs, a, s1, (-6.0, 2.6, 4.6), (-6.5, 6.5, 4.6), 26, dl=(0.2, 0.3, 0)); react(h_me, "blank", s1)
+    shf(hs, a, s1, G20H, 3.0, 0); react(h_me, "blank", s1)
     sh(hs, s1, s2, (-2.6, 1.0, 4.8), (-4.0, 3.9, 4.8), 30, pz=s1 + 2, amount=1.15); ctx.sfx("crickets", s1 + 2, 0.4)
     turn(g, s2, (-8, 8.6), 4); pose(g, s2 + 2, 4, ra=(-170, 0, 0), la=(-170, 0, 0)); react(g, "determined", s2)
-    sh(hs, s2, b, (-6.6, 5.0, 3.0), (-8, 8.6, 5.2), 22, dl=(0.2, 0.3, 0.4)); ctx.sfx("ding", b - 8, 0.8); ctx.sfx("sparkle", b - 6, 0.6)
+    sh(hs, s2, b, (-4.4, 7.4, 4.6), (-7.6, 8.2, 5.0), 24, dl=(0.2, 0.2, 0)); ctx.sfx("ding", b - 8, 0.8); ctx.sfx("sparkle", b - 6, 0.6)
     rest(g, b, "ra", "la")
 
     # ======================= 16-19: ten, Mom calls =======================
@@ -306,21 +332,21 @@ def build(ctx):
     sh(hs, a, s1, (-2.8, 1.2, 4.8), (-4.0, 3.9, 4.8), 28, dl=(0.2, 0.3, 0)); ctx.sfx("crickets", a + 2, 0.3)
     age(hs, s1, "g10"); g10 = hg["g10"]; at(g10, s1, (1.0, 2.6, 0), (-4, 3.9), ease=1); react(g10, "happy", s1); poof(s1, 0.8)
     react(h_me, "terrified", s1 + 4)
-    sh(hs, s1, b, (1.6, -2.4, 3.6), (1.0, 2.6, 3.0), 24, pz=s1 + 3, amount=1.3)
+    shf(hs, s1, b, G10H, 2.6, 0, pz=s1 + 3, amount=1.3)
     # 17: Mom: "Why is a child answering Grandpa's phone?"
     a, b = L(17); ctx.sfx("ring", a - 14, 0.6)
     rc_g = hand_receiver(); hold(g10, rc_g, "ra", (0, -0.2, 0.2), (90, 0, 90)); show_between(rc_g, a, L(18)[0])
     rc_m = hand_receiver(); hold(h_me, rc_m, "ra", (0, -0.2, 0.2), (90, 0, 90)); show_between(rc_m, L(18)[0], seg(18, "that's")[0][1])
     show_between(receiver, 0, a); vis(receiver, seg(18, "that's")[0][1], True)
     at(g10, a, (8.0, 1.6, 0), (8.8, 2.6), ease=1); pose(g10, a, 1, ra=(-160, 0, 40)); react(g10, "smile", a)
-    sh(hs, a, b, (6.6, -0.6, 3.4), (8.0, 1.6, 3.2), 26, dl=(0.2, 0.3, 0))
+    shf(hs, a, b, G10PH, 2.4, 75)
     # 18: "I said, 'Wrong number,' and hung up. That's when I knew I had a problem."
     (a, s1), (_, b) = seg(18, "that's")
     at(h_me, a, (7.0, 0.8, 0), (8.8, 2.6), ease=1); pose(h_me, a, 1, ra=(-160, 0, 40)); react(h_me, "nervous", a)
     rest(g10, a, "ra", ease=1); react(g10, "confused", a)
-    sh(hs, a, s1, (5.6, -1.6, 4.6), (7.4, 1.4, 4.4), 24, dl=(0.3, 0.3, 0)); ctx.sfx("click", s1 - 4, 1.0)
+    shf(hs, a, s1, ME_PH, 2.8, -70); ctx.sfx("click", s1 - 4, 1.0)
     rest(h_me, s1, "ra", ease=4); react(h_me, "embarrassed", s1)
-    sh(hs, s1, b, (5.8, -0.4, 4.8), (7.0, 0.8, 4.8), 34, pz=s1 + 2, amount=1.15)
+    shf(hs, s1, b, ME_PH, 2.4, -60, pz=s1 + 2, amount=1.15)
     # 19: "So I made a plan. Never say 'I'm bored' again."
     a, b = L(19); at(h_me, a, (-1.0, 0.0, 0), 0, ease=1); react(h_me, "determined", a)
     sh(hs, a, b, (-1.0, -3.0, 4.6), (-1.0, 0.0, 4.6), 26, pz=a + 4, amount=1.2); ctx.sfx("whoosh", a, 0.4)
@@ -331,7 +357,7 @@ def build(ctx):
     sh(hs, a, s1, (-0.4, -2.0, 4.8), (-1.0, 0.0, 4.8), 30, dl=(0.1, 0.3, 0)); ctx.sfx("crickets", a + 4, 0.3)
     age(hs, s1, "g5"); g5 = hg["g5"]; at(g5, s1, (1.5, 1.8, 0), (-1, 0), ease=1); react(g5, "happy", s1); poof(s1, 0.7)
     react(h_me, "annoyed", s1 + 6)
-    sh(hs, s1, b, (2.4, -1.6, 2.6), (1.5, 1.8, 2.4), 24, pz=s1 + 3, amount=1.25)
+    shf(hs, s1, b, G5, 2.2, 0, pz=s1 + 3, amount=1.25)
     # 21: bored jar
     (a, s1), (_, s2), (_, b) = seg(21, "every", ("i", 3))
     sh(ins, a, s1, (16.2, -4.2, 2.6), (16, 0, 1.2), 30, dl=(0, 1.0, -0.2), cap="auto"); ctx.sfx("pop", a + 2, 0.5)
@@ -346,14 +372,14 @@ def build(ctx):
     # 22: yawn, baby teeth
     (a, s1), (_, s2), (_, b) = seg(22, "his", "baby")
     react(h_me, "sleepy", a); pose(h_me, a, 4, head=(-20, 0, 0)); rest(h_me, s1, "head", ease=4)
-    sh(hs, a, s1, (-0.6, -1.6, 4.8), (-1.0, 0.0, 4.8), 34, pz=a + 3, amount=1.15); ctx.sfx("sigh", a, 0.6)
+    shf(hs, a, s1, ME_PLAN, 2.6, 0, pz=a + 3, amount=1.15); ctx.sfx("sigh", a, 0.6)
     teeth = []
     for dx in (-0.12, 0.12):
         t = prim("box", (0.16, 0.08, 0.2), (dx, -0.67, 0.42), mat((250, 250, 245), 0.3), parent=g5["head"], bevel=0.03); teeth.append(t)
         t.keyframe_insert("location", frame=s1 + 2); t.location.z -= 3.2; t.location.y -= 0.3; t.keyframe_insert("location", frame=s1 + 12)
         show_between(t, 0, s2 + 12)
     react(g5, "shock", s1 + 2)
-    sh(hs, s1, s2, (1.9, 0.6, 2.8), (1.5, 1.8, 2.4), 26, pz=s1 + 3, amount=1.2); ctx.sfx("pop", s1 + 4, 0.6); ctx.sfx("pop", s1 + 8, 0.5)
+    shf(hs, s1, s2, G5, 2.0, 15, pz=s1 + 3, amount=1.2); ctx.sfx("pop", s1 + 4, 0.6); ctx.sfx("pop", s1 + 8, 0.5)
     sh(ins, s2, b, (48, -2.6, 2.9), (48, 0, 2.5), 34, dl=(0, 0.8, 0), cap="auto"); ctx.sfx("ding", s2 + 2, 0.4)
     # 23: busy - garage, lawn, spices
     (a, s1), (_, s2), (_, s3), (_, b) = seg(23, ("i", 1), "mowed", "alphabetized")
@@ -365,7 +391,7 @@ def build(ctx):
     for o in (mower,):
         for fc in o.animation_data.action.fcurves:
             for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
-    sh(yd, s2, s3, (-4.5, -9.5, 2.4), (-7, -3, 2.0), 22, dt=(0, -2, 0)); ctx.sfx("rev", s2, 0.4)
+    sh(yd, s2, s3, (-9.5, -11.0, 3.6), (-7, -2, 3.4), 22, dt=(0, -2.5, 0)); ctx.sfx("rev", s2, 0.4)
     at(h_me, s3, (-11.5, 5.4, 0), (-11.5, 8.6), ease=1); pose(h_me, s3, 1, ra=(-140, 0, 0)); react(h_me, "suspicious", s3)
     sh(hs, s3, b, (-10.0, 3.0, 5.4), (-11.8, 8.6, 4.6), 26, dl=(-0.4, 0.4, 0)); ctx.sfx("pop", s3 + 3, 0.3); ctx.sfx("pop", s3 + 7, 0.3)
     rest(h_me, b, "ra")
@@ -374,26 +400,26 @@ def build(ctx):
     at(h_me, a, (-1.0, 0.0, 0), 0, ease=1); react(h_me, "relieved", a); pose(h_me, a + 2, 6, head=(-15, 0, 0))
     sh(hs, a, s1, (-0.8, -2.2, 4.8), (-1.0, 0.0, 4.8), 32, dl=(0, 0.3, 0)); ctx.sfx("sigh", a + 1, 0.9)
     react(h_me, "terrified", s1); rest(h_me, s1, "head", ease=3)
-    sh(hs, s1, s2, (-0.9, -0.8, 4.8), (-1.0, 0.0, 4.8), 40, pz=s1 + 2, amount=1.3); ctx.sfx("scared", s1 + 2, 0.5)
+    shf(hs, s1, s2, ME_PLAN, 1.9, 0, lens=34, pz=s1 + 2, amount=1.3); ctx.sfx("scared", s1 + 2, 0.5)
     age(hs, s2, "g4"); g4 = hg["g4"]; at(g4, s2, (1.5, 1.8, 0), (-1, 0), ease=1); react(g4, "cry", s2, b + 4); poof(s2, 0.7)
     ring = prim("cylY", (0.5, 0.5, 0.12), (0, 0, 0), mat((120, 200, 255), 0.3)); hold(g4, ring, "ra", (0, -0.3, 0.3), (90, 0, 0)); show_between(ring, s2, L(26)[1])
     pose(g4, s2, 1, ra=(-150, 0, 20))
-    sh(hs, s2, b, (1.9, -0.4, 2.0), (1.5, 1.8, 2.0), 24, pz=s2 + 3, amount=1.2); ctx.sfx("cry", s2 + 4, 0.4)
+    shf(hs, s2, b, G4, 2.0, 0, pz=s2 + 3, amount=1.2); ctx.sfx("cry", s2 + 4, 0.4)
     # 25: "Grandpa was four years old."
     a, b = L(25); react(g4, "blank", a); react(h_me, "blank", a)
     sh(hs, a, b, (-0.2, -6.5, 3.0), (0.4, 1.0, 2.6), 22, dl=(0.4, 1.5, 0)); ctx.sfx("crickets", a, 0.4)
     # 26: "Juice box. Now."
     (a, s1), (_, b) = seg(26, "now")
     react(g4, "angry", a, b + 6); pose(g4, a, 3, ra=(-90, 0, 0)); kit.speak(g4, 26)
-    sh(hs, a, s1, (1.2, -0.2, 2.2), (1.5, 1.8, 2.2), 28, pz=a + 2, amount=1.2)
+    shf(hs, a, s1, G4, 2.0, 10, pz=a + 2, amount=1.2)
     sh(ins, s1, b, (24.2, -3.0, 1.6), (24, 0, 0.9), 30, dl=(0, 0.8, 0), cap="auto"); ctx.sfx("pop", s1 + 1, 0.7)
     rest(g4, b, "ra")
     # 27: naps, cartoons, bit the mailman
     (a, s1), (_, s2), (_, b) = seg(27, ("he", 1), ("he", 2))
     at(g4, a, (-3.6, 3.9, 1.45), 0, ease=1); react(g4, "sleepy", a)
     sh(hs, a, s1, (-3.6, 0.6, 3.4), (-3.6, 3.9, 2.4), 28, dl=(0, 0.4, 0)); ctx.sfx("snore", a + 2, 0.5)
-    at(g4, s1, (-1.0, 1.0, 0), (-1, 4), ease=1); react(g4, "happy", s1); react(h_me, "annoyed", s1)
-    sh(hs, s1, s2, (-1.0, -2.2, 2.2), (-1.0, 1.0, 2.2), 26, dl=(0, 0.4, 0)); ctx.sfx("boing", s1 + 2, 0.4)
+    at(g4, s1, (-1.0, 1.0, 0), 0, ease=1); react(g4, "happy", s1); react(h_me, "annoyed", s1); pose(g4, s1, 2, ra=(-120, 0, 30))
+    shf(hs, s1, s2, G4CART, 2.2, 0); ctx.sfx("boing", s1 + 2, 0.4)
     age(yd, s2, "g4"); yg4 = yg["g4"]; at(mail, s2, (-5, -8.6, 0), 0, ease=1); at(yg4, s2, (-4.6, -9.6, 0), 0, ease=1)
     react(yg4, "furious", s2, b + 10); react(mail, "terrified", s2 + 4); pose(yg4, s2, 2, waist=(30, 0, 0))
     sh(yd, s2, b, (-3.6, -13.0, 2.4), (-5, -8.6, 2.6), 22, pz=s2 + 4, amount=1.2); ctx.sfx("nom", s2 + 3, 0.9)
@@ -407,22 +433,22 @@ def build(ctx):
     at(h_me, a, (-13.2, -3.4, 0), (-15.5, -2.0), ease=1); sit(h_me, a, 1.8, (-13.4, -3.4), (-15.5, -2), ease=1)
     book2 = toys.box_prop(A + "storybook.png", 0.7, 0.15, 0.9, (120, 70, 160)); hold(h_me, book2, "la", (0, -0.3, 0.2), (90, 0, 0)); show_between(book2, a, b)
     pose(h_me, a, 1, la=(-80, 0, 20)); react(h_me, "smile", a); kit.speak(h_me, 29, 0.5, a, s1)
-    sh(hs, a, s1, (-11.0, -6.6, 4.4), (-14.4, -2.6, 3.4), 24, dl=(0.2, 0.4, 0)); ctx.sfx("rustle", a + 2, 0.6)
-    sh(hs, s1, s2, (-15.0, -5.6, 3.2), (-15.5, -2.0, 2.2), 30, dl=(0, 0.3, 0)); ctx.sfx("snore", s1 + 2, 0.5)
+    shf(hs, a, s1, ME_BED, 3.0, -35); ctx.sfx("rustle", a + 2, 0.6)
+    sh(hs, s1, s2, (-15.5, -6.5, 5.4), (-15.5, -1.8, 2.6), 26, dl=(0, 0.4, 0)); ctx.sfx("snore", s1 + 2, 0.5)
     pose(g4, s2, 3, waist=(0, 0, 0), ra=(-90, 0, 0)); react(g4, "annoyed", s2); react(h_me, "shock", s2 + 4)
-    sh(hs, s2, b, (-13.6, -5.2, 3.6), (-15.0, -2.4, 3.0), 26, pz=s2 + 3, amount=1.2); ctx.sfx("boing", s2 + 2, 0.5)
+    sh(hs, s2, b, (-17.8, -5.5, 4.6), (-15.3, -2.2, 2.8), 26, pz=s2 + 3, amount=1.2); ctx.sfx("boing", s2 + 2, 0.5)
     rest(g4, b, "ra")
 
     # ======================= 30-35: the birthday card, the truth =======================
     (a, s1), (_, b) = seg(30, "under")
     at(h_me, a, (-17.5, 3.0, 0), (-17.5, 7.4), ease=1); rest(h_me, a, "ll", "rl", "ll_knee", "rl_knee", "la", ease=1); react(h_me, "sad", a)
-    sh(hs, a, s1, (-15.0, -0.4, 4.6), (-17.5, 5.6, 4.2), 24, dl=(-0.4, 0.6, 0)); ctx.sfx("tick", a, 0.6)
+    sh(hs, a, s1, (-14.6, 4.4, 4.8), (-17.5, 3.0, 4.6), 26, dl=(-0.3, 0.2, 0)); ctx.sfx("tick", a, 0.6)
     sh(ins, s1, b, (0.3, -3.6, 1.4), (0, 0, 1.05), 28, dl=(0, 1.0, 0), cap="auto"); ctx.sfx("rustle", s1 + 2, 0.6)
     a, b = L(31); ctx.music(a, "paused")
     sh(ins, a, b, (8.0, -4.2, 1.3), (8, 0, 1.0), 34, dl=(0, 1.4, 0), cap="auto")
     (a, s1), (_, b) = seg(32, "every")
     react(h_me, "cry", a, L(34)[0])
-    sh(hs, a, s1, (-16.6, 4.8, 4.8), (-17.5, 3.0, 4.8), 36, dl=(0.1, -0.3, 0)); ctx.sfx("sad", a + 4, 0.35)
+    sh(hs, a, s1, (-16.4, 5.4, 4.8), (-17.5, 3.0, 4.7), 30, dl=(0.1, -0.3, 0)); ctx.sfx("sad", a + 4, 0.35)
     age(hs, s1, "g80"); at(hg["g80"], s1, (5.0, 3.2, 0), 0, ease=1); sit(hg["g80"], s1, 1.5, (5.0, 3.2), 0, ease=1); react(hg["g80"], "sad", s1, b + 6)
     sh(hs, s1, b, (5.0, -1.6, 4.0), (5.0, 3.2, 4.2), 30, dl=(0, 0.5, 0), look="flashback")
     (a, s1), (_, b) = seg(33, ("he", 2))
@@ -435,26 +461,26 @@ def build(ctx):
     # 34: "I went to his room. He was coloring. Inside the lines. Very carefully."
     (a, s1), (_, s2), (_, b) = seg(34, "he", "inside")
     at(h_me, a, (-11.5, -3.6, 0), (-15, -2.6), ease=1); react(h_me, "worried", a)
-    sh(hs, a, s1, (-7.0, -6.0, 4.4), (-12.5, -3.0, 4.0), 22, dl=(-0.6, 0.4, 0)); ctx.sfx("step", a + 3, 0.6)
-    sh(hs, s1, s2, (-15.0, -5.2, 3.0), (-15.0, -3.2, 1.9), 30, dl=(0, 0.2, 0))
-    sh(hs, s2, b, (-15.0, -3.9, 3.2), (-15.0, -3.6, 1.86), 34, dl=(0, 0.1, -0.2), cap="auto"); ctx.sfx("rustle", s2 + 2, 0.4)
+    sh(hs, a, s1, (-14.0, -6.4, 4.6), (-11.5, -3.6, 4.4), 24, dl=(0.2, 0.2, 0)); ctx.sfx("step", a + 3, 0.6)
+    sh(hs, s1, s2, (-15.0, -6.0, 4.8), (-15.0, -3.0, 2.6), 28, dl=(0, 0.3, 0))
+    shf(hs, s2, b, G4_COLOR, 2.0, 0, lens=30); ctx.sfx("rustle", s2 + 2, 0.4)
     # 35: "Grandpa, I don't need you young..."
     (a, s1), (_, b) = seg(35, ("i", 2))
     sit(h_me, a, 1.8, (-13.4, -3.0), (-15, -2.6), ease=1); react(h_me, "sad", a); kit.speak(h_me, 35, 1.0)
-    sh(hs, a, s1, (-14.6, -5.4, 4.0), (-13.4, -3.0, 4.6), 30, dl=(0, 0.3, 0))
+    shf(hs, a, s1, ME_SIT_BED, 2.8, 30)
     react(h_me, "smile", s1); react(g4, "worried", s1)
-    sh(hs, s1, b, (-13.8, -5.6, 3.4), (-14.6, -2.8, 3.2), 28, dl=(0.2, 0.3, 0))
+    sh(hs, s1, b, (-14.2, -6.8, 4.6), (-14.2, -2.8, 3.6), 24, dl=(0, 0.4, 0))
 
     # ======================= 36-41: "Like what?", Spit, laughing him old again =======================
     a, b = L(36); react(g4, "confused", a); kit.speak(g4, 36)
-    sh(hs, a, b, (-14.2, -4.4, 2.8), (-15.0, -2.6, 2.6), 30, pz=a + 2, amount=1.15)
+    shf(hs, a, b, G4_COLOR, 2.2, 0, pz=a + 2, amount=1.15)
     (a, s1), (_, s2), (_, b) = seg(37, ("how", 1), "that")
     react(h_me, "happy", a); kit.speak(h_me, 37, 0.6)
-    sh(hs, a, s1, (-13.0, -5.4, 4.6), (-13.4, -3.0, 4.6), 30, dl=(0.1, 0.3, 0)); ctx.sfx("splash", a + 2, 0.4)
-    sh(hs, s1, s2, (-12.4, -4.6, 4.4), (-13.4, -3.0, 4.6), 34, pz=s1 + 2, amount=1.1)
+    shf(hs, a, s1, ME_SIT_BED, 2.6, 35); ctx.sfx("splash", a + 2, 0.4)
+    shf(hs, s1, s2, ME_SIT_BED, 2.2, 15, pz=s1 + 2, amount=1.1)
     sh(ins, s2, b, (40.2, -2.6, 2.4), (40, 0, 0.0), 30, dl=(0, 0.8, -0.3), cap="auto"); ctx.sfx("slap", s2 + 3, 0.8); ctx.sfx("slap", s2 + 8, 0.6)
     (a, s1), (_, b) = seg(38, "then")
-    react(g4, "blank", a); sh(hs, a, s1, (-14.8, -4.0, 2.8), (-15.0, -2.6, 2.6), 40, dl=(0, 0.2, 0)); ctx.sfx("tick", a, 0.6)
+    react(g4, "blank", a); shf(hs, a, s1, G4_COLOR, 2.4, -15, lens=30); ctx.sfx("tick", a, 0.6)
     react(g4, "determined", s1)
     K._key(g4["root"], "location", s1, (-15.0, -2.6, 1.8 - 2.0 * 0.5 + 0.45 * 0.5), 1); K._key(g4["root"], "location", s1 + 6, (-14.0, -4.2, 1.6)); K._key(g4["root"], "location", s1 + 12, (-13.0, -5.0, 0))
     rest(g4, s1, "ll", "rl", "ll_knee", "rl_knee", "ra", ease=3); pose(g4, s1 + 2, 3, ra=(-160, 0, 0), la=(-160, 0, 0)); rest(g4, s1 + 14, "ra", "la", ease=4)
@@ -462,7 +488,7 @@ def build(ctx):
     a, b = L(39); at(g4, a, (-12.6, -5.4, 0), (-13.4, -3.0), ease=1); react(g4, "smug", a); kit.speak(g4, 39)
     deck = prim("box", (0.5, 0.7, 0.3), (0, 0, 0), mat((40, 80, 170), 0.5)); hold(g4, deck, "ra", (0, -0.3, 0.1)); show_between(deck, a, b)
     pose(g4, a, 3, ra=(-100, 0, 0))
-    sh(hs, a, b, (-12.0, -7.6, 2.2), (-12.6, -5.4, 2.3), 26, pz=wf(39, "lose"), amount=1.3); ctx.sfx("ding", wf(39, "lose"), 0.5)
+    shf(hs, a, b, G4_FLOOR, 2.2, -30, pz=wf(39, "lose"), amount=1.3); ctx.sfx("ding", wf(39, "lose"), 0.5)
     rest(g4, b, "ra")
     # 40: "We played until midnight. I lost forty times. I laughed every single time."
     (a, s1), (_, s2), (_, b) = seg(40, "i", ("i", 1))
@@ -485,9 +511,9 @@ def build(ctx):
     sh(hs, a, s1, (1.6, -3.0, 4.6), (2, -6.0, 4.6), 28, dl=(0, -0.3, 0)); ctx.sfx("giggle", a + 2, 0.4)
     for f, k, z in ((s1, "g10", 1.58), (s2, "g20", 1.58), (s3, "g70", 1.58), (s3 + (b - s3) // 2, "g80b", 1.58)):
         age(hs, f, k); sit(hg[k], f, z, (2, -1.7), 0, ease=1); react(hg[k], "laugh", f); poof(f, 0.6)
-    sh(hs, s1, s2, (2.2, -6.6, 4.4), (2, -1.7, 3.8), 26, pz=s1 + 2, amount=1.15)
-    sh(hs, s2, s3, (2.6, -6.4, 4.8), (2, -1.7, 4.6), 26, pz=s2 + 2, amount=1.15)
-    sh(hs, s3, b, (2.0, -6.6, 4.8), (2, -1.7, 4.6), 24, dl=(0, 0.5, 0))
+    sh(hs, s1, s2, (5.6, -3.8, 4.4), (2, -1.7, 3.9), 24, pz=s1 + 2, amount=1.15)
+    sh(hs, s2, s3, (-1.6, -3.6, 4.6), (2, -1.7, 4.3), 24, pz=s2 + 2, amount=1.15)
+    sh(hs, s3, b, (5.0, -4.4, 4.8), (2, -1.7, 4.4), 22, dl=(-0.4, 0.4, 0))
     ctx.music(b - 6, "normal")
 
     # ======================= 42-45: back to eighty, fishing, rocks, best summer =======================
@@ -505,20 +531,20 @@ def build(ctx):
     hold(yg80, rodg, "ra", (0, -0.1, 0), (-30, 0, 0)); hold(y_me, rodm, "ra", (0, -0.1, 0), (-30, 0, 0))
     pose(yg80, a, 1, ra=(-70, 0, 0)); pose(y_me, a, 1, ra=(-70, 0, 0)); react(yg80, "smile", a); react(y_me, "happy", a)
     sh(yd, a, s1, (4.5, 55.5, 3.4), (0, 51, 2.8), 22, dl=(-0.6, -0.4, 0)); ctx.sfx("splash", a + 4, 0.5)
-    K._key(bt, "location", s1, (0, 55, -1.0), 1); K._key(bt, "location", s1 + 10, (0, 53.5, 3.5))
+    K._key(bt, "location", s1, (1.5, 55, -1.0), 1); K._key(bt, "location", s1 + 10, (1.5, 53.5, 3.5))
     pose(y_me, s1, 3, ra=(-150, 0, 0)); pose(yg80, s1 + 4, 3, ra=(-150, 0, 0)); react(y_me, "starstruck", s1); react(yg80, "starstruck", s1 + 4)
-    sh(yd, s1, s2, (0, 47.5, 2.4), (0, 53.5, 3.2), 24, pz=s1 + 10, amount=1.2); ctx.sfx("splash", s1 + 2, 0.7); ctx.sfx("boing", s1 + 10, 0.5)
+    sh(yd, s1, s2, (4.0, 54.0, 2.8), (0.6, 53.5, 3.0), 24, pz=s1 + 10, amount=1.2); ctx.sfx("splash", s1 + 2, 0.7); ctx.sfx("boing", s1 + 10, 0.5)
     react(y_me, "angry", s2, b + 6); react(yg80, "angry", s2 + 4, b + 6); turn(y_me, s2, (-1, 51), 4); turn(yg80, s2, (1, 51), 4)
     kit.speak(y_me, 43, 1.0, s2, b); kit.speak(yg80, 43, 1.0, s2 + 6, b)
-    sh(yd, s2, b, (0, 55.5, 4.6), (0, 51, 4.0), 24, dl=(0, -0.6, 0))
+    sh(yd, s2, b, (-2.4, 55.0, 4.2), (0, 51, 3.7), 24, dl=(0.2, -0.4, 0))
     # 44: rock collection
     (a, s1), (_, b) = seg(44, "i")
     age(hs, a, "g80b"); at(g80, a, (9.0, 6.2, 0), (-1, 4), ease=1); pose(g80, a, 1, waist=(14, 0, 0), ra=(-80, 0, -10)); react(g80, "happy", a)
     at(h_me, a, (6.8, 4.2, 0), (10.5, 8.5), ease=1); rest(h_me, a, "ll", "rl", "ll_knee", "rl_knee", "la", "ra", ease=1); react(h_me, "smile", a)
-    sh(hs, a, s1, (7.4, 1.6, 4.4), (9.6, 7.0, 4.2), 24, dl=(0.3, 0.3, 0)); ctx.sfx("pop", a + 2, 0.4)
+    shf(hs, a, s1, G80B_SHELF, 2.8, -20); ctx.sfx("pop", a + 2, 0.4)
     rk2 = prim("ball", (0.45, 0.4, 0.3), (0, 0, 0), mat((140, 140, 140), 0.8)); hold(h_me, rk2, "ra", (0, -0.3, 0.1)); show_between(rk2, s1, b)
     pose(h_me, s1, 3, ra=(-90, 0, 0)); react(h_me, "love", s1)
-    sh(hs, s1, b, (8.4, 5.6, 4.8), (6.8, 4.2, 4.7), 30, dl=(0.1, 0.2, 0)); ctx.sfx("sparkle", s1 + 2, 0.5)
+    shf(hs, s1, b, ME_SHELF, 2.6, 25); ctx.sfx("sparkle", s1 + 2, 0.5)
     # 45: "Best summer of my life. I didn't say I was bored once."
     a, b = L(45); react(y_me, "relieved", a); react(yg80, "smile", a)
     sit(y_me, a, 0.62, (1.0, 51.0), 180, ease=1); sit(yg80, a, 0.62, (-1.0, 51.0), 180, ease=1)
@@ -531,11 +557,11 @@ def build(ctx):
     react(c_me, "sleepy", a); sh(cl, a, s1, (1.4, 1.6, 4.6), (2.2, -1.0, 4.6), 30, dl=(0, 0.4, 0)); ctx.sfx("crickets", a + 2, 0.5)
     react(c_me, "nervous", s1)
     for k in range(5): ctx.sfx("pop", s1 + 3 + k * 4, 0.35)
-    sh(cl, s1, b, (2.0, 0.4, 4.8), (2.2, -1.0, 4.7), 36, pz=s1 + 4, amount=1.25)
+    shf(cl, s1, b, ME_C, 2.2, 0, lens=30, pz=s1 + 4, amount=1.25)
     (a, s1), (_, b) = seg(48, "he's")
     react(c_g10, "happy", a); pose(c_g10, a + 4, 4, ra=(-175, 0, 0)); react(c_me, "annoyed", s1)
-    sh(cl, a, s1, (-0.4, 3.4, 4.0), (-1.0, -1.0, 3.6), 24, dl=(0, -0.4, 0)); ctx.sfx("ding", a + 6, 0.4)
-    sh(cl, s1, b, (0.0, 1.0, 4.2), (0.0, -1.0, 4.0), 22, dl=(0, -0.3, 0))
+    shf(cl, a, s1, G10_C, 3.0, -25); ctx.sfx("ding", a + 6, 0.4)
+    sh(cl, s1, b, (0.0, 3.0, 4.6), (0.0, -1.0, 4.0), 22, dl=(0, -0.4, 0))
     a, b = L(49); react(teacher, "annoyed", a); kit.speak(teacher, 49); pose(teacher, a, 4, ra=(-95, 0, 20))
     sh(cl, a, b, (3.0, 0.8, 4.8), (4.0, 3.5, 4.7), 28, pz=a + 3, amount=1.15)
     a, b = L(50); react(c_g10, "smug", a); kit.speak(c_g10, 50)
