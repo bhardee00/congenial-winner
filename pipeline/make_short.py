@@ -168,6 +168,9 @@ def main():
     fetch_models(story)
     json.dump(captions(timed), open(OUT + "words.json", "w"))
     images()
+    extra = os.path.join(HERE, "stories", story["module"] + "_images.py")  # story-specific pictures (no bpy needed)
+    if os.path.exists(extra):
+        sys.path.insert(0, os.path.dirname(extra)); __import__(story["module"] + "_images").make(OUT, font)
     sounds(story, timed)
     args = ["blender", "-b", "--python-exit-code", "1", "-P", HERE + "/build_short.py", "--", story_path] + [a for a in sys.argv[2:] if a.startswith("--")]
     subprocess.run(args, check=True)

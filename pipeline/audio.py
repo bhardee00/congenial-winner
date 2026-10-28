@@ -282,6 +282,73 @@ def sfx_handshake():  # rubbery pumping
     return out
 
 
+def sfx_squawk():  # parrot: harsh rising-falling screech
+    d = 0.42; t = t_(d); f = 1150 + 900 * np.sin(np.pi * t / d) ** 2 + 120 * np.sin(2 * np.pi * 38 * t)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    x = np.sign(np.sin(ph)) * 0.5 + np.sin(2 * ph) * 0.4 + lp(noise(d), 4000) * 0.35
+    return hp(lp(x, 5000), 600) * env(d, 0.01, 0.12) * 0.9
+
+
+def sfx_heartbeat():  # lub-dub x3
+    out = np.zeros(int(2.6 * SR))
+    for k in range(3):
+        for at, g in ((0, 1.0), (0.22, 0.7)):
+            d = 0.16; place(out, lp(tone(55, d) + 0.5 * tone(110, d), 300) * env(d, 0.004, shape=4) * 0.8 * g, k * 0.85 + at)
+    return out
+
+
+def sfx_whale():  # long gliding whale song
+    d = 2.2; t = t_(d); f = 260 + 140 * np.sin(2 * np.pi * 0.45 * t) + 60 * np.sin(2 * np.pi * 1.3 * t)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    return lp(np.sin(ph) + 0.3 * np.sin(2 * ph), 1200) * env(d, 0.35, 0.6) * 0.7
+
+
+def sfx_sing():  # parrot whistling a little tune along
+    out = np.zeros(int(1.8 * SR))
+    for i, n in enumerate((79, 83, 86, 84, 83, 79, 81, 83)):
+        d = 0.2; t = t_(d); f = note(n) * (1 + 0.02 * np.sin(2 * np.pi * 7 * t))
+        place(out, np.sin(2 * np.pi * np.cumsum(f) / SR) * env(d, 0.01, 0.05) * 0.6, i * 0.2)
+    return out
+
+
+def sfx_doorbell():  # ding-dong
+    out = np.zeros(int(1.6 * SR))
+    for at, n in ((0, 76), (0.45, 72)):
+        d = 1.0; x = tone(note(n), d) + 0.4 * tone(note(n) * 2.76, d) + 0.2 * tone(note(n) * 5.4, d)
+        place(out, x * env(d, 0.003, shape=2.5) * 0.6, at)
+    return out
+
+
+def sfx_gasp():  # crowd inhale
+    d = 0.7; x = hp(lp(noise(d), 3500), 400) * env(d, 0.25, 0.25)
+    return x * np.linspace(0.6, 1.1, len(x)) * 0.8
+
+
+def sfx_snore():
+    out = np.zeros(int(2.4 * SR))
+    for k in range(2):
+        d = 0.8; t = t_(d); x = lp(noise(d), 250) * (1 + np.sign(np.sin(2 * np.pi * 34 * t))) * 0.5
+        place(out, x * env(d, 0.25, 0.3) * 2.0, k * 1.2)
+    return out
+
+
+def sfx_rustle():  # paper
+    d = 0.5; x = hp(noise(d), 1800) * (0.4 + 0.6 * (rng.uniform(0, 1, int(d * SR)) > 0.7))
+    return lp(x, 7000) * env(d, 0.02, 0.15) * 0.6
+
+
+def sfx_ahem():  # throat clear
+    d = 0.35; t = t_(d); x = lp(noise(d), 900) * (1 + 0.8 * np.sin(2 * np.pi * 120 * t))
+    out = np.zeros(int(0.8 * SR)); place(out, x * env(d, 0.02, 0.1), 0); place(out, x[: int(0.25 * SR)] * env(0.25, 0.01, 0.08), 0.42)
+    return out * 0.9
+
+
+def sfx_freeze():  # icy shimmer for the freezer
+    d = 1.0; out = lp(hp(noise(d), 3000), 9000) * env(d, 0.05, 0.6) * 0.35
+    for n in (88, 91, 95): out += tone(note(n), d) * env(d, 0.01, shape=3) * 0.15
+    return out
+
+
 SFX = {k[4:]: v for k, v in globals().items() if k.startswith("sfx_")}
 
 

@@ -62,7 +62,7 @@ print("SAVED", out_blend, "frames", S.total, "shots", len(S.shots))
 if preview:
     pv = D + "short/preview/"; os.makedirs(pv, exist_ok=True)
     m = S.master; m.render.resolution_percentage = 30
-    for sc in bpy.data.scenes: sc.eevee.taa_render_samples = 8
+    for sc in bpy.data.scenes: sc.eevee.taa_render_samples = 8; sc.eevee.use_motion_blur = False  # preview only (not saved)
     m.render.image_settings.file_format = 'PNG'
     frames = [int((a + b) / 2) for _, _, a, b, _ in sorted(S.shots, key=lambda s: s[2])]
     pick = [x for x in args if x.startswith("--frames=")]
