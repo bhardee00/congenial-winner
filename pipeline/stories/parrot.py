@@ -291,7 +291,7 @@ def build(ctx):
 
     # ======================= 3-9: a week earlier, the will =======================
     a3, b3 = L(3)
-    S.flash(a3, 6); ctx.sfx("whoosh", a3, 0.9)
+    S.flash(a3, 6); ctx.sfx("poof", a3, 0.9)
     toys.set_time(clk, a3, 9, 0)
     (a, s1), (_, s2), (_, s3), (_, b) = seg(3, "my", "one", "if")
     react(me, "smile", a); turn(me, a, (8, 0.6), 1); pose(law, a, 4, la=(-80, 0, 10))
@@ -336,7 +336,7 @@ def build(ctx):
     (a, s1), (_, b) = seg(10, "i")
     clock_insert(a, s1)
     crk = empty("cracker"); prim("box", (0.45, 0.08, 0.45), (0, 0, 0), mat((230, 175, 90), 0.8), parent=crk, bevel=0.03)
-    hold(me, crk, "ra", (0, -0.2, 0.15), (90, 0, 0)); show_between(crk, s1, L(11)[0] + 6)
+    hold(me, crk, "ra", (0, -0.2, 0.15), (90, 0, 0)); show_between(crk, s1, L(11)[0] + 6); ctx.sfx("pop", s1 + 2, 0.7)
     at(me, s1, (0.2, 0.0, 0), 180, ease=1); pose(me, s1, 6, ra=(-95, 0, 0)); react(me, "smile", s1)
     sh(hs, s1, b, (3.8, -0.6, 4.8), (0.1, 1.5, 5.0), 26, dl=(-0.4, 0.3, 0))
     # 11: "Thank you, loser!"
@@ -358,7 +358,7 @@ def build(ctx):
     bl = toys.blanket(); bl.location = (0, 3, 0)
     K._key(bl, "location", a + 4, (0, 1.0, 5.5), 1); K._key(bl, "location", a + 12, (0, 3, 0))
     bl.scale = (0.3, 0.3, 0.3); bl.keyframe_insert("scale", frame=a + 4); bl.scale = (1, 1, 1); bl.keyframe_insert("scale", frame=a + 12)
-    show_between(bl, a + 4, L(18)[0] + 2); ctx.sfx("whoosh", a + 4, 0.8)
+    show_between(bl, a + 4, L(18)[0] + 2); ctx.sfx("whoosh", a + 4, 0.6); ctx.sfx("poof", a + 12, 0.8)
     pose(me, a, 4, ra=(-150, 0, 0), la=(-150, 0, 0)); pose(me, a + 12, 6, ra=(-60, 0, 0), la=(-60, 0, 0)); react(me, "determined", a)
     sh(hs, a, s1, (4.4, -1.2, 4.4), (0.1, 1.8, 5.2), 22, dl=(-0.4, 0.4, 0))
     react(me, "smug", s1); rest(me, s1, "ra", "la"); turn(me, s1, (1.9, 2.3), 8)
@@ -416,13 +416,13 @@ def build(ctx):
     for w, sd in cap["wings"]: w.rotation_euler = (0, 0, 0); w.keyframe_insert("rotation_euler", frame=s2 + 10)
     sh(hs, a, s1, (1.7, 1.5, 5.6), (0, 3, 5.4), 28, dl=(-0.2, 0.3, 0))
     sh(hs, s1, s2, (-1.7, 1.5, 5.6), (0, 3, 5.4), 30, cap="top"); ctx.overlays.append((A + "censored.png", s1 + 3, s2, 7, 0, 60, 1.1))
-    ctx.sfx("buzz", s1 + 3, 0.6); react(me, "shock", s2); react(law, "disgusted", s2)
+    ctx.sfx("pop", s1 + 3, 0.8); ctx.sfx("buzz", s1 + 5, 0.4); react(me, "shock", s2); react(law, "disgusted", s2)
     sh(hs, s2, b, (1.9, 2.3, 4.9), (0.2, 0.0, 4.7), 26, dl=(-0.2, -0.2, 0))
     # 24: "By hour twelve, I was desperate. I put headphones on him and played whale sounds."
     (a, s1), (_, s2), (_, b) = seg(24, "i", "and")
     clock_insert(a, s1)
     react(me, "worried", s1); sh(hs, s1, s1 + max(6, (s2 - s1) // 2), (1.9, 2.3, 4.9), (0.2, 0.0, 4.7), 28, dl=(-0.1, -0.2, 0))
-    hp_ = toys.headphones(); hp_.parent = cap["head"]; hp_.location = (0, 0, 0.3); hp_.scale = (1.15, 1.15, 1.15); show_between(hp_, s2 - 6)
+    hp_ = toys.headphones(); hp_.parent = cap["head"]; hp_.location = (0, 0, 0.3); hp_.scale = (1.15, 1.15, 1.15); show_between(hp_, s2 - 6); ctx.sfx("poof", s2 - 6, 0.6)
     pose(me, s1 + max(6, (s2 - s1) // 2), 4, ra=(-130, 0, 0))
     sh(hs, s1 + max(6, (s2 - s1) // 2), s2, (1.7, 1.5, 5.8), (0, 3, 5.8), 30, dl=(-0.2, 0.3, 0))
     wp = toys.card(A + "phone_whale.png", 0.5, 0.9); hold(me, wp, "la", (0, -0.25, 0.1), (80, 0, 0)); show_between(wp, s2, L(25)[0])
@@ -444,7 +444,7 @@ def build(ctx):
     # 27: "The video got a million views. The lawyer said singing counts as words."
     (a, s1), (_, b) = seg(27, "lawyer")
     sh(hs, a, s1, (6, 8.0, 4.2), (6, 10.6, 4.6), 30, cap="top"); ctx.overlays.append((A + "viral.png", a + 2, s1, 7, 0, 0, 1.0))
-    ctx.sfx("whoosh", a + 1, 0.6); ctx.sfx("coin", wf(27, "million"), 0.7)
+    ctx.sfx("pop", a + 2, 0.8); ctx.sfx("coin", wf(27, "million"), 0.7)
     react(law, "annoyed", s1); talk_nod(law, s1, b)
     sh(hs, s1, b, (4.0, -2.2, 4.3), (8.1, 0.6, 4.3), 26, dl=(0.3, 0.3, 0))
     # 28: "Starting over. Also, can I get an autograph?"
@@ -476,6 +476,7 @@ def build(ctx):
     # ======================= 33-41: the final staring contest =======================
     a33, b33 = L(33)
     for o in (perch, tbl): vis(o, a33, True)
+    ctx.sfx("pop", a33 + 1, 0.6)
     cap_root = cap["root"]; K._key(cap_root, "location", a33, (0, 1.2, 3.2), 1)  # Captain on the T-perch on the table
     sit(me, a33, 1.58, (0, -1.4), 180, ease=1)
     seat = toys.chair(0, -1.5, 180)
@@ -543,7 +544,7 @@ def build(ctx):
     toys.flap({"wings": cap["wings"]}, s1, land, 6, 70); ctx.sfx("flap", s1, 0.9)
     sh(hs, s1, s2, (-6, -7.5, 2.8), (-2, -1.5, 5.0), 20, dt=(-2.4, -1.6, 1.0))
     react(me, "big_eyes", land); react(der, "shock", land)
-    c = sh(hs, s2, b, (1.6, 1.0, 5.0), (0.3, -1.4, 5.0), 26, dl=(-0.2, 0.3, 0)); ctx.sfx("pop", land, 0.6)
+    c = sh(hs, s2, b, (1.6, 1.0, 5.0), (0.3, -1.4, 5.0), 26, dl=(-0.2, 0.3, 0)); ctx.sfx("poof", land, 0.7)
     # 41: "The clock hit twenty-four hours. Silence."
     (a, s1), (_, b) = seg(41, "silence")
     clock_insert(a, s1, 0.9); ctx.sfx("bell", wf(41, "clock") + 4, 0.6)
@@ -601,7 +602,7 @@ def build(ctx):
     sh(hs, s1, b, (0.8, 1.0, 4.8), (0.2, -1.4, 4.9), 28, pz=wf(51, "captain") + 2, amount=1.25); ctx.sfx("tweet", wf(51, "captain") + 4, 0.6)
 
     # ======================= 52-54: back to the funeral =======================
-    a52, b52 = L(52); S.flash(a52, 6); ctx.sfx("whoosh", a52, 0.9)
+    a52, b52 = L(52); S.flash(a52, 6); ctx.sfx("poof", a52, 0.9)
     for m in mourners + [f_law, f_der]: react(m, "smile", a52)
     react(f_me, "blank", a52)
     f_cap["root"].keyframe_insert("location", frame=a52)

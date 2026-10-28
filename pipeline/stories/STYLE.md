@@ -28,6 +28,8 @@ pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 - Music: "Lurking Behind" by The Fly Guy Five (royalty free), quiet under the voice and ducked while anyone talks.
   Story json: `"music_file": "assets/music/fly_guy_five_lurking_behind.mp3", "music_credit": "Lurking Behind - The Fly Guy Five"`
   (the alternative is `fly_guy_five_hide_and_sneak.mp3`). Synthesized SFX (audio.py) on every action.
+- The user's own sound effects live in assets/sfx/<name>.wav|mp3. They replace a synthesized effect with the same
+  name, or add a new name, in every short (`ctx.sfx("poof", f)`). Current: poof (appear/disappear, time jumps, landings), pop (props and on-screen graphics appearing).
 - Story type: a mix of comedy (deal / three backfiring attempts) and emotional mystery (strange rule, clues, twist).
 - Free assets only. Credit any Creator Store model in `models` (written to `render/<slug>_credits.txt`).
 

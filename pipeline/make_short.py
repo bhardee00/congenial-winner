@@ -87,6 +87,11 @@ def sounds(story, timed):
     sys.path.insert(0, HERE)
     import audio
     audio.make_sfx(OUT + "sfx")
+    # the user's own sound effects (assets/sfx/<name>.wav|mp3) replace or add to the synthesized ones by name
+    import glob
+    for f in sorted(glob.glob(os.path.join(REPO, "assets", "sfx", "*"))):
+        name = os.path.splitext(os.path.basename(f))[0]
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f, "-ac", "1", "-ar", str(audio.SR), OUT + f"sfx/{name}.wav"], check=True)
     if story.get("music_file"):  # your own track; muffled and quieter while the world is paused
         src = os.path.join(REPO, story["music_file"])
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-ac", "1", "-ar", str(audio.SR), OUT + "music_normal.wav"], check=True)
