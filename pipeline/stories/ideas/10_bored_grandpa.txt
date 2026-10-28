@@ -1,24 +1,37 @@
 Me|My eighty-year-old grandpa sat down next to me in math class. He was ten.
 Teacher|New student? What's your name?
 Grandpa|Harold. I have a pension.
-Me|You see, two weeks earlier, my mom dropped me off at Grandpa's house for the summer.
+Me|You see, two weeks earlier, my mom dropped me off at Grandpa's house for the whole summer.
 Me|No Wi-Fi. No video games. Just a cat named Doug and a clock that ticked really loud.
+Grandpa|Want to see my rock collection? It's mostly gravel.
 Me|On day one, I said, "I'm so bored." Grandpa's back cracked. Then it uncracked.
 Me|He stood up straight for the first time in fifteen years. His gray hair turned brown. He was seventy.
 Me|The next day, I said it again. He was sixty. He did a cartwheel. He hadn't done one since 1974.
 Me|That's when I figured out the rule. Every time I say "I'm bored," Grandpa gets ten years younger.
-Me|At first, it was awesome. At forty, he beat me at basketball. At thirty, he bought a motorcycle.
+Me|At first, it was awesome.
+Me|At fifty, he signed up for a marathon. He won. He was the only one there.
+Me|At forty, he beat me at basketball. Then he dunked on the mailman.
+Me|At thirty, he bought a motorcycle. And a leather jacket. And sunglasses he wore inside.
+Grandpa|Kid, call me Hal.
+Me|At twenty, he asked for the Wi-Fi password. There was no Wi-Fi. So he installed Wi-Fi.
 Me|Then I said it twice in one afternoon. He was ten.
 Mom|Why is a child answering Grandpa's phone?
+Me|I said, "Wrong number," and hung up. That's when I knew I had a problem.
 Me|So I made a plan. Never say "I'm bored" again.
 Me|Attempt one. I said, "I'm unentertained." He lost five years. Close enough counts.
-Me|Attempt two. I yawned. His front teeth fell out. Baby teeth.
-Me|Attempt three. I stayed super busy. I cleaned the garage, mowed the lawn, and alphabetized his spices.
+Me|Attempt two. I made a bored jar. Every time I almost said it, I put in a dollar. I went broke by lunch.
+Me|Attempt three. I yawned. His front teeth fell out. Baby teeth.
+Me|Attempt four. I stayed super busy. I cleaned the garage, mowed the lawn, and alphabetized his spices.
 Me|Then I sighed. Just once. He started teething.
-Me|Grandpa was four years old. He wanted juice boxes and naps. He bit the mailman.
+Me|Grandpa was four years old.
+Grandpa|Juice box. Now.
+Me|He wanted naps. He wanted cartoons. He bit the mailman.
+Mailman|Ow! Not again!
+Me|I had to read him a bedtime story. He fell asleep on page one. Then he woke up and corrected my reading.
 Me|That night, I found his old birthday card on the fridge. Under "my wish," he had written something.
 Me|"I wish I wasn't too old for my grandson."
 Me|That's when it hit me. Every time I said I was bored at his house, he thought I meant him.
+Me|He thought he was the boring part. He thought he had to change.
 Me|I went to his room. He was coloring. Inside the lines. Very carefully.
 Me|I said, "Grandpa, I don't need you young. I need you to teach me the stuff you know."
 Grandpa|Like what?
@@ -28,8 +41,11 @@ Grandpa|It's called Spit. And you're gonna lose.
 Me|We played until midnight. I lost forty times. I laughed every single time.
 Me|And every time I laughed, he got older. Ten years. Twenty. Fifty. All the way back to eighty.
 Me|His creaky back. His loud clock. His cat named Doug.
+Me|The next morning, he taught me to fish. I caught a boot. He caught the same boot. We argued about it for an hour.
+Me|Then he showed me his rock collection. It's still mostly gravel. I loved it anyway.
 Me|Best summer of my life. I didn't say I was bored once.
 Me|Which brings us back to math class.
 Me|It was a really boring class. I said it seven times.
-Me|Now Grandpa is ten again. And he's better at math than me.
+Me|Now Grandpa is ten again. He sits next to me. He's better at math than me.
 Teacher|Harold, please stop correcting the textbook.
+Grandpa|It's wrong. I was there when they wrote it.

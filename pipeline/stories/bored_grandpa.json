@@ -17,11 +17,15 @@
   ],
   [
    "narrator",
-   "You see, two weeks earlier, my mom dropped me off at Grandpa's house for the summer."
+   "You see, two weeks earlier, my mom dropped me off at Grandpa's house for the whole summer."
   ],
   [
    "narrator",
    "No Wi-Fi. No video games. Just a cat named Doug and a clock that ticked really loud."
+  ],
+  [
+   "grandpa",
+   "Want to see my rock collection? It's mostly gravel."
   ],
   [
    "narrator",
@@ -41,7 +45,27 @@
   ],
   [
    "narrator",
-   "At first, it was awesome. At forty, he beat me at basketball. At thirty, he bought a motorcycle."
+   "At first, it was awesome."
+  ],
+  [
+   "narrator",
+   "At fifty, he signed up for a marathon. He won. He was the only one there."
+  ],
+  [
+   "narrator",
+   "At forty, he beat me at basketball. Then he dunked on the mailman."
+  ],
+  [
+   "narrator",
+   "At thirty, he bought a motorcycle. And a leather jacket. And sunglasses he wore inside."
+  ],
+  [
+   "grandpa",
+   "Kid, call me Hal."
+  ],
+  [
+   "narrator",
+   "At twenty, he asked for the Wi-Fi password. There was no Wi-Fi. So he installed Wi-Fi."
   ],
   [
    "narrator",
@@ -53,6 +77,10 @@
   ],
   [
    "narrator",
+   "I said, \"Wrong number,\" and hung up. That's when I knew I had a problem."
+  ],
+  [
+   "narrator",
    "So I made a plan. Never say \"I'm bored\" again."
   ],
   [
@@ -61,11 +89,15 @@
   ],
   [
    "narrator",
-   "Attempt two. I yawned. His front teeth fell out. Baby teeth."
+   "Attempt two. I made a bored jar. Every time I almost said it, I put in a dollar. I went broke by lunch."
   ],
   [
    "narrator",
-   "Attempt three. I stayed super busy. I cleaned the garage, mowed the lawn, and alphabetized his spices."
+   "Attempt three. I yawned. His front teeth fell out. Baby teeth."
+  ],
+  [
+   "narrator",
+   "Attempt four. I stayed super busy. I cleaned the garage, mowed the lawn, and alphabetized his spices."
   ],
   [
    "narrator",
@@ -73,7 +105,23 @@
   ],
   [
    "narrator",
-   "Grandpa was four years old. He wanted juice boxes and naps. He bit the mailman."
+   "Grandpa was four years old."
+  ],
+  [
+   "grandpa",
+   "Juice box. Now."
+  ],
+  [
+   "narrator",
+   "He wanted naps. He wanted cartoons. He bit the mailman."
+  ],
+  [
+   "mailman",
+   "Ow! Not again!"
+  ],
+  [
+   "narrator",
+   "I had to read him a bedtime story. He fell asleep on page one. Then he woke up and corrected my reading."
   ],
   [
    "narrator",
@@ -86,6 +134,10 @@
   [
    "narrator",
    "That's when it hit me. Every time I said I was bored at his house, he thought I meant him."
+  ],
+  [
+   "narrator",
+   "He thought he was the boring part. He thought he had to change."
   ],
   [
    "narrator",
@@ -125,6 +177,14 @@
   ],
   [
    "narrator",
+   "The next morning, he taught me to fish. I caught a boot. He caught the same boot. We argued about it for an hour."
+  ],
+  [
+   "narrator",
+   "Then he showed me his rock collection. It's still mostly gravel. I loved it anyway."
+  ],
+  [
+   "narrator",
    "Best summer of my life. I didn't say I was bored once."
   ],
   [
@@ -137,15 +197,23 @@
   ],
   [
    "narrator",
-   "Now Grandpa is ten again. And he's better at math than me."
+   "Now Grandpa is ten again. He sits next to me. He's better at math than me."
   ],
   [
    "teacher",
    "Harold, please stop correcting the textbook."
+  ],
+  [
+   "grandpa",
+   "It's wrong. I was there when they wrote it."
   ]
  ],
  "models": {},
  "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
  "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
- "synth_music": false
+ "synth_music": false,
+ "voice_speeds": {
+  "narrator": 1.6,
+  "others": 1.75
+ }
 }
