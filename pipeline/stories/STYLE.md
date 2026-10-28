@@ -12,6 +12,13 @@ pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 - Free assets only. Credit any Creator Store model in `models` (written to `render/<slug>_credits.txt`).
 
 ## Script
+Current target structure (from the user's reference transcript, ~570 words, dialogue-heavy):
+cold open mid-chaos → "You see, the day before…" → a deal with money on the line ("That's it?" "That's it.")
+→ "How hard could it be?" → attempt 1 backfires → the person paying pulls me aside → attempt 2 backfires bigger
+→ "One more. If not, you get nothing." → they "help" and make it worse → reveal ("Did you pay him?") and silence
+→ a sweet moment → "Thanks for the easiest $X of my life" → the cold-open gag happens again.
+Drafts: pipeline/stories/ideas/.
+
 - First-person narrator, short deadpan sentences, one absurd fact per line.
 - Hook in line 1 (the impossible thing happens in the first 3 seconds).
 - Escalating montage of places/attempts ("I tried everything." → rapid list).
