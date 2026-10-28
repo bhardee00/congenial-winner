@@ -1,16 +1,20 @@
 """Narration: reads work/lines.json (list of strings) and writes work/voice.wav + timed work/lines_timed.json,
 including when every word is spoken (for the captions).
-Voice: Kokoro am_adam at its natural pitch, sped up 1.3x from the 1.1 base.
+Voice: Kokoro am_adam (full-precision model, clearer than int8), gently sped up, pitched up to ~167 Hz with
+formants kept (so it doesn't go chipmunk), then EQ + compression for a crisp, upfront sound.
 Override with env SHORTS_VOICE / SHORTS_SPEED / SHORTS_PITCH / SHORTS_GAP."""
 import os, json, subprocess, numpy as np, soundfile as sf
 from kokoro_onnx import Kokoro
 W = os.environ.get('SHORTS_WORK', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'work')) + '/'
 VOICE = os.environ.get("SHORTS_VOICE", "am_adam")
-SPEED = float(os.environ.get("SHORTS_SPEED", 1.43))  # 1.1 x 1.3
-PITCH = float(os.environ.get("SHORTS_PITCH", 1.0))  # >1 raises pitch (formants shifted, like CapCut's slider)
-GAP = float(os.environ.get("SHORTS_GAP", 0.7))  # silence after each line, so the action can finish before the cut
+SPEED = float(os.environ.get("SHORTS_SPEED", 1.25))
+PITCH = float(os.environ.get("SHORTS_PITCH", 1.329))  # am_adam ~126 Hz -> ~167 Hz like the reference
+GAP = float(os.environ.get("SHORTS_GAP", 0.35))  # short breath after each line, brisk like the reference
+MODEL = W + "tts/kokoro-fp32.onnx" if os.path.exists(W + "tts/kokoro-fp32.onnx") else W + "tts/kokoro.onnx"
+CLEAR = ("highpass=f=90,equalizer=f=280:t=q:w=1.2:g=-3,equalizer=f=3500:t=q:w=1.0:g=4,equalizer=f=8000:t=q:w=1.0:g=2,"
+         "acompressor=threshold=-20dB:ratio=3:attack=5:release=60:makeup=2,loudnorm=I=-14:TP=-1.0")
 
-k = Kokoro(W + "tts/kokoro.onnx", W + "tts/voices.bin")
+k = Kokoro(MODEL, W + "tts/voices.bin")
 
 
 def say(text):
@@ -41,8 +45,8 @@ for x in lines:
 raw = W + "voice_raw.wav"
 sf.write(raw, np.concatenate(au), sr)
 # rubberband keeps the duration, so the line timings above stay valid
-pitch = f"rubberband=pitch={PITCH}:formant=shifted," if PITCH != 1.0 else ""
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", pitch + "loudnorm=I=-16:TP=-1.5",
+pitch = f"rubberband=pitch={PITCH}:formant=preserved:pitchq=quality:transients=crisp," if PITCH != 1.0 else ""
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", pitch + CLEAR,
                 "-ar", "48000", W + "voice.wav"], check=True)
 json.dump(out, open(W + "lines_timed.json", "w"), indent=1)
 print("narration seconds:", round(t, 2))
