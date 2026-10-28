@@ -35,7 +35,7 @@ def wall_mat(c, rough=0.8):
 
 
 def npc(ctx, name, look, loc, yaw=0):
-    a = blocky.build(ctx.D, name, look); at(a, 0, loc, yaw, ease=None); idle(a, ("head",), 0.03, 50); return a
+    a = blocky.build(ctx.D, name, look); at(a, 0, loc, yaw, ease=1); idle(a, ("head",), 0.03, 50); return a
 
 
 def glasses(av, c=(25, 25, 30), dark=False):
@@ -114,19 +114,19 @@ def build(ctx):
         toys.clouds(10, (-80, 50, 30), (80, 120, 50), 3, 7)
         cof = toys.coffin(0, 6); toys.easel(6, 7.2, A + "portrait.png", rot=-12); toys.podium(-6.5, 4.6)
         for x in (-3.4, 3.4): toys.flower_bush(x * 1.0, 8.0, 0.6)
-        f_me = blocky.build(ctx.D, "me_f"); idle(f_me); at(f_me, 0, (-6.5, 5.7, 0), 0, ease=None)
+        f_me = blocky.build(ctx.D, "me_f"); idle(f_me); at(f_me, 0, (-6.5, 5.7, 0), 0, ease=1)
         paper = toys.card(A + "will.png", 0.5, 0.65); hold(f_me, paper, "la", (0, -0.25, 0.1), (80, 0, 0)); pose(f_me, 0, None, la=(-60, 0, 10))
         rows = {}
         for r, y in enumerate((-2.5, -5.5, -8.5, -11.5)):
             for x in (-10.5, -7, -3.5, 3.5, 7, 10.5):
                 toys.chair(x, y, 180)
                 rows[(r, x)] = (x, y)
-        f_law = npc(ctx, "lawyer_f", LAWYER, (0, 0, 0)); glasses(f_law); tie(f_law); sit(f_law, 0, 1.58, (3.5, -2.5 + 0.1), 180, ease=None)
-        f_der = npc(ctx, "derek_f", DEREK, (0, 0, 0)); glasses(f_der, dark=True); sit(f_der, 0, 1.58, (-3.5, -2.4), 180, ease=None)
+        f_law = npc(ctx, "lawyer_f", LAWYER, (0, 0, 0)); glasses(f_law); tie(f_law); sit(f_law, 0, 1.58, (3.5, -2.5 + 0.1), 180, ease=1)
+        f_der = npc(ctx, "derek_f", DEREK, (0, 0, 0)); glasses(f_der, dark=True); sit(f_der, 0, 1.58, (-3.5, -2.4), 180, ease=1)
         mourners = []
         for k, ((r, x), (px, py)) in enumerate(sorted(rows.items())):
             if (r, x) in ((0, 3.5), (0, -3.5)): continue
-            m = npc(ctx, f"mourner{k}", MOURNERS[k % len(MOURNERS)], (0, 0, 0)); sit(m, 0, 1.58, (px, py + 0.1), 180, ease=None); mourners.append(m)
+            m = npc(ctx, f"mourner{k}", MOURNERS[k % len(MOURNERS)], (0, 0, 0)); sit(m, 0, 1.58, (px, py + 0.1), 180, ease=1); mourners.append(m)
         f_cap = toys.parrot("captain_f", 0.95)
     # ---- house: living room (cage), lawyer's armchair, kitchen (fridge), window, front door
     hs = Set("house", sky=(120, 185, 255), horizon=(215, 232, 255), sun=(50, 0, -38), sun_energy=4.2, sun_color=(255, 244, 228))
@@ -198,10 +198,10 @@ def build(ctx):
         rt2 = toys.router(); rt2.location = (5.0, 2.7, 3.2); prim("box", (3, 0.2, 2.5), (5.0, 3.1, 3.6), mat((255, 245, 200), 0.3, emit=0.5))
         for x in range(-30, 31, 12): toys.tree(x, 24, 1.1)
         toys.clouds(8, (-60, 40, 25), (60, 100, 45), 3, 6)
-        gp = npc(ctx, "grandpa", GRANDPA, (0, 0, 0)); glasses(gp); sit(gp, 0, 2.35, (-2.3, 1.7), 0, ease=None)
+        gp = npc(ctx, "grandpa", GRANDPA, (0, 0, 0)); glasses(gp); sit(gp, 0, 2.35, (-2.3, 1.7), 0, ease=1)
         kid = blocky.build(ctx.D, "me_young"); kid["root"].scale = (0.72, 0.72, 0.72); kid["scale"] = 0.72; idle(kid)
-        sit(kid, 0, 2.35, (-4.7, 1.7), 0, ease=None)
-        yder = npc(ctx, "derek_young", {**DEREK, "scale": 0.72}, (0, 0, 0)); sit(yder, 0, 0.8 + 0.1, (4.6, -0.5), 20, ease=None)
+        sit(kid, 0, 2.35, (-4.7, 1.7), 0, ease=1)
+        yder = npc(ctx, "derek_young", {**DEREK, "scale": 0.72}, (0, 0, 0)); sit(yder, 0, 0.8 + 0.1, (4.6, -0.5), 20, ease=1)
         yph = toys.phone(); hold(yder, yph, "ra", (0, -0.2, 0.1), (70, 0, 0)); pose(yder, 0, None, ra=(-80, 0, 10), head=(-12, 0, 0))
         p_cap = toys.parrot("captain_p", 0.55); p_cap["root"].parent = gp["waist"]; p_cap["root"].location = (0.6, 0.05, 2.0)
     # ---- 23:59 red clock insert
@@ -243,8 +243,8 @@ def build(ctx):
     toys.set_time(clk, wf(41, "clock") + 4, 32, 60, ease=2)
 
     # ======================= cast defaults in the house =======================
-    sit(law, 0, 1.5, (8.1, 0.6), -90, ease=None); pose(law, 0, None, ra=(-55, 0, -10), la=(-50, 0, 10))
-    at(me, 0, (0.2, -1.6, 0), 180, ease=None)
+    sit(law, 0, 1.5, (8.1, 0.6), -90, ease=1); pose(law, 0, None, ra=(-55, 0, -10), la=(-50, 0, 10))
+    at(me, 0, (0.2, -1.6, 0), 180, ease=1)
     beak = lambda f0, f1, every=5: toys.beak(cap, f0, f1, every)
 
     def click(btn, f):
@@ -334,7 +334,7 @@ def build(ctx):
     clock_insert(a, s1)
     crk = empty("cracker"); prim("box", (0.45, 0.08, 0.45), (0, 0, 0), mat((230, 175, 90), 0.8), parent=crk, bevel=0.03)
     hold(me, crk, "ra", (0, -0.2, 0.15), (90, 0, 0)); show_between(crk, s1, L(11)[0] + 6)
-    at(me, s1, (0.2, 0.0, 0), 180, ease=None); pose(me, s1, 6, ra=(-95, 0, 0)); react(me, "smile", s1)
+    at(me, s1, (0.2, 0.0, 0), 180, ease=1); pose(me, s1, 6, ra=(-95, 0, 0)); react(me, "smile", s1)
     sh(hs, s1, b, (3.8, -0.6, 4.8), (0.1, 1.5, 5.0), 26, dl=(-0.4, 0.3, 0))
     # 11: "Thank you, loser!"
     a, b = L(11); beak(a + 2, b - 3, 4); ctx.sfx("squawk", a, 0.7); ctx.sfx("nom", a + 4, 0.6); toys.tilt(cap, a, 15)
@@ -364,7 +364,7 @@ def build(ctx):
     (a, s1), (_, s2), (_, b) = seg(16, "then", "in")
     ctx.sfx("snore", a + 2, 0.6)
     sh(hs, a, s1, (-2.6, 0.4, 4.8), (0, 3, 5.4), 24, dl=(0.3, 0.3, 0))
-    at(me, s1, (0.9, 1.0, 0), (0, 3), ease=None); pose(me, s1, 6, waist=(18, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
+    at(me, s1, (0.9, 1.0, 0), (0, 3), ease=1); pose(me, s1, 6, waist=(18, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
     sh(hs, s1, s2, (-1.9, 1.7, 4.8), (0.9, 1.0, 4.8), 26, dl=(-0.2, -0.1, 0))
     react(me, "big_eyes", s2); sh(hs, s2, b, (-1.6, 1.9, 4.8), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
     # 17: "Don't tell my grandson about the money in the freezer."
@@ -382,7 +382,7 @@ def build(ctx):
     sh(hs, s1, b, (-19.5, 1.0, 3.0), (-8, 2.2, 4.4), 22, dt=(-6, 1.2, 0)); ctx.sfx("step", s1 + 3); ctx.sfx("step", s1 + 8); ctx.sfx("step", s1 + 13)
     # 19: "Inside was one frozen chicken nugget and a note that said, 'Nice try.'"
     (a, s1), (_, s2), (_, b) = seg(19, "one", "nice")
-    at(me, a, (-19.2, 3.6, 0), (-20.2, 7.2), ease=None); pose(me, a, 4, la=(-100, 0, 30))
+    at(me, a, (-19.2, 3.6, 0), (-20.2, 7.2), ease=1); pose(me, a, 4, la=(-100, 0, 30))
     fz.keyframe_insert("rotation_euler", frame=a); fz.rotation_euler = (0, 0, math.radians(105)); fz.keyframe_insert("rotation_euler", frame=a + 8)
     ctx.sfx("freeze", a + 2, 0.7); react(me, "starstruck", a + 4)
     sh(hs, a, s1, (-16.4, 1.4, 4.8), (-19.6, 5.6, 5.0), 22, dl=(-0.4, 0.4, 0))
@@ -400,7 +400,7 @@ def build(ctx):
 
     # ======================= 22-28: sign language, whale sounds, the viral video =======================
     (a, s1), (_, b) = seg(22, "i")
-    clock_insert(a, s1); at(me, s1, (0.2, 0.0, 0), 180, ease=None); react(me, "determined", s1)
+    clock_insert(a, s1); at(me, s1, (0.2, 0.0, 0), 180, ease=1); react(me, "determined", s1)
     for k, f in enumerate(range(s1, b, 6)):
         pose(me, f, 3, ra=((-110, 0, 30) if k % 2 else (-70, 0, -20)), la=((-70, 0, 20) if k % 2 else (-120, 0, -30)))
     sh(hs, s1, b, (1.9, 2.3, 4.9), (0.2, 0.0, 4.7), 26, dl=(-0.2, -0.2, 0))
@@ -456,9 +456,9 @@ def build(ctx):
     (a, s1), (_, s2), (_, b) = seg(29, "i", "i")
     clock_insert(a, s1)
     tx = toys.papers(A + "taxes.png", 10); hold(me, tx, "la", (0.5, -0.4, 0.2), (90, 0, 0)); show_between(tx, s1, L(31)[0] + 6)
-    at(me, s1, (0.2, -0.4, 0), 180, ease=None); pose(me, s1, 4, la=(-85, 0, 30), ra=(-85, 0, -30)); react(me, "sleepy", s1)
+    at(me, s1, (0.2, -0.4, 0), 180, ease=1); pose(me, s1, 4, la=(-85, 0, 30), ra=(-85, 0, -30)); react(me, "sleepy", s1)
     sh(hs, s1, s2, (2.6, 1.4, 4.4), (0.2, -0.4, 4.8), 24, dl=(-0.3, 0.3, 0)); ctx.sfx("rustle", s1 + 2, 0.8)
-    sh(hs, s2, b, (0.6, -2.8, 5.6), (0.4, -0.6, 4.4), 30, dl=(0, 0.3, 0), cap="top"); ctx.sfx("rustle", s2 + 4, 0.6)
+    sh(hs, s2, b, (1.9, 2.3, 4.9), (0.2, -0.4, 4.6), 26, dl=(-0.2, -0.2, 0)); ctx.sfx("rustle", s2 + 4, 0.6)
     # 30: "He fell asleep in two minutes. Then he woke up and corrected my math."
     (a, s1), (_, b) = seg(30, "then")
     toys.lids(cap, a + 2, True); h = cap["head"]; toys.tilt(cap, a + 8, 25, 8, axis=0); ctx.sfx("snore", a + 6, 0.5)
@@ -474,11 +474,11 @@ def build(ctx):
     a33, b33 = L(33)
     for o in (perch, tbl): vis(o, a33, True)
     cap_root = cap["root"]; K._key(cap_root, "location", a33, (0, 1.2, 3.2), 1)  # Captain on the T-perch on the table
-    sit(me, a33, 1.58, (0, -1.4), 180, ease=None)
+    sit(me, a33, 1.58, (0, -1.4), 180, ease=1)
     seat = toys.chair(0, -1.5, 180)
     show_between(seat, a33)
     (a, s1), (_, s2), (_, s3), (_, s4), (_, s5), (_, b) = seg(33, "final", "i'd", "no", "no", "no")
-    react(me, "determined", a); sh(hs, a, s1, (3.2, -4.2, 4.4), (0, -0.4, 4.4), 24, dl=(-0.6, 0.6, 0))
+    react(me, "determined", a); sh(hs, a, s1, (3.4, 1.8, 4.6), (0, -1.0, 4.4), 22, dl=(-0.4, -0.3, 0))
     sh(hs, s1, s2, (1.2, 0.2, 4.6), (0, -1.4, 4.6), 30, pz=s1 + 1, amount=1.2)
     sh(hs, s2, s3, (-4.5, -0.2, 3.4), (0, 0, 4.0), 22, dl=(0.6, 0.4, 0))
     tv_on.keyframe_insert("default_value", frame=s3 + 2); tv_on.default_value = 0.0; tv_on.keyframe_insert("default_value", frame=s3 + 3)
@@ -502,12 +502,12 @@ def build(ctx):
     ctx.sfx("doorbell", a + 2, 0.9); react(me, "shock", a + 4); turn(me, a + 6, (14, 3), 6)
     sh(hs, a, s1, (2.6, -3.4, 4.6), (0, -1.4, 4.6), 26, pz=a + 4, amount=1.15)
     door.keyframe_insert("rotation_euler", frame=s1); door.rotation_euler = (0, 0, math.radians(-100)); door.keyframe_insert("rotation_euler", frame=s1 + 8)
-    at(der, s1, (16.5, 3, 0), -90, ease=None); react(der, "smug", s1); ctx.sfx("whoosh", s1 + 2, 0.5)
+    at(der, s1, (16.5, 3, 0), -90, ease=1); react(der, "smug", s1); ctx.sfx("whoosh", s1 + 2, 0.5)
     sh(hs, s1, s2, (8, 1.4, 3.0), (15, 3, 4.6), 22, dl=(0.6, 0.2, 0))
     walk(der, s2, min(s2 + 30, L(36)[0] - 2), (16.5, 3, 0), (3.0, 1.8, 0), 6, 30)
     sh(hs, s2, b, (5.0, 0.4, 3.4), (12, 3, 4.6), 22, dt=(-6, -0.6, 0)); react(me, "annoyed", s2)
     # 36-37: Derek: "Hey, Captain! Say 'Derek is the best'!" / "Come on, buddy... Say Derek!"
-    a, b = L(36); at(der, a, (2.4, 2.4, 0), (0, 1.2), ease=None); pose(der, a, 4, waist=(20, 0, 0)); react(der, "grin", a); talk_nod(der, a, b, 8, 8)
+    a, b = L(36); at(der, a, (2.4, 2.4, 0), (0, 1.2), ease=1); pose(der, a, 4, waist=(20, 0, 0)); react(der, "grin", a); talk_nod(der, a, b, 8, 8)
     sh(hs, a, b, (-1.4, 0.4, 4.6), (2.4, 2.4, 4.7), 24, dl=(0.2, 0.3, 0))
     a, b = L(37); gold = toys.box_prop(A + "cracker_gold.png", 0.8, 0.35, 1.05, (250, 200, 40)); hold(der, gold, "ra", (0, -0.4, 0.3), (90, 0, 0))
     show_between(gold, a, L(39)[0]); pose(der, a, 4, ra=(-100, 0, -30)); react(der, "happy", a); talk_nod(der, a, b, 8, 8)
@@ -549,7 +549,7 @@ def build(ctx):
     # ======================= 42-51: the win, the whisper, the flashback =======================
     a, b = L(42); ctx.music(a, "normal")
     chk = toys.card(A + "check.png", 1.4, 0.6); hold(law, chk, "la", (0, -0.4, 0.3), (80, 0, 0)); show_between(chk, a); show_between(clip, 0, a)
-    at(law, a, (3.4, -2.6, 0), (0, -1.4), ease=None); rest(law, a, "ll", "rl", "ll_knee", "rl_knee", "waist", ease=None)
+    at(law, a, (3.4, -2.6, 0), (0, -1.4), ease=1); rest(law, a, "ll", "rl", "ll_knee", "rl_knee", "waist", ease=1)
     pose(law, a, 4, la=(-95, 0, 20)); react(law, "happy", a); talk_nod(law, a, b)
     sh(hs, a, b, (-0.8, -4.0, 4.2), (2.2, -1.8, 4.6), 24, dl=(0.3, 0.3, 0)); ctx.sfx("coin", a + 6, 0.8)
     # 43: "Derek dropped to his knees. I couldn't believe it."
