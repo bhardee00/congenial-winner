@@ -3,7 +3,25 @@
 "I Grabbed the Balloon Nobody Can Let Go Of" is the approved example. New shorts copy its format,
 pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 
-## Format
+## Reference short breakdown (the user's example, 1:47, analysed frame by frame)
+- **Cuts:** ~65 shots in 107 s. Median shot is 0.9 s in the first half and 1.5 s in the second. Hard cuts on every
+  sentence and often mid-sentence. A few long tracking shots (up to 12 s) while someone walks.
+- **Camera:** wide lens (~20–24 mm), low and close to the characters. Slow continuous dolly or push on every shot,
+  with a slight handheld float. People walk *toward* the camera. Foreground props are huge in frame (shoes, flashlight,
+  socks, glue bottle). Over-the-shoulder shots, and extreme close-ups of faces for emotional beats.
+- **Inserts:** full-screen object close-ups as their own 0.5–1 s shots (a recurring clock motif 3:00 / 2:59 / 4:00, a heart
+  monitor, shoes, a rope). They're used as rhythm beats and story clues.
+- **Look:** very bright and saturated, with soft shadows and ambient occlusion. Glossy reflective water with ripple rings.
+  Time of day sets the mood: deep-blue night with a bright moon glint, pink sunset, warm daylight, mint hospital.
+  A white glow-out is used as a dream or transition.
+- **Captions:** one word at a time, yellow with a thick black outline, rounded bold font, about 5% of frame height,
+  no pop animation. **Position changes per shot** (top ~15%, middle ~50% or bottom ~75%) to stay off faces.
+- **Faces:** classic Roblox-style. Expressive brows, worried or sad eyes, a drawn tear streak, closed eyes when asleep.
+  No floating emote icons.
+- **Audio:** fast narrator (~4 words/s), quiet background music under it the whole time (~15 dB below the voice), and sound effects.
+- **Story:** first person. A strange rule in a town (everyone sleepwalks into the lake at 3 a.m.), with clues planted
+  (clock, shoes, socks, rope). An emotional twist at the end (hospital, dad holding my hand), and the opening image repeats.
+
 - 1080x1440 (3:4), no black bars, 30 fps, H.264 + AAC.
 - Length 1:20–2:30, aim for **~2:00** every time. At our voice speeds that is ~540 words / ~55–60 lines
   (balloon: 406 words = 1:30).
