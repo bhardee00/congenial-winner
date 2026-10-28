@@ -256,7 +256,7 @@ def build(ctx):
         a, b = L(i); b = f1 or b; f = a + 4; m = a + max(8, (b - a) * 3 // 5)
         click(isw_btn, f); ctx.sfx("click", f, 1.2); react(law, "blank", a); pose(law, a, 4, ra=(-95, 0, -25)); pose(law, b, 6, ra=(-55, 0, -10))
         sh(ins, a, m, (10.3, -3.4, 1.2), (10, 0, 0.8), 30, dl=(0, 0.9, 0), pz=f, amount=1.3, cap="top")
-        sh(hs, m, b, (5.0, -1.4, 4.5), (8.1, 0.6, 4.4), 30, dl=(0.3, 0.2, 0))
+        sh(hs, m, b, (4.0, -2.2, 4.5), (8.1, 0.6, 4.3), 26, dl=(0.3, 0.2, 0))
 
     # ======================= 0-2: the funeral (cold open) =======================
     fp = (0, 6, 3.35)  # top of the coffin lid
@@ -297,11 +297,11 @@ def build(ctx):
     react(me, "starstruck", s2); ctx.sfx("coin", s2, 0.8)
     sh(hs, s2, s3, (2.8, -0.6, 4.8), (0.2, -1.6, 4.7), 26, pz=s2 + 2)                       # me: one million
     toys.tilt(cap, s3 + 4, -20); ctx.sfx("tweet", s3 + 2, 0.4)
-    sh(hs, s3, b, (1.7, 1.5, 5.8), (0, 3, 5.75), 26, dl=(-0.3, 0.3, 0))                     # Captain cocks his head
+    sh(hs, s3, b, (2.0, 1.2, 5.8), (0, 3, 5.7), 24, dl=(-0.3, 0.3, 0))                     # Captain cocks his head
     # 4-6: "Twenty-four hours. Not one word." / "That's it?" / "That's it."
     a, b = L(4); react(law, "blank", a); talk_nod(law, a, b); pose(law, a, 4, la=(-50, 0, 10))
     sh(hs, a, b, (5.6, -1.0, 3.2), (8.1, 0.6, 4.4), 24, dl=(0.4, 0.3, 0))
-    a, b = L(5); react(me, "suspicious", a); sh(hs, a, b, (2.6, -2.8, 4.7), (0.2, -1.6, 4.7), 28, dl=(0.2, 0.2, 0))
+    a, b = L(5); react(me, "suspicious", a); sh(hs, a, b, (2.9, -1.0, 4.7), (0.2, -1.6, 4.7), 28, dl=(0.2, 0.2, 0))
     a, b = L(6); react(law, "smug", a); talk_nod(law, a, b, 8, 10); sh(hs, a, b, (5.2, -0.9, 4.5), (8.1, 0.6, 4.4), 32, pz=a + 3, amount=1.15)
     # 7: "I signed immediately. How hard could it be to keep a bird quiet?"
     (a, s1), (_, s2), (_, b) = seg(7, "how", "bird")
@@ -313,7 +313,7 @@ def build(ctx):
     rest(me, s1, "ra", ease=6); react(me, "smug", s1)
     sh(hs, s1, s2, (2.6, -0.4, 4.8), (0.2, -1.6, 4.7), 24, dl=(0.1, 0.3, 0))
     turn_f = s2 + 2; toys.tilt(cap, turn_f, 25, 10, axis=2); toys.lids(cap, turn_f + 10, False)
-    sh(hs, s2, b, (1.7, 1.5, 5.8), (0, 3, 5.75), 32, dl=(-0.3, 0.3, 0)); ctx.sfx("scared", s2 + 4, 0.5)
+    sh(hs, s2, b, (2.0, 1.2, 5.8), (0, 3, 5.7), 26, dl=(-0.3, 0.3, 0)); ctx.sfx("scared", s2 + 4, 0.5)
     # 8: "Well, the parrot's name was Captain. And Captain had been listening ... forty years."
     (a, s1), (_, s2), (_, b) = seg(8, "captain", "and")
     toys.tilt(cap, a, 0, 6, axis=2)
@@ -347,7 +347,7 @@ def build(ctx):
     rest(me, b12, "ra")
     # 13: "It counts double."
     a, b = L(13); react(law, "smug", a); talk_nod(law, a, b)
-    sh(hs, a, b, (5.0, -1.4, 4.4), (8.1, 0.6, 4.4), 30, dl=(0.2, 0.2, 0)); ctx.sfx("rustle", a + 4, 0.6)
+    sh(hs, a, b, (4.0, -2.2, 4.4), (8.1, 0.6, 4.3), 26, dl=(0.2, 0.2, 0)); ctx.sfx("rustle", a + 4, 0.6)
     stopwatch_gag(14); react(me, "annoyed", L(14)[0])
 
     # ======================= 15-21: the blanket, Grandpa's voice, the freezer =======================
@@ -363,14 +363,14 @@ def build(ctx):
     # 16: "He fell asleep, all right. Then he started sleep talking. In Grandpa's voice."
     (a, s1), (_, s2), (_, b) = seg(16, "then", "in")
     ctx.sfx("snore", a + 2, 0.6)
-    sh(hs, a, s1, (2.4, -0.6, 4.6), (0, 3, 5.4), 26, dl=(-0.3, 0.4, 0))
+    sh(hs, a, s1, (-2.6, 0.4, 4.8), (0, 3, 5.4), 24, dl=(0.3, 0.3, 0))
     at(me, s1, (0.9, 1.0, 0), (0, 3), ease=None); pose(me, s1, 6, waist=(18, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
-    sh(hs, s1, s2, (3.0, -0.6, 4.6), (0.9, 1.6, 4.8), 26, dl=(-0.2, 0.3, 0))
-    react(me, "big_eyes", s2); sh(hs, s2, b, (-1.6, 0.4, 4.9), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
+    sh(hs, s1, s2, (-1.9, 1.7, 4.8), (0.9, 1.0, 4.8), 26, dl=(-0.2, -0.1, 0))
+    react(me, "big_eyes", s2); sh(hs, s2, b, (-1.6, 1.9, 4.8), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
     # 17: "Don't tell my grandson about the money in the freezer."
     (a, s1), (_, b) = seg(17, "money")
     ctx.music(a, "paused")
-    sh(hs, a, s1, (-1.8, -0.4, 4.8), (0, 3, 5.4), 28, dl=(0.4, 0.8, 0.1))                    # slow creep toward the covered cage
+    sh(hs, a, s1, (-3.2, -1.2, 5.0), (0, 3, 5.4), 24, dl=(0.6, 0.6, 0))                    # slow creep toward the covered cage
     react(me, "starstruck", s1); turn(me, s1, (-2.6, -1.8), 6)
     sh(hs, s1, b, (-2.6, -1.8, 4.8), (0.9, 1.0, 4.8), 34, pz=wf(17, "freezer"), amount=1.3)
     ctx.sfx("sparkle", wf(17, "freezer"), 0.7)
@@ -443,7 +443,7 @@ def build(ctx):
     sh(hs, a, s1, (6, 8.0, 4.2), (6, 10.6, 4.6), 30, cap="top"); ctx.overlays.append((A + "viral.png", a + 2, s1, 7, 0, 0, 1.0))
     ctx.sfx("whoosh", a + 1, 0.6); ctx.sfx("coin", wf(27, "million"), 0.7)
     react(law, "annoyed", s1); talk_nod(law, s1, b)
-    sh(hs, s1, b, (5.0, -1.4, 4.2), (8.1, 0.6, 4.4), 26, dl=(0.3, 0.3, 0))
+    sh(hs, s1, b, (4.0, -2.2, 4.3), (8.1, 0.6, 4.3), 26, dl=(0.3, 0.3, 0))
     # 28: "Starting over. Also, can I get an autograph?"
     (a, s1), (_, b) = seg(28, "also")
     click(isw_btn, a + 4); ctx.sfx("click", a + 4, 1.2); react(law, "blank", a)
