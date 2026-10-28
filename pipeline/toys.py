@@ -556,3 +556,155 @@ def window(x, y, w=4.0, h=3.6, z=3.2, rot=0, sky=(150, 200, 255)):
     for dx in (-w / 2, 0, w / 2): prim("box", (0.18, 0.25, h + 0.2), (dx, -0.05, z), fm, parent=r)
     for dz in (-h / 2, h / 2): prim("box", (w + 0.2, 0.25, 0.18), (0, -0.05, z + dz), fm, parent=r)
     return r, pb
+
+
+# ---------------- grandpa's summer (bored grandpa short) ----------------
+def cat(name="doug", c=(240, 150, 60)):
+    """Blocky orange cat sitting, facing -Y. Returns parts: root, head, tail (swish with rotation Y)."""
+    r = empty(name, (0, 0, 0)); m = mat(c, 0.7); w = mat((255, 240, 220), 0.7)
+    prim("box", (1.0, 1.6, 0.9), (0, 0.1, 0.55), m, parent=r, bevel=0.25)
+    prim("box", (0.7, 0.4, 0.5), (0, -0.62, 0.45), w, parent=r, bevel=0.15)
+    h = empty(name + "_head", (0, -0.6, 1.15), r)
+    prim("box", (0.95, 0.8, 0.75), (0, 0, 0.1), m, parent=h, bevel=0.25)
+    for sx in (-0.3, 0.3): prim("cone", (0.3, 0.2, 0.35), (sx, 0.05, 0.6), m, parent=h)
+    for sx in (-0.2, 0.2):
+        prim("ball", (0.18, 0.06, 0.22), (sx, -0.41, 0.18), mat((30, 30, 30), 0.3), parent=h)
+    prim("ball", (0.12, 0.06, 0.09), (0, -0.42, 0.0), mat((240, 120, 140), 0.4), parent=h)
+    for sx in (-1, 1):
+        for k in range(2): prim("box", (0.35, 0.02, 0.02), (sx * 0.5, -0.42, -0.02 + k * 0.08), mat((250, 250, 250), 0.5), rot=(0, sx * (10 - k * 20), 0), parent=h)
+    t = empty(name + "_tail", (0, 0.9, 0.4), r)
+    prim("box", (0.2, 0.2, 1.1), (0, 0.1, 0.5), m, rot=(20, 0, 0), parent=t, bevel=0.08)
+    for sx in (-0.3, 0.3): prim("box", (0.3, 0.4, 0.3), (sx, -0.55, 0.15), m, parent=r, bevel=0.1)
+    return {"root": r, "head": h, "tail": t}
+
+
+def grandfather_clock(dial_img):
+    """Tall wooden clock facing -Y; returns root, hands (hour/minute pivots) and pendulum pivot."""
+    r = empty("gclock"); wd = mat((110, 65, 40), 0.4)
+    prim("box", (2.0, 1.2, 7.5), (0, 0, 3.75), wd, parent=r, bevel=0.1)
+    prim("box", (2.4, 1.4, 0.5), (0, 0, 7.6), wd, parent=r, bevel=0.1)
+    prim("box", (1.4, 0.05, 3.0), (0, -0.62, 2.6), mat((240, 220, 160), 0.1, alpha=0.4), parent=r)
+    plane_image(dial_img, (1.6, 1.6), (0, -0.62, 6.3), parent=r)
+    hh = empty("g_hour", (0, -0.66, 6.3), r); mh = empty("g_min", (0, -0.68, 6.3), r)
+    ink = mat((30, 30, 40), 0.4)
+    prim("box", (0.08, 0.02, 0.45), (0, 0, 0.18), ink, parent=hh); prim("box", (0.05, 0.02, 0.65), (0, 0, 0.28), ink, parent=mh)
+    pend = empty("g_pend", (0, -0.55, 4.4), r)
+    prim("box", (0.06, 0.04, 2.0), (0, 0, -1.0), mat((210, 170, 70), 0.2, 0.8), parent=pend)
+    prim("cylY", (0.6, 0.6, 0.08), (0, 0, -2.1), mat((210, 170, 70), 0.2, 0.8), rot=(90, 0, 0), parent=pend)
+    return {"root": r, "h": hh, "m": mh, "pend": pend}
+
+
+def swing_pendulum(clk, f0, f1, period=30, amp=14):
+    p = clk["pend"]
+    for k, f in enumerate(range(f0, f1, period // 2)):
+        p.rotation_euler = (0, math.radians(amp if k % 2 else -amp), 0); p.keyframe_insert("rotation_euler", frame=f)
+    for fc in p.animation_data.action.fcurves:
+        for kp in fc.keyframe_points: kp.interpolation = 'SINE'; kp.easing = 'EASE_IN_OUT'
+
+
+def motorcycle(c=(30, 30, 35)):
+    """Motorcycle facing -Y; seat top at ~2.4."""
+    r = empty("motorcycle"); m = mat(c, 0.25, 0.4); chrome = mat((210, 215, 220), 0.15, 0.9)
+    for y in (-1.6, 1.6):
+        prim("cyl", (0.45, 1.5, 1.5), (0, y, 0.75), mat((20, 20, 22), 0.6), parent=r)
+        prim("cyl", (0.47, 0.7, 0.7), (0, y, 0.75), chrome, parent=r)
+    prim("box", (0.8, 3.0, 0.7), (0, 0, 1.6), m, parent=r, bevel=0.2)
+    prim("box", (0.9, 1.4, 0.5), (0, 0.6, 2.2), mat((25, 20, 18), 0.5), parent=r, bevel=0.15)
+    prim("box", (1.0, 1.0, 0.8), (0, -0.6, 2.1), mat((200, 40, 40), 0.25, 0.3), parent=r, bevel=0.25)
+    prim("box", (2.0, 0.15, 0.15), (0, -1.5, 2.8), chrome, parent=r)
+    prim("box", (0.12, 0.12, 1.4), (0, -1.6, 2.1), chrome, rot=(-20, 0, 0), parent=r)
+    prim("box", (0.25, 1.6, 0.25), (0.55, 0.9, 1.1), chrome, parent=r)
+    return r
+
+
+def hoop():
+    r = empty("hoop"); prim("cylY", (0.3, 0.3, 9.5), (0, 0.4, 4.75), mat((120, 120, 125), 0.4, 0.6), parent=r)
+    prim("box", (3.6, 0.2, 2.4), (0, 0, 9.6), mat((250, 250, 250), 0.4), parent=r)
+    prim("box", (1.4, 0.22, 1.0), (0, -0.02, 9.2), mat((220, 60, 50), 0.4), parent=r)
+    for k in range(12):
+        a = k / 12 * math.tau; prim("box", (0.12, 0.12, 0.12), (math.cos(a) * 0.75, -0.9 + math.sin(a) * 0.75, 8.6), mat((240, 100, 40), 0.3, 0.4), parent=r)
+    return r
+
+
+def ball(c=(235, 110, 40), s=0.95):
+    r = empty("ball"); prim("ball", (s, s, s), (0, 0, 0), mat(c, 0.6), parent=r); return r
+
+
+def mailbox():
+    r = empty("mailbox"); prim("box", (0.25, 0.25, 3.0), (0, 0, 1.5), mat((110, 80, 50), 0.6), parent=r)
+    prim("box", (0.9, 1.6, 0.9), (0, 0, 3.3), mat((60, 100, 200), 0.4, 0.3), parent=r, bevel=0.3)
+    prim("box", (0.08, 0.08, 0.7), (0.5, 0.3, 3.7), mat((220, 40, 40), 0.4), parent=r)
+    return r
+
+
+def bed(c=(120, 170, 230)):
+    r = empty("bed"); prim("box", (3.6, 6.0, 1.2), (0, 0, 0.6), mat((150, 100, 60), 0.5), parent=r, bevel=0.1)
+    prim("box", (3.4, 5.6, 0.6), (0, 0, 1.45), mat((250, 250, 250), 0.8), parent=r, bevel=0.2)
+    prim("box", (3.5, 3.8, 0.3), (0, -1.0, 1.85), mat(c, 0.85), parent=r, bevel=0.12)
+    prim("box", (2.2, 1.0, 0.5), (0, 2.2, 1.95), mat((255, 255, 255), 0.9), parent=r, bevel=0.2)
+    prim("box", (3.6, 0.3, 3.2), (0, 3.0, 1.6), mat((150, 100, 60), 0.5), parent=r, bevel=0.08)
+    return r   # mattress top ~1.8
+
+
+def desk(c=(200, 160, 110)):
+    """School desk + chair (chair on the +Y side, so a student sits facing -Y). Seat top ~1.6, desk top ~2.6."""
+    r = empty("desk"); m = mat(c, 0.5); metal = mat((90, 95, 100), 0.4, 0.6)
+    prim("box", (2.6, 1.8, 0.15), (0, -0.4, 2.6), m, parent=r)
+    for sx in (-1.1, 1.1):
+        for sy in (-1.1, 0.3): prim("box", (0.12, 0.12, 2.6), (sx, sy, 1.3), metal, parent=r)
+    prim("box", (1.6, 1.4, 0.15), (0, 1.3, 1.5), m, parent=r); prim("box", (1.6, 0.15, 1.3), (0, 2.0, 2.2), m, parent=r)
+    for sx in (-0.7, 0.7):
+        for sy in (0.7, 1.9): prim("box", (0.1, 0.1, 1.5), (sx, sy, 0.75), metal, parent=r)
+    return r
+
+
+def rod():
+    r = empty("rod"); prim("cylY", (0.08, 0.08, 4.5), (0, 0, 2.25), mat((60, 60, 70), 0.3, 0.3), parent=r)
+    prim("cyl", (0.3, 0.3, 0.3), (0.12, 0, 0.7), mat((200, 200, 205), 0.3, 0.8), parent=r)
+    return r
+
+
+def boot(c=(90, 60, 40)):
+    r = empty("boot"); m = mat(c, 0.7)
+    prim("box", (0.7, 0.8, 1.2), (0, 0.15, 0.6), m, parent=r, bevel=0.12); prim("box", (0.7, 1.4, 0.45), (0, -0.2, 0.22), m, parent=r, bevel=0.12)
+    return r
+
+
+def juice_box():
+    r = empty("juicebox"); prim("box", (0.45, 0.3, 0.7), (0, 0, 0.35), mat((250, 140, 60), 0.5), parent=r, bevel=0.03)
+    prim("box", (0.04, 0.04, 0.4), (0.12, 0, 0.85), mat((250, 250, 250), 0.4), rot=(0, 15, 0), parent=r)
+    return r
+
+
+def jar(label_img, coins=0):
+    r = empty("jar"); prim("cylY", (1.1, 1.1, 1.4), (0, 0, 0.7), mat((210, 235, 250), 0.05, alpha=0.35), parent=r)
+    prim("cylY", (1.15, 1.15, 0.15), (0, 0, 1.45), mat((200, 170, 70), 0.3, 0.7), parent=r)
+    plane_image(label_img, (0.9, 0.38), (0, -0.56, 0.7), parent=r)
+    bills = []
+    for k in range(coins):
+        b = prim("box", (0.6, 0.3, 0.02), (R.uniform(-0.3, 0.3), R.uniform(-0.2, 0.2), 0.12 + k * 0.05), mat((120, 190, 110), 0.7), rot=(0, 0, R.uniform(0, 180)), parent=r); bills.append(b)
+    return r, bills
+
+
+def landline(c=(210, 60, 60)):
+    """Old desk phone; returns (root, receiver) - parent the receiver to a hand to answer."""
+    r = empty("landline"); m = mat(c, 0.35)
+    prim("box", (1.2, 1.0, 0.45), (0, 0, 0.22), m, parent=r, bevel=0.15)
+    prim("cylY", (0.6, 0.6, 0.05), (0, -0.1, 0.47), mat((240, 240, 240), 0.4), parent=r)
+    rc = empty("receiver", (0, 0.15, 0.62), r)
+    prim("box", (1.3, 0.3, 0.22), (0, 0, 0), m, parent=rc, bevel=0.1)
+    for sx in (-0.55, 0.55): prim("box", (0.32, 0.36, 0.3), (sx, 0, -0.1), m, parent=rc, bevel=0.1)
+    return r, rc
+
+
+def lake(x, y, w=60, d=40):
+    r = empty("lake", (x, y, 0))
+    m = bpy.data.materials.new("lake_water"); m.use_nodes = True; pb = m.node_tree.nodes["Principled BSDF"]
+    from shortkit import lin
+    pb.inputs["Base Color"].default_value = lin((60, 150, 220)); pb.inputs["Roughness"].default_value = 0.05
+    prim("box", (w, d, 0.2), (0, 0, -0.15), m, parent=r)
+    dk = mat((170, 120, 75), 0.7)
+    prim("box", (3.0, 12, 0.3), (0, -d / 2 + 6, 0.5), dk, parent=r)
+    for sx in (-1.4, 1.4):
+        for sy in range(-int(d / 2) + 1, -int(d / 2) + 12, 3): prim("cylY", (0.3, 0.3, 1.6), (sx, sy, 0), dk, parent=r)
+    return r

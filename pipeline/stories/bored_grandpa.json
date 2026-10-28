@@ -215,5 +215,85 @@
  "voice_speeds": {
   "narrator": 1.6,
   "others": 1.75
+ },
+ "voice_files": {
+  "narrator": "assets/voice/bored_narrator_1.60x.wav",
+  "others": "assets/voice/bored_others_1.75x.wav",
+  "others_order": [
+   "teacher",
+   "grandpa",
+   "grandpa",
+   "grandpa",
+   "mom",
+   "grandpa",
+   "mailman",
+   "grandpa",
+   "grandpa",
+   "teacher",
+   "grandpa"
+  ],
+  "others_spans": [
+   [
+    0.01,
+    1.02
+   ],
+   [
+    1.31,
+    2.3
+   ],
+   [
+    2.51,
+    4.12
+   ],
+   [
+    4.38,
+    5.03
+   ],
+   [
+    5.26,
+    6.47
+   ],
+   [
+    6.66,
+    7.45
+   ],
+   [
+    7.64,
+    8.46
+   ],
+   [
+    8.69,
+    9.03
+   ],
+   [
+    9.25,
+    10.99
+   ],
+   [
+    11.22,
+    12.56
+   ],
+   [
+    12.57,
+    13.51
+   ]
+  ]
+ },
+ "beats": {
+  "2": 0.6,
+  "6": 0.4,
+  "7": 0.5,
+  "9": 0.5,
+  "14": 0.5,
+  "16": 0.6,
+  "18": 0.4,
+  "22": 0.4,
+  "25": 0.6,
+  "28": 0.4,
+  "31": 1.0,
+  "39": 0.5,
+  "41": 0.6,
+  "47": 0.5,
+  "50": 0.5
  }
 }

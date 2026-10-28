@@ -155,13 +155,13 @@ GESTURE = {
 }
 
 
-def _clear_after(o, path, f):
-    """Drop o's keys on path after frame f, so a new gesture replaces the end of the previous one."""
+def _clear_after(o, path, f, until=None):
+    """Drop o's keys on path after frame f (up to `until`), so a new gesture replaces what was there before."""
     act = o.animation_data.action if o.animation_data else None
     if not act: return
     for fc in act.fcurves:
         if fc.data_path == path:
-            for kp in [k for k in fc.keyframe_points if k.co[0] > f][::-1]: fc.keyframe_points.remove(kp)
+            for kp in [k for k in fc.keyframe_points if k.co[0] > f and (until is None or k.co[0] <= until)][::-1]: fc.keyframe_points.remove(kp)
 
 
 def gesture(av, face, f0, f1):
@@ -188,7 +188,7 @@ def talk(av, frames, amount=1.0):
     import random
     rnd = random.Random(sum(map(ord, av.get("name", ""))) + frames[0])
     f0, f1 = frames[0], frames[-1] + 14
-    _clear_after(n, "rotation_euler", f0 - 6)
+    _clear_after(n, "rotation_euler", f0 - 6, f1)  # only this speech's own stretch
     key(n, "rotation_euler", f0 - 6, (0, 0, 0))
     picked, last = [], -99
     for f in frames:

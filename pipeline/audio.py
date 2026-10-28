@@ -349,6 +349,63 @@ def sfx_freeze():  # icy shimmer for the freezer
     return out
 
 
+def sfx_crack():  # back cracking: a few sharp knuckle pops
+    out = np.zeros(int(0.5 * SR))
+    for k, at in enumerate((0.0, 0.07, 0.11, 0.2)):
+        d = 0.025; place(out, hp(noise(d), 1800) * env(d, 0.0005, shape=4) * (1.2 - 0.15 * k), at)
+    return out
+
+
+def sfx_crickets():  # awkward silence
+    out = np.zeros(int(2.0 * SR))
+    for k in range(6):
+        for j in range(3):
+            d = 0.03; place(out, tone(4300, d) * env(d, 0.003, shape=2) * 0.35, k * 0.33 + j * 0.045)
+    return out
+
+
+def sfx_bounce():  # basketball on a driveway
+    out = np.zeros(int(1.0 * SR))
+    for k, at in enumerate((0.0, 0.32, 0.56)):
+        d = 0.12; place(out, lp(tone(95, d) + noise(d) * 0.3, 900) * env(d, 0.002, shape=4) * (1.3 - 0.3 * k), at)
+    return out
+
+
+def sfx_clang():  # dunk on the rim
+    d = 0.9; x = tone(520, d) + 0.6 * tone(1310, d) + 0.4 * tone(2210, d) + hp(noise(d), 2000) * 0.3
+    return x * env(d, 0.002, shape=3) * 0.55
+
+
+def sfx_rev():  # motorcycle rev
+    d = 1.3; t = t_(d); f = 55 + 70 * np.sin(np.pi * np.clip(t / 0.9, 0, 1)) ** 2
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    x = np.sign(np.sin(ph)) * 0.5 + lp(noise(d), 600) * 0.6
+    return lp(x, 1800) * env(d, 0.05, 0.35) * 0.8
+
+
+def sfx_ring():  # old phone ring
+    out = np.zeros(int(1.6 * SR))
+    for k in range(2):
+        d = 0.5; t = t_(d); x = (tone(440, d) + tone(480, d)) * (0.5 + 0.5 * np.sign(np.sin(2 * np.pi * 20 * t)))
+        place(out, x * env(d, 0.01, 0.05) * 0.35, k * 0.75)
+    return out
+
+
+def sfx_slap():  # card slapped on the table
+    d = 0.08; return hp(noise(d), 900) * env(d, 0.001, shape=3) * 1.2
+
+
+def sfx_splash():
+    d = 0.7; return lp(noise(d), 3000) * env(d, 0.01, 0.4) * np.linspace(1, 0.3, int(d * SR)) * 0.9
+
+
+def sfx_clap():  # one person clapping slowly
+    out = np.zeros(int(1.6 * SR))
+    for k in range(3):
+        d = 0.05; place(out, hp(lp(noise(d), 4000), 700) * env(d, 0.001, shape=3) * 1.1, k * 0.5)
+    return out
+
+
 SFX = {k[4:]: v for k, v in globals().items() if k.startswith("sfx_")}
 
 

@@ -202,6 +202,7 @@ def main(story_path):
         timed.append({"speaker": speaker, "text": text, "start": t, "end": t + len(clip) / SR, "words": words})
         nxt = lines[i + 1][0] if i + 1 < len(lines) else None
         gap = 0.1 if (nxt and (nxt != "narrator" or speaker != "narrator")) else 0.18
+        gap += float(story.get("beats", {}).get(str(i), 0))  # held beat after a punchline/reveal (story "beats")
         out += [clip, np.zeros(int(gap * SR), np.float32)]; t += len(clip) / SR + gap
     raw = W + "voice_raw.wav"; sf.write(raw, np.concatenate(out), SR)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", "loudnorm=I=-14:TP=-1.0", "-ar", str(SR), W + "voice.wav"], check=True)
