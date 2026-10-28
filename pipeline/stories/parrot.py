@@ -367,21 +367,21 @@ def build(ctx):
     (a, s1), (_, s2), (_, b) = seg(16, "then", "in")
     ctx.sfx("snore", a + 2, 0.6)
     sh(hs, a, s1, (-4.6, -1.6, 4.8), (0.2, 2.0, 4.9), 22, dl=(0.4, 0.4, 0))
-    at(me, s1, (0.9, 1.0, 0), (0, 3), ease=1); pose(me, s1, 6, waist=(18, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
-    sh(hs, s1, s2, (3.4, 2.0, 4.8), (0.9, 1.0, 4.8), 26, dl=(-0.3, 0.1, 0))
-    react(me, "big_eyes", s2); turn(me, s2, (-2.8, 0.6), 4); sh(hs, s2, b, (-2.8, 0.6, 4.8), (0.9, 1.0, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
+    at(me, s1, (1.3, 0.4, 0), (0, 3), ease=1); pose(me, s1, 6, waist=(8, 0, 0), head=(0, 0, -15)); react(me, "suspicious", s1)
+    sh(hs, s1, s2, (3.4, 2.0, 4.8), (1.3, 0.4, 4.8), 26, dl=(-0.3, 0.1, 0))
+    react(me, "big_eyes", s2); turn(me, s2, (-2.8, 0.6), 4); sh(hs, s2, b, (-2.8, 0.6, 4.8), (1.3, 0.4, 4.8), 30, pz=s2 + 2); ctx.sfx("scared", s2, 0.6)
     # 17: "Don't tell my grandson about the money in the freezer."
     (a, s1), (_, b) = seg(17, "money")
     ctx.music(a, "paused")
     sh(hs, a, s1, (-3.2, -1.2, 5.0), (0, 3, 5.4), 24, dl=(0.6, 0.6, 0))                    # slow creep toward the covered cage
     react(me, "starstruck", s1); turn(me, s1, (-2.6, -1.8), 6)
-    sh(hs, s1, b, (-2.6, -1.8, 4.8), (0.9, 1.0, 4.8), 34, pz=wf(17, "freezer"), amount=1.3)
+    sh(hs, s1, b, (-2.6, -1.8, 4.8), (1.3, 0.4, 4.8), 34, pz=wf(17, "freezer"), amount=1.3)
     ctx.sfx("sparkle", wf(17, "freezer"), 0.7)
     # 18: "I froze. Then I ran to the freezer."
     (a, s1), (_, b) = seg(18, "then")
     ctx.music(a, "normal"); react(me, "shock", a); rest(me, a, "waist", "head", ease=4)  # stand up straight again
-    sh(hs, a, s1, (-2.8, -2.0, 4.8), (0.9, 1.0, 4.8), 30); ctx.sfx("freeze", a, 0.6)
-    walk(me, s1, b - 1, (0.9, 0.0, 0), (-19.2, 3.6, 0), 5, 40); react(me, "determined", s1)
+    sh(hs, a, s1, (-2.8, -2.0, 4.8), (1.3, 0.4, 4.8), 30); ctx.sfx("freeze", a, 0.6)
+    walk(me, s1, b - 1, (1.3, 0.4, 0), (-19.2, 3.6, 0), 5, 40); react(me, "determined", s1)
     sh(hs, s1, b, (-19.5, 1.0, 3.0), (-8, 2.2, 4.4), 22, dt=(-6, 1.2, 0)); ctx.sfx("step", s1 + 3); ctx.sfx("step", s1 + 8); ctx.sfx("step", s1 + 13)
     # 19: "Inside was one frozen chicken nugget and a note that said, 'Nice try.'"
     (a, s1), (_, s2), (_, b) = seg(19, "one", "nice")
@@ -531,9 +531,9 @@ def build(ctx):
     (a, s1), (_, s2), (_, b) = seg(40, "flew", "landed")
     j = cap["jaw"]; j.keyframe_insert("rotation_euler", frame=a + 2); j.rotation_euler = (0, 0, 0); j.keyframe_insert("rotation_euler", frame=a + 6)
     sh(hs, a, s1, (0.2, -0.5, 4.6), (0, 1.2, 4.7), 28, pz=a + 5, amount=1.15); ctx.sfx("click", a + 5, 0.4)
-    shoulder = empty("shoulder", (-0.62, 0.05, 2.02), me["waist"])
+    shoulder = empty("shoulder", (-1.3, 0.05, 2.02), me["waist"])  # out on the arm, clear of the head
     land = s2 + 6
-    for f, p in ((s1, (0, 1.2, 3.2)), (s1 + (land - s1) // 2, (-4.0, -4.0, 8.0)), (land, (0.62, -1.45, 4.0))):
+    for f, p in ((s1, (0, 1.2, 3.2)), (s1 + (land - s1) // 2, (-4.0, -4.0, 8.0)), (land, (1.3, -1.45, 4.0))):
         K._key(cap_root, "location", f, p)
     cap_root.rotation_euler = (0, 0, 0); cap_root.keyframe_insert("rotation_euler", frame=s1)
     cap_root.rotation_euler = (0, 0, math.radians(200)); cap_root.keyframe_insert("rotation_euler", frame=s1 + 8)
@@ -554,7 +554,7 @@ def build(ctx):
     chk = toys.card(A + "check.png", 1.4, 0.6); hold(law, chk, "la", (0, -0.4, 0.3), (80, 0, 0)); show_between(chk, a); show_between(clip, 0, a)
     at(law, a, (3.4, -2.6, 0), (0, -1.4), ease=1); rest(law, a, "ll", "rl", "ll_knee", "rl_knee", "waist", ease=1)
     pose(law, a, 4, la=(-95, 0, 20)); react(law, "happy", a); talk_nod(law, a, b)
-    sh(hs, a, b, (-0.8, -4.0, 4.2), (2.2, -1.8, 4.6), 24, dl=(0.3, 0.3, 0)); ctx.sfx("coin", a + 6, 0.8)
+    sh(hs, a, b, (1.6, -2.4, 5.0), (3.4, -2.6, 4.4), 18, dl=(0.2, 0.0, 0)); ctx.sfx("coin", a + 6, 0.8)
     # 43: "Derek dropped to his knees. I couldn't believe it."
     (a, s1), (_, b) = seg(43, "i")
     at(der, a, (2.4, 2.4, -1.2), (0, -1.4), ease=4); pose(der, a, 4, ll_knee=(90, 0, 0), rl_knee=(90, 0, 0), la=(-150, 0, 20), ra=(-150, 0, -20))
@@ -563,14 +563,14 @@ def build(ctx):
     react(me, "starstruck", s1); sh(hs, s1, b, (1.3, 0.8, 4.6), (-0.2, -1.4, 4.8), 28, pz=s1 + 2, amount=1.1)
     # 44: "Why did you stay quiet, Captain?"
     a, b = L(44); react(me, "smile", a); pose(me, a, 6, head=(0, 0, -25))
-    sh(hs, a, b, (1.6, 0.6, 4.7), (0.3, -1.4, 4.8), 30, dl=(-0.2, 0.2, 0))
+    sh(hs, a, b, (-0.6, 1.4, 4.8), (0.6, -1.4, 4.9), 28, dl=(0.1, 0.2, 0))
     # 45: "He leaned in and whispered in Grandpa's voice."
     a, b = L(45); toys.tilt(cap, a + 4, -25, 10, axis=2); toys.tilt(cap, a + 10, 18, 8, axis=0)
-    sh(hs, a, b, (2.2, 0.2, 4.8), (0.4, -1.4, 4.7), 34, dl=(-0.4, 0.4, 0))
+    sh(hs, a, b, (-0.9, 1.2, 4.8), (0.7, -1.4, 4.9), 32, dl=(0.2, 0.3, 0))
     # 46: "Because you stayed."
     a, b = L(46); beak(a + 2, b - 4, 7); react(me, "cry", a + 6, L(47)[0] + 40); ctx.sfx("sparkle", a, 0.4)
     ctx.music(a, "paused")
-    sh(hs, a, b, (1.8, 0.2, 4.6), (0.5, -1.3, 4.7), 36, dl=(-0.2, 0.25, 0)); S.whiteout(b - 2, 10, 4, 14)
+    sh(hs, a, b, (-0.2, 0.8, 4.8), (0.8, -1.4, 5.0), 34, dl=(0.1, 0.25, 0)); S.whiteout(b - 2, 10, 4, 14)
     # 47: "I wanted to cry. Every Sunday for ten years, I visited Grandpa. Derek visited once. For the Wi-Fi."
     (a, s1), (_, s2), (_, s3), (_, b) = seg(47, "every", "derek", "for")
     sh(hs, a, s1, (0.6, 0.6, 4.6), (-0.1, -1.4, 4.8), 36, dl=(0, 0.25, 0))
@@ -588,15 +588,15 @@ def build(ctx):
     (a, s1), (_, b) = seg(49, ("the", 1))
     ctx.music(a, "normal"); react(me, "relieved", a)
     toys.tilt(cap, a, 0, 6, axis=0); toys.tilt(cap, a + 2, -30, 8, axis=2)
-    sh(hs, a, s1, (1.6, 0.8, 4.8), (0.2, -1.4, 4.8), 26, dl=(-0.2, 0.2, 0))
+    sh(hs, a, s1, (-0.6, 1.4, 4.8), (0.6, -1.4, 4.9), 26, dl=(0.1, 0.2, 0))
     react(me, "smile", s1); sh(hs, s1, b, (-5, 2.5, 4.6), (0.2, -1.4, 4.4), 22, dl=(1.0, -0.4, 0))
     # 50: "Then the lawyer cleared his throat."
     a, b = L(50); react(law, "smug", a); ctx.sfx("ahem", a + 6, 0.9); pose(law, a + 4, 4, ra=(-130, 0, 40))
-    sh(hs, a, b, (1.2, -1.9, 4.6), (3.4, -2.6, 4.6), 30, pz=a + 8, amount=1.15); rest(law, b, "ra")
+    sh(hs, a, b, (1.4, -2.2, 4.8), (3.4, -2.6, 4.6), 20, pz=a + 8, amount=1.15); rest(law, b, "ra")
     # 51: "One more thing. You also inherit Captain."
     (a, s1), (_, b) = seg(51, "you")
     talk_nod(law, a, b); react(law, "grin", a)
-    sh(hs, a, s1, (1.0, -2.4, 4.4), (3.4, -2.6, 4.6), 26, dl=(0.2, 0.1, 0))
+    sh(hs, a, s1, (1.5, -2.0, 4.6), (3.4, -2.6, 4.6), 22, dl=(0.15, -0.05, 0))
     react(me, "blank", s1); toys.tilt(cap, s1 + 4, 0, 6, axis=2); toys.tilt(cap, wf(51, "captain") + 2, 22, 5, axis=1)
     sh(hs, s1, b, (0.8, 1.0, 4.8), (0.2, -1.4, 4.9), 28, pz=wf(51, "captain") + 2, amount=1.25); ctx.sfx("tweet", wf(51, "captain") + 4, 0.6)
 
