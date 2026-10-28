@@ -26,6 +26,7 @@ class Set:
         ee.use_bloom = True; ee.bloom_intensity = 0.05; ee.bloom_threshold = 0.9
         ee.use_soft_shadows = True; ee.shadow_cascade_size = '2048'; ee.shadow_cube_size = '1024'
         ee.use_motion_blur = True; ee.motion_blur_shutter = 0.45  # smooth motion on screen
+        ee.use_ssr = True; ee.ssr_quality = 0.5  # glossy reflections (water, floors) like the reference look
         sc.view_settings.view_transform = 'Standard'
         try: sc.view_settings.look = 'Medium High Contrast'
         except Exception: pass
@@ -153,6 +154,23 @@ def show_between(o, f0, f1=None):
 
 
 # ---------------- cameras ----------------
+CAPTION_Y = {"top": 0.17, "mid": 0.5, "low": 0.74}  # caption height (share of the frame from the top) per band
+
+
+def _handheld(cam, amount=1.0):
+    """Slow drifting aim like a handheld camera: noise on the look-at target, scaled to its distance."""
+    t = cam.constraints["Track To"].target
+    if t.get("handheld"): return
+    t["handheld"] = 1
+    d = max(1.0, (t.location - cam.location).length)
+    if not (t.animation_data and t.animation_data.action):
+        t.keyframe_insert("location", frame=0)
+    for i in range(3):
+        fc = t.animation_data.action.fcurves.find("location", index=i)
+        if fc is None: t.keyframe_insert("location", index=i, frame=0); fc = t.animation_data.action.fcurves.find("location", index=i)
+        m = fc.modifiers.new('NOISE'); m.strength = 0.022 * d * amount * (0.6 if i == 2 else 1.0); m.scale = 45; m.phase = 7 * i + len(cam.name)
+
+
 def camera(st, name, loc, target, lens=35, f0=None, f1=None, loc2=None, target2=None, fstop=None):
     """A camera aimed at a target empty; optional move from (loc, target) at f0 to (loc2, target2) at f1."""
     cd = bpy.data.cameras.new(name); cd.lens = lens; cd.sensor_width = 36
@@ -335,10 +353,12 @@ class Short:
         b = self.frame(self.timed[i + 1]["start"] - 0.15) if i + 1 < len(self.timed) else self.total + 1
         return a, b
 
-    def shot(self, st, cam, f0, f1, frozen=False, drift=0.08, caption="low", look=None):
+    def shot(self, st, cam, f0, f1, frozen=False, drift=0.08, caption="auto", look=None, handheld=1.0):
         """Cut to `cam` from f0 to f1. A camera that doesn't already move slowly pushes in (drift = share of the
-        distance to its target), which keeps every shot alive."""
+        distance to its target), which keeps every shot alive, and floats a little like a handheld camera.
+        caption: "auto" (placed in the band of the frame with no faces), "top", "mid", "low" (or "high" = top)."""
         c = st.cams[cam] if isinstance(cam, str) else cam
+        if handheld: _handheld(c, handheld)
         if drift and not (c.animation_data and c.animation_data.action):
             t = c.constraints["Track To"].target; a = c.location.copy(); b = a + (t.location - a) * drift
             for f, v in ((f0, a), (f1, b)):
@@ -364,12 +384,45 @@ class Short:
                 cb = s.modifiers.new("cool", 'COLOR_BALANCE'); cb.color_balance.gain = (0.98, 1.0, 1.04)
         se.sequences.new_sound("voice", voice, 30, 1)
         items = [(p, f0, f1, ch, *(pos or (0, 0, 1))) for p, f0, f1, ch, *pos in overlays]
-        high = [(f0, f1) for (st, cam, f0, f1, fr) in self.shots if self.shot_opts.get((st.name, f0), {}).get("caption") == "high"]
-        lift = int(H * 0.36)  # captions move up when a shot needs the lower part of the frame clear
-        items += [(p, f0, f1, 9, 0, lift if any(a <= f0 < b for a, b in high) else 0, 1) for p, f0, f1 in words]
+        bands = [(f0, f1, self._caption_band(st, cam, f0, f1)) for (st, cam, f0, f1, fr) in self.shots]
+        def lift(f):  # caption PNGs have the word at 62% down the frame; move it into the shot's band
+            band = next((b for a, e, b in bands if a <= f < e), "low")
+            return int(H * (CAPTION_Y[band] - 0.38))
+        items += [(p, f0, f1, 9, 0, lift(f0), 1) for p, f0, f1 in words]
         ov = self._overlay_scene(items)
         o = se.sequences.new_scene("overlay", ov, 100, 1)
         o.frame_final_start = 1; o.frame_final_end = self.total + 1; o.channel = 5; o.blend_type = 'ALPHA_OVER'
+
+    def _caption_band(self, st, cam, f0, f1):
+        """Where the caption goes in this shot: the shot's own choice, or (auto) the lowest band that keeps clear
+        of every character's face on screen in the middle of the shot - like the reference channel does."""
+        want = self.shot_opts.get((st.name, f0), {}).get("caption", "auto")
+        if want in ("top", "mid", "low"): return want
+        if want == "high": return "top"
+        import avatar
+        from bpy_extras.object_utils import world_to_camera_view
+        sc = st.scene; c = st.cams[cam] if isinstance(cam, str) else cam
+        dg = sc.view_layers[0].depsgraph; sc.frame_current = (f0 + f1) // 2; dg.update()
+        ce = c.evaluated_get(dg); faces = []
+        for av in avatar.ALL:
+            fp = av["faces"]["smile"]
+            if sc.name not in [u.name for u in fp.users_scene]: continue
+            w = fp.evaluated_get(dg).matrix_world
+            v = world_to_camera_view(sc, ce, w.translation)
+            if v.z <= 0 or not (0.12 < v.x < 0.88): continue
+            top = world_to_camera_view(sc, ce, w @ Vector((0, 0.9, 0)))  # face planes are ~1 unit tall
+            r = max(0.05, abs(top.y - v.y))
+            faces.append((v.y - r, v.y + r))
+        def clear(band):
+            y = 1 - CAPTION_Y[band]; return all(y + 0.035 < lo or y - 0.035 > hi for lo, hi in faces)
+        return next((b for b in ("low", "top", "mid") if clear(b)), "low")
+
+    def whiteout(self, f, up=10, hold=4, down=14, channel=8):
+        """Glow to white and back (a dream / memory transition from the reference)."""
+        c = self.se.sequences.new_effect(f"white{f}", 'COLOR', channel, frame_start=f - up, frame_end=f + hold + down)
+        c.color = (1, 1, 1); c.blend_type = 'ALPHA_OVER'
+        for fr, a in ((f - up, 0.0), (f, 1.0), (f + hold, 1.0), (f + hold + down, 0.0)):
+            c.blend_alpha = a; c.keyframe_insert("blend_alpha", frame=fr)
 
     def _overlay_scene(self, items):
         """Captions, cards and icons as flat pictures in a transparent scene laid over the shots. (Image strips in

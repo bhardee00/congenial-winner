@@ -52,11 +52,12 @@ def fetch_models(story):
     with open(os.path.join(REPO, "render", story["slug"] + "_credits.txt"), "w") as f:
         f.write("Free models from the Roblox Creator Store:\n")
         for name, m in story["models"].items(): f.write(f'- {m["name"]} by {m["creator"]} (asset {m["id"]})\n')
+        if story.get("music_credit"): f.write(f'\nMusic: {story["music_credit"]}\n')
 
 
 def captions(timed):
     """One full-frame transparent PNG per spoken word (yellow, thick black outline), shown while it is said."""
-    os.makedirs(OUT + "words", exist_ok=True); f = font(78); words = []
+    os.makedirs(OUT + "words", exist_ok=True); f = font(72); words = []
     for l in timed:
         if "words" in l: words += [[w.strip(".,?!\"").lower(), s, e] for w, s, e in l["words"]]
         else:  # older narration without word timings: spread the line by word length

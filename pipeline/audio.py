@@ -325,6 +325,15 @@ def make_music(path_normal, path_paused, seconds, bpm=118):
 
 
 # ---------------- mix ----------------
+def _loop(x, n, xf=2.0):
+    """Repeat a track to n samples, crossfading each repeat over xf seconds so the seam isn't heard."""
+    if len(x) >= n: return x[:n]
+    k = int(xf * SR); out = x.copy(); r = np.linspace(0, 1, k)
+    while len(out) < n:
+        out[-k:] = out[-k:] * (1 - r) + x[:k] * r; out = np.concatenate([out, x[k:]])
+    return out[:n]
+
+
 def mix(out_path, voice_path, sfx_dir, cues, seconds, music=None, voice_extra=()):
     """cues: [(seconds, sfx name or path, gain)]. music: (normal.wav, paused.wav, [(seconds, "paused"|"normal")])."""
     n = int(seconds * SR); out = np.zeros(n)
@@ -336,7 +345,7 @@ def mix(out_path, voice_path, sfx_dir, cues, seconds, music=None, voice_extra=()
     if music:
         normal, paused, switches = music
         a, b = read(normal), read(paused)
-        a = np.tile(a, n // len(a) + 1)[:n]; b = np.tile(b, n // len(b) + 1)[:n]
+        a, b = _loop(a, n), _loop(b, n)
         mode = np.zeros(n)  # 0 = band, 1 = music box
         for at, m in switches: mode[int(at * SR):] = 1.0 if m == "paused" else 0.0
         mode = lp(mode, 3, 1)  # quick crossfades

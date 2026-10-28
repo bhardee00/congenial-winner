@@ -26,7 +26,10 @@ pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 - Length 1:20–2:30, aim for **~2:00** every time. At our voice speeds that is ~540 words / ~55–60 lines
   (balloon: 406 words = 1:30).
 - R6 blocky characters only (blocky.py). Narrator uses the user's avatar.
-- No background music unless asked. Synthesized SFX (audio.py) on every action.
+- Music: "Lurking Behind" by The Fly Guy Five (royalty free), quiet under the voice and ducked while anyone talks.
+  Story json: `"music_file": "assets/music/fly_guy_five_lurking_behind.mp3", "music_credit": "Lurking Behind - The Fly Guy Five"`
+  (the alternative is `fly_guy_five_hide_and_sneak.mp3`). Synthesized SFX (audio.py) on every action.
+- Story type: a mix of comedy (deal / three backfiring attempts) and emotional mystery (strange rule, clues, twist).
 - Free assets only. Credit any Creator Store model in `models` (written to `render/<slug>_credits.txt`).
 
 ## Script
@@ -60,6 +63,9 @@ Drafts: pipeline/stories/ideas/.
   for ideas), a head squash on shock, a red flush and shake on anger, a droop on sad, a shake on laugh, tears on cry.
   Every character blinks on its own.
 - Big emotional beats get a punch-in on the face.
+- Emote pops are OFF by default (the reference has none); use `emote_kind=` only for a deliberate gag.
+- Captions place themselves per shot (auto: low, else top, else middle, wherever no face is on screen).
+  Every shot floats slightly like a handheld camera. Use `S.whiteout(f)` for a dream or memory glow.
 
 ## Pacing and camera
 - New shot every 1–3 s; a cut on every new sentence or beat.

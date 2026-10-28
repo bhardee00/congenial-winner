@@ -121,6 +121,7 @@ def build(D, name="me", look=None):
 EMOTES = {"angry": "anger", "furious": "steam", "nervous": "sweat", "worried": "sweat", "embarrassed": "sweat",
           "shock": "exclaim", "big_eyes": "exclaim", "terrified": "exclaim", "scream": "exclaim",
           "suspicious": "question", "confused": "question", "love": "hearts", "sleepy": "zzz", "dizzy": "stars"}
+AUTO_EMOTES = False  # the reference style has no floating icons; pass emote_kind="..." to pop one on purpose
 POP = ("shock", "big_eyes", "terrified", "scream", "starstruck")
 
 
@@ -191,7 +192,7 @@ def react(av, face, f0, f1=None, emote_kind=None):
         key(h, "rotation_euler", f0, base)
         for i in range(n): key(h, "rotation_euler", f0 + 3 + i * 4, (base[0] + math.radians(12 if i % 2 == 0 else 4), base[1], base[2]))
         key(h, "rotation_euler", f0 + 5 + n * 4, base)
-    em = EMOTES.get(face) if emote_kind is None else emote_kind
+    em = emote_kind if emote_kind is not None else (EMOTES.get(face) if AUTO_EMOTES else None)
     if em: emote(av, em, f0, min(f1, f0 + 40))
     if face in ("shock", "big_eyes"):
         for f, sc in ((f0 - 1, 1.0), (f0 + 3, 1.28), (f0 + 8, 1.0)):
