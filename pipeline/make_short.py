@@ -166,8 +166,24 @@ def images():
     for i, (h, m) in enumerate(((3, 10), (8, 45), (11, 55))): clock(h, m, f"clock{i}.png")
 
 
+SHARED = ("Fredoka.ttf", "avatar", "models", "tts", "whisper")  # downloaded/converted once, used by every short
+
+
+def story_workdir(slug):
+    """Each short gets its own work folder (voice, timings, captions, previews) so building one never overwrites
+    another's; the big shared things (voice model, avatar, models) are linked in from work/."""
+    global D, OUT
+    base = os.path.join(REPO, "work"); d = os.path.join(base, "stories", slug)
+    os.makedirs(d, exist_ok=True)
+    for n in SHARED:
+        src, dst = os.path.join(base, n), os.path.join(d, n)
+        if os.path.exists(src) and not os.path.lexists(dst): os.symlink(src, dst)
+    os.environ["SHORTS_WORK"] = d; D = d + "/"; OUT = D + "short/"
+
+
 def main():
     story_path = os.path.abspath(sys.argv[1]); story = json.load(open(story_path))
+    if "SHORTS_WORK" not in os.environ: story_workdir(story["slug"])
     os.makedirs(OUT, exist_ok=True); os.makedirs(os.path.join(REPO, "render"), exist_ok=True)
     narration(story)
     timed = json.load(open(D + "lines_timed.json"))
