@@ -25,6 +25,7 @@ class Set:
         ee = sc.eevee; ee.taa_render_samples = 32; ee.use_gtao = True; ee.gtao_distance = 1.2
         ee.use_bloom = True; ee.bloom_intensity = 0.05; ee.bloom_threshold = 0.9
         ee.use_soft_shadows = True; ee.shadow_cascade_size = '2048'; ee.shadow_cube_size = '1024'
+        ee.use_motion_blur = True; ee.motion_blur_shutter = 0.45  # smooth motion on screen
         sc.view_settings.view_transform = 'Standard'
         try: sc.view_settings.look = 'Medium High Contrast'
         except Exception: pass
@@ -170,6 +171,37 @@ def camera(st, name, loc, target, lens=35, f0=None, f1=None, loc2=None, target2=
     return c
 
 
+def orbit(st, name, center, radius, height, a0, a1, f0, f1, lens=35, target_h=0.0, fstop=None):
+    """Camera circling `center` from angle a0 to a1 (degrees, 0 = in front at -Y) between f0 and f1, eased."""
+    c = camera(st, name, (0, 0, 0), (center[0], center[1], center[2] + target_h), lens, fstop=fstop)
+    n = max(2, int(abs(a1 - a0) / 15) + 1)
+    for i in range(n + 1):
+        u = i / n; e = u * u * (3 - 2 * u); a = math.radians(a0 + (a1 - a0) * e)
+        c.location = (center[0] + math.sin(a) * radius, center[1] - math.cos(a) * radius, center[2] + height)
+        c.keyframe_insert("location", frame=int(f0 + (f1 - f0) * u))
+    for fc in c.animation_data.action.fcurves:
+        for kp in fc.keyframe_points: kp.interpolation = 'BEZIER'; kp.handle_left_type = kp.handle_right_type = 'AUTO_CLAMPED'
+    return c
+
+
+def punch(cam, f, amount=1.35, hold=10, ease=4):
+    """Quick zoom-in on a beat (the lens snaps tighter, then settles back)."""
+    d = cam.data; base = d.lens
+    for fr, v in ((f - 1, base), (f + ease, base * amount), (f + ease + hold, base * amount), (f + ease + hold + 8, base)):
+        d.lens = v; d.keyframe_insert("lens", frame=fr)
+    d.lens = base
+
+
+def shake(cam, f, frames=12, strength=0.25):
+    """Camera shake on an impact, fading out."""
+    if not (cam.animation_data and cam.animation_data.action and cam.animation_data.action.fcurves.find("rotation_euler", index=0)):
+        for i in range(3): cam.keyframe_insert("rotation_euler", index=i, frame=0)
+    for i in range(3):
+        fc = cam.animation_data.action.fcurves.find("rotation_euler", index=i)
+        m = fc.modifiers.new('NOISE'); m.strength = strength * (0.6 if i == 2 else 1.0) * 0.12; m.scale = 2.5
+        m.use_restricted_range = True; m.frame_start = f; m.frame_end = f + frames; m.blend_in = 1; m.blend_out = frames * 0.7
+
+
 def follow(st, name, subject, offset, look_offset=(0, 0, 0), lens=35, fstop=None):
     """Camera that keeps a fixed offset from a moving subject (child of a copy-location helper)."""
     h = bpy.data.objects.new(name + "_h", None); st.link(h)
@@ -293,7 +325,7 @@ class Short:
         self.se = m.sequence_editor_create()
         self.total = self.frame(timed[-1]["end"] + end_pad)
         m.frame_start = 1; m.frame_end = self.total
-        self.shots = []
+        self.shots = []; self.shot_opts = {}
 
     def frame(self, t): return int(round(t * FPS)) + 1
 
@@ -303,7 +335,7 @@ class Short:
         b = self.frame(self.timed[i + 1]["start"] - 0.15) if i + 1 < len(self.timed) else self.total + 1
         return a, b
 
-    def shot(self, st, cam, f0, f1, frozen=False, drift=0.08):
+    def shot(self, st, cam, f0, f1, frozen=False, drift=0.08, caption="low", look=None):
         """Cut to `cam` from f0 to f1. A camera that doesn't already move slowly pushes in (drift = share of the
         distance to its target), which keeps every shot alive."""
         c = st.cams[cam] if isinstance(cam, str) else cam
@@ -314,7 +346,7 @@ class Short:
             for fc in c.animation_data.action.fcurves:
                 for kp in fc.keyframe_points: kp.interpolation = 'SINE'; kp.easing = 'EASE_IN_OUT'
             c.location = a
-        self.shots.append((st, cam, f0, f1, frozen))
+        self.shots.append((st, cam, f0, f1, frozen)); self.shot_opts[(st.name, f0)] = {"caption": caption, "look": look}
 
     def assemble(self, voice, words, overlays=()):
         se = self.se
@@ -325,11 +357,16 @@ class Short:
             s.frame_final_start = f0; s.frame_final_end = f1; s.channel = 1
             s.scene_camera = st.cams[cam] if isinstance(cam, str) else cam
             s.color_saturation = 1.25  # bright and colourful
+            if self.shot_opts.get((st.name, f0), {}).get("look") == "flashback":  # warm, faded memory
+                s.color_saturation = 0.35
+                fb = s.modifiers.new("memory", 'COLOR_BALANCE'); fb.color_balance.gain = (1.12, 1.0, 0.8); fb.color_balance.lift = (1.05, 1.02, 0.98)
             if frozen:  # the paused world: just a hint of cool, colour stays full
                 cb = s.modifiers.new("cool", 'COLOR_BALANCE'); cb.color_balance.gain = (0.98, 1.0, 1.04)
         se.sequences.new_sound("voice", voice, 30, 1)
         items = [(p, f0, f1, ch, *(pos or (0, 0, 1))) for p, f0, f1, ch, *pos in overlays]
-        items += [(p, f0, f1, 9, 0, 0, 1) for p, f0, f1 in words]
+        high = [(f0, f1) for (st, cam, f0, f1, fr) in self.shots if self.shot_opts.get((st.name, f0), {}).get("caption") == "high"]
+        lift = int(H * 0.36)  # captions move up when a shot needs the lower part of the frame clear
+        items += [(p, f0, f1, 9, 0, lift if any(a <= f0 < b for a, b in high) else 0, 1) for p, f0, f1 in words]
         ov = self._overlay_scene(items)
         o = se.sequences.new_scene("overlay", ov, 100, 1)
         o.frame_final_start = 1; o.frame_final_end = self.total + 1; o.channel = 5; o.blend_type = 'ALPHA_OVER'

@@ -208,6 +208,80 @@ def sfx_tick():
 def sfx_swoosh_card(): return sfx_whoosh(0.4) * 0.8
 
 
+def sfx_honk():  # goose
+    out = np.zeros(int(0.7 * SR))
+    for at, d in ((0, 0.22), (0.28, 0.3)):
+        t = t_(d); f = 420 * (1 + 0.05 * np.sin(2 * np.pi * 30 * t))
+        x = lp(tone(f, d, "square") + 0.6 * tone(f * 2.01, d, "saw"), 2200) * env(d, 0.01, 0.06)
+        place(out, x, at)
+    return out * 0.7
+
+
+def sfx_tweet():
+    out = np.zeros(int(0.5 * SR))
+    for i in range(3):
+        d = 0.08; place(out, tone(sweep(2600, 4200, d), d) * env(d, 0.005, shape=2) * 0.4, i * 0.12)
+    return out
+
+
+def sfx_giggle():  # cartoon kid laugh: hee-hee-hee-hee
+    out = np.zeros(int(1.4 * SR))
+    for i in range(6):
+        d = 0.12; t = t_(d); f = (820 - i * 25) * (1 + 0.08 * np.sin(2 * np.pi * 18 * t))
+        x = lp(tone(f, d, "saw") * 0.5 + tone(f * 2, d) * 0.3 + hp(noise(d), 3000) * 0.15, 3200) * np.sin(np.linspace(0, np.pi, len(t)))
+        place(out, x, i * 0.17)
+    return out * 0.9
+
+
+def sfx_tuba():  # bwomp
+    d = 0.9; t = t_(d); f = 62 * (1 + 0.02 * np.sin(2 * np.pi * 5 * t)) * np.linspace(1.08, 0.94, len(t))
+    return lp(tone(f, d, "saw") + 0.5 * tone(f * 2, d, "square"), 700) * env(d, 0.04, 0.3) * 0.9
+
+
+def sfx_drums():  # parade drum roll into a hit
+    out = np.zeros(int(1.6 * SR))
+    for i in range(18):
+        d = 0.05; place(out, hp(noise(d), 900) * env(d, 0.001, shape=3) * (0.25 + i * 0.02), i * 0.06)
+    kd = 0.4; place(out, (tone(sweep(120, 45, kd), kd) * 0.9 + hp(noise(kd), 800) * 0.4) * env(kd, 0.002, shape=2), 1.1)
+    return out
+
+
+def sfx_splat():
+    d = 0.3; return (lp(noise(d), 900) * 1.6 + tone(sweep(300, 80, d), d) * 0.5) * env(d, 0.003, shape=2.5)
+
+
+def sfx_coin():
+    out = np.zeros(int(0.6 * SR))
+    for at, f in ((0, 1975), (0.08, 2637)):
+        d = 0.4; place(out, (tone(f, d, "square") * 0.25 + tone(f, d) * 0.3) * env(d, 0.002, shape=3), at)
+    return out
+
+
+def sfx_bell():  # big tower bell
+    d = 2.5; t = t_(d)
+    x = sum(a * tone(f, d) * np.exp(-t * k) for f, a, k in ((196, 1.0, 1.2), (392, 0.5, 1.6), (466, 0.3, 2.2), (588, 0.25, 2.5), (784, 0.15, 3)))
+    return x * 0.45
+
+
+def sfx_live():  # news sting
+    out = np.zeros(int(1.0 * SR))
+    for i, n in enumerate((67, 72, 76, 79)):
+        d = 0.5 - i * 0.05; place(out, lp(tone(note(n), d, "saw") + tone(note(n - 12), d, "square") * 0.5, 2500) * env(d, 0.005, shape=2) * 0.35, i * 0.09)
+    return out
+
+
+def sfx_wind():
+    d = 2.0; x = noise(d); e = np.sin(np.linspace(0, np.pi, len(x)))
+    return lp(x, 500) * e * 1.4 + hp(lp(x, 2500), 900) * e * 0.25
+
+
+def sfx_handshake():  # rubbery pumping
+    out = np.zeros(int(1.0 * SR))
+    for i in range(5):
+        d = 0.1; place(out, lp(noise(d), 1200) * env(d, 0.005, shape=2) * 0.8 + tone(sweep(260, 200, d), d) * env(d, 0.005, shape=2) * 0.2, i * 0.18)
+    return out
+
+
 SFX = {k[4:]: v for k, v in globals().items() if k.startswith("sfx_")}
 
 

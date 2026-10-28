@@ -23,7 +23,15 @@ def font(size):
 
 
 def narration(story):
-    lines = [l[1] for l in story["lines"]]
+    if story.get("voice_files"):  # recorded voices (e.g. ElevenLabs): place each line in the recordings
+        files = [os.path.join(REPO, story["voice_files"][k]) for k in ("narrator", "others")]
+        key = hashlib.sha1((json.dumps(story["lines"]) + "".join(str(os.path.getsize(f)) for f in files)
+                            + open(HERE + "/voice_import.py").read()).encode()).hexdigest()
+        stamp = D + "voice.key"
+        if os.path.exists(D + "voice.wav") and os.path.exists(stamp) and open(stamp).read() == key: return
+        sys.path.insert(0, HERE); import voice_import; voice_import.main(os.path.abspath(sys.argv[1]))
+        open(stamp, "w").write(key); return
+    lines = [l[1] if isinstance(l, list) else l for l in story["lines"]]
     key = hashlib.sha1(json.dumps([lines, open(HERE + "/tts.py").read()]).encode()).hexdigest()
     stamp = D + "voice.key"
     if os.path.exists(D + "voice.wav") and os.path.exists(stamp) and open(stamp).read() == key:
@@ -135,6 +143,10 @@ def images():
     card("PARIS", "card_paris.png"); card("JAPAN", "card_japan.png"); card("ICELAND", "card_iceland.png")
     card("1 YEAR LATER", "card_year.png", 120, sub="(probably)")
     icon("pause", "icon_pause.png"); icon("play", "icon_play.png")
+    live = Image.new("RGBA", (W, 230), (0, 0, 0, 0)); d = ImageDraw.Draw(live)
+    d.rounded_rectangle((40, 40, 260, 140), 18, fill=(225, 30, 40)); d.text((150, 90), "LIVE", font=font(70), anchor="mm", fill=WHITE)
+    d.rounded_rectangle((40, 150, W - 40, 220), 14, fill=(250, 250, 250)); d.text((W / 2, 185), "MAN STUCK TO BALLOON", font=font(54), anchor="mm", fill=(30, 30, 40))
+    live.save(OUT + "live_banner.png")
     sign([("AA BATTERIES", 110), ("SOLD OUT", 150)], "sign_soldout.png")
     sign([("SORRY!", 120), ("NO AA", 160)], "sign_noaa.png", bg=(240, 190, 30), fg=(40, 30, 20))
     sign([("BATTERIES", 120)], "sign_batteries.png", bg=(30, 90, 170), size=(900, 260))

@@ -191,6 +191,12 @@
    "girl"
   ]
  },
- "models": {},
+ "models": {
+  "beard": {
+   "id": 4801552977,
+   "name": "Beard",
+   "creator": "Yosbums"
+  }
+ },
  "synth_music": true
 }
