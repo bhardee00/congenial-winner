@@ -180,23 +180,25 @@ def gesture(av, face, f0, f1):
 
 
 def talk(av, frames, amount=1.0):
-    """Head motion while someone speaks: a little nod on every word plus a slow side-to-side sway (nod pivot).
-    frames: the frames each word starts on."""
+    """Subtle head motion while someone speaks (nod pivot): a small, soft nod on a few stressed words (at most one
+    every ~0.4 s) and a slow, gentle turn that changes once per phrase. Kept small on purpose - the user found
+    a nod on every word too much."""
     n = av.get("nod")
     if n is None or not frames or not GESTURES: return
     import random
     rnd = random.Random(sum(map(ord, av.get("name", ""))) + frames[0])
-    f0, f1 = frames[0], frames[-1] + 10
-    _clear_after(n, "rotation_euler", f0 - 4)
-    key(n, "rotation_euler", f0 - 4, (0, 0, 0))
-    sway = rnd.choice((-1, 1))
-    for k, f in enumerate(frames):
-        if k and f - frames[k - 1] < 4: continue
-        if k % 4 == 0: sway = -sway
-        down = math.radians(rnd.uniform(4, 8) * amount)
-        yaw = math.radians(sway * rnd.uniform(3, 7) * amount); roll = math.radians(sway * rnd.uniform(1, 4) * amount)
-        key(n, "rotation_euler", f, (down, roll, yaw))
-        key(n, "rotation_euler", f + 3, (down * 0.2, roll, yaw))
+    f0, f1 = frames[0], frames[-1] + 14
+    _clear_after(n, "rotation_euler", f0 - 6)
+    key(n, "rotation_euler", f0 - 6, (0, 0, 0))
+    picked, last = [], -99
+    for f in frames:
+        if f - last >= 12 and rnd.random() < 0.6: picked.append(f); last = f
+    yaw = math.radians(rnd.choice((-1, 1)) * rnd.uniform(1.5, 3) * amount)
+    for k, f in enumerate(picked):
+        if k % 3 == 0: yaw = -yaw  # new gentle direction every few nods
+        down = math.radians(rnd.uniform(1.8, 3.2) * amount)
+        key(n, "rotation_euler", f + 2, (down, 0, yaw))
+        key(n, "rotation_euler", f + 8, (down * 0.25, 0, yaw))
     key(n, "rotation_euler", f1, (0, 0, 0))
 
 

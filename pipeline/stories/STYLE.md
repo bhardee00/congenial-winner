@@ -14,8 +14,7 @@ pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 - **Look:** very bright and saturated, with soft shadows and ambient occlusion. Glossy reflective water with ripple rings.
   Time of day sets the mood: deep-blue night with a bright moon glint, pink sunset, warm daylight, mint hospital.
   A white glow-out is used as a dream or transition.
-- **Captions:** one word at a time, yellow with a thick black outline, rounded bold font, about 5% of frame height,
-  no pop animation. (The reference moves captions per shot; the user prefers them fixed in one spot, so ours don't move.)
+- **Captions:** one word at a time, no pop animation. Ours are white bold Arial-style with a thin outline. (The reference moves captions per shot; the user prefers them fixed in one spot, so ours don't move.)
 - **Faces:** classic Roblox-style. Expressive brows, worried or sad eyes, a drawn tear streak, closed eyes when asleep.
   No floating emote icons.
 - **Audio:** fast narrator (~4 words/s), quiet background music under it the whole time (~15 dB below the voice), and sound effects.
@@ -64,8 +63,9 @@ Drafts: pipeline/stories/ideas/.
   Every character blinks on its own.
 - **Head motion (every short from the parrot short on):** heads move whenever someone talks and whenever their
   expression changes. react() plays a head gesture for each emotion on the neck pivot (shock jerks back, laugh bobs,
-  cry shakes, suspicious tilts, angry shakes, and so on). avatar.talk() nods on every spoken word with a slow sway:
-  dialogue at full strength, narration lighter on the narrator who's on screen. These add to the story's own head poses.
+  cry shakes, suspicious tilts, angry shakes, and so on). avatar.talk() is SUBTLE (user feedback: a nod on every
+  word was too much): a small soft nod (2–3°) on a few stressed words, at most one every ~0.4 s, plus a slow gentle
+  turn. Dialogue at full strength, narration at half. These add to the story's own head poses.
 - Big emotional beats get a punch-in on the face.
 - Emote pops are OFF by default (the reference has none); use `emote_kind=` only for a deliberate gag.
 - Captions stay in ONE fixed spot (70% down the frame) for the whole short. The user asked for this; don't move them

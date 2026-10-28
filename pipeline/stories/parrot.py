@@ -623,6 +623,6 @@ def build(ctx):
     for i, (who, _) in enumerate(ctx.story["lines"]):
         a, b = L(i)
         if i in speakers: talk_nod(speakers[i], a, b)
-        elif who == "narrator" and i not in (47, 48): talk_nod(f_me if i in (0, 2, 52, 54) else me, a, b, amount=0.6)
+        elif who == "narrator" and i not in (47, 48): talk_nod(f_me if i in (0, 2, 52, 54) else me, a, b, amount=0.5)
     talk_nod(gp, *seg(48, "anybody")[1])
     hs.__exit__(None, None, None)
