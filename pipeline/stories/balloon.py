@@ -85,7 +85,7 @@ def town(ctx):
             toys.bunting((x, 9.4, 7.5), (x + 12, 9.4, 7.5), 7.5); toys.bunting((x, -6.4, 7.5), (x + 12, -6.4, 7.5), 7.5)
         toys.clouds(14, (-80, 40, 35), (80, 120, 60), 3, 7)
         # bouncy castle for the 26-year-old's childhood
-        bc = empty("castle", (16, -9, 0))
+        bc = empty("castle", (30, -2.3, 0))
         prim("box", (8, 7, 1.2), (0, 0, 0.6), mat((250, 80, 120), 0.4), parent=bc, bevel=0.5)
         for dx in (-3.5, 3.5):
             for dy in (-3, 3): prim("cylY", (1.4, 1.4, 5), (dx, dy, 3.2), mat((80, 170, 250), 0.4), parent=bc); prim("ball", (1.8, 1.8, 1.8), (dx, dy, 6), mat((250, 210, 60), 0.4), parent=bc)
@@ -107,7 +107,8 @@ def town(ctx):
         prim("cylY", (0.14, 0.14, 4.2), (0, 0, -0.6), mat((170, 120, 70), 0.7), parent=broom)
         prim("box", (1.4, 0.4, 0.6), (0, 0, -2.8), mat((240, 200, 70), 0.8), parent=broom, bevel=0.1)
         wrapper = prim("box", (0.5, 0.3, 0.06), (-0.6, -4.2, 0.33), mat((255, 120, 200), 0.4))
-        cream = toys.ice_cream(); cream.parent = girl["grips"]["la"]; cream.location = (0, -0.2, -0.1)
+        cream = toys.ice_cream(); cream.parent = girl["grips"]["la"]; cream.location = (0, -0.25, 0.15); cream.scale = (1.5, 1.5, 1.5)
+        cream.rotation_euler = (math.radians(75), 0, 0); pose(girl, 0, None, la=(-75, 0, 0))
         cream_drop = toys.ice_cream()
         bd = place_beard(ctx, me); goose_hat = toys.goose(0, 0, 0, 0.55, "goosehat"); goose_hat["root"].parent = me["head"]; goose_hat["root"].location = (0, 0.1, 1.75)
         birds = [toys.bird(0, 0, 0, c, 0.5) for c in ((90, 170, 250), (250, 200, 60))]
@@ -175,11 +176,11 @@ def town(ctx):
         rest(me, b + 4, "waist", "la")
         # ---- 5: the kid ran off to finally have a childhood
         a, b = L(5)
-        walk(kid, a + 2, b - 6, (1.9, -3.1, 0.35), (14.5, -7.5, 1.2), 7, 40); react(kid, "happy", a)
-        for k, f in enumerate(range(b - 6, L(26)[0] - 10, 9)):  # bounce, bounce
-            K._key(kid["root"], "location", f, (15.5, -8.5, 1.2 + (2.6 if k % 2 else 0)))
+        walk(kid, a + 2, b - 6, (1.9, -3.1, 0.35), (12.0, -2.0, 0.35), 7, 40); react(kid, "happy", a)
+        for k, f in enumerate(range(b + 20, L(26)[0] - 10, 9)):  # off to the bouncy castle, bounce, bounce
+            K._key(kid["root"], "location", f, (29.5, -2.3, 1.2 + (2.6 if k % 2 else 0)))
         ctx.sfx("boing", b - 4, 0.8); ctx.sfx("giggle", b - 10, 0.5)
-        cam(st, "t5", (6, -14.5, 4.5), (4, -4.5, 2.5), 28, a, b, (6, 2, 0.5), (9, -2.5, 0.5))
+        cam(st, "t5", (19.5, -0.4, 3.0), (5.0, -2.6, 2.8), 32, a, b, (1.5, -0.2, 0.3), (8, 0.4, -0.2))
         S.shot(st, "t5", a, b)
         # ---- 6: the balloon looked down at me
         a, b = L(6)
@@ -190,12 +191,12 @@ def town(ctx):
         # ---- 7: then it went up. so did I.
         a, b = L(7); s2 = sentence_frames(ctx, 7)[-1]
         toys.face(bfaces, a + 2, "grin")
-        lift = [(s2, 0.35), (s2 + 12, 2.0), (b + 30, 16), (L(26)[0], 40)]
+        lift = [(a + 4, 0.35), (s2, 2.6), (b, 14), (b + 40, 22), (L(26)[0], 40)]
         for f, z in lift: K._key(me["root"], "location", f, (0, -3.0, z))
-        hang(me, s2 + 6, 8); react(me, "big_eyes", s2 + 2)
+        hang(me, a + 8, 8); react(me, "big_eyes", a + 6)
         for crowd_npc in crowd[:5] + [dad]: pose(crowd_npc, s2 + 10, 12, head=(-28, 0, 0)); react(crowd_npc, "shock", s2 + 8)
         ctx.sfx("whoosh", a + 2, 0.8); ctx.sfx("boing", s2, 0.7); ctx.sfx("wind", s2 + 6, 0.6)
-        c = cam(st, "t7", (5, -15, 4.5), (0, -3, 5), 30, a, b, (2, 2, 12), (0, 0, 13)); shake(c, s2, 14, 0.35)
+        c = K.follow(st, "t7", me["root"], (5, -12, 1.2), (0, 0, 5.5), 30); shake(c, s2, 14, 0.35)
         S.shot(st, "t7", a, b)
 
         # ---- flashbacks (26, 27, 29): the kid at last year's parade
@@ -234,8 +235,8 @@ def town(ctx):
         trk.rotation_euler = (0, 0, 0); trk.keyframe_insert("rotation_euler", frame=a)
         for k, f in enumerate(range(a, b, 14)): trk.rotation_euler = (math.radians(8 if k % 2 else -8), 0, 0); trk.keyframe_insert("rotation_euler", frame=f)
         ctx.sfx("honk", sf[min(2, len(sf) - 1)]); ctx.sfx("tweet", sf[min(1, len(sf) - 1)], 0.8); ctx.sfx("wind", a, 0.4)
-        cam(st, "t33a", (1, 4.5, 1.6), (-2.4, -6.5, 16), 24, a, sf[1], (-1, -1, 0), (0, 0, -3)); S.shot(st, "t33a", a, sf[1])
-        c = cam(st, "t33b", (-1.8, 2.5, 17), (-2.4, -6.6, 15.8), 40, sf[1], b, (0, -1.0, -6), (0, 0, -6.2)); punch(c, sf[min(2, len(sf) - 1)], 1.2)
+        cam(st, "t33a", (-2, 7.2, 3.0), (-2.4, -6.5, 17), 24, a, sf[1], (-0.5, -0.5, 0), (0, 0, -3)); S.shot(st, "t33a", a, sf[1])
+        c = K.follow(st, "t33b", me["root"], (0.8, 8.5, 4.6), (0, 0, 4.4), 40); punch(c, sf[min(2, len(sf) - 1)], 1.2)
         S.shot(st, "t33b", sf[1], b, caption="high")
         # ---- 34: a little girl looked up at me
         a, b = L(34)
@@ -246,8 +247,8 @@ def town(ctx):
         a, b = L(35)
         react(girl, "happy", a + 2)
         for f in range(a + 4, b + 8, 4): pose(girl, f, 2, waist=(-14 if (f // 4) % 2 else 2, 0, 0))
-        vis(cream, a + 14, False); cream_drop.location = (-3.0, -2.6, 1.6); vis(cream_drop, 0, False); vis(cream_drop, a + 14, True)
-        K._key(cream_drop, "location", a + 14, (-2.6, -2.6, 1.6), 1); K._key(cream_drop, "location", a + 26, (-2.4, -2.0, 0.45))
+        vis(cream, a + 14, False); vis(cream_drop, 0, False); vis(cream_drop, a + 14, True); pose(girl, a + 16, 6, la=(0, 0, 0))
+        K._key(cream_drop, "location", a + 14, (-4.0, -1.9, 2.4), 1); K._key(cream_drop, "location", a + 26, (-3.8, -1.2, 0.45))
         K._key(cream_drop, "rotation_euler", a + 14, (0, 0, 0), 1); K._key(cream_drop, "rotation_euler", a + 26, (math.radians(110), 0, 0))
         ctx.sfx("giggle", a + 2); ctx.sfx("splat", a + 26)
         rest(girl, b + 14, "waist", ease=8)
@@ -386,21 +387,23 @@ def sky(ctx):
         # ---- 9-12: the helicopter
         a9, b9 = L(9); a12, b12 = L(12)
         p = put(a9, "stadium", (0, 0, 2), until=b12, drift=(1.5, 0, 0.5))
-        heli = toys.helicopter(0, 0, 0)
+        heli = toys.helicopter(0, 0, 0); heli.scale = (1.6, 1.6, 1.6)
+        prim("box", (0.12, 2.2, 1.9), (-2.06, -1.0, 0.1), mat((25, 25, 30), 0.6), parent=heli)  # open side door
         K._key(heli, "location", a9 - 1, rel(p, (40, 6, 6)), 1); K._key(heli, "location", a9 + 30, rel(p, (8.5, 0.5, 4.0)))
         K._key(heli, "location", b12, rel(p, (10, 0.5, 4.5)))
-        pilot = blocky.build(ctx.D, "pilot", PILOT); pilot["root"].parent = heli; pilot["root"].location = (-2.3, -1.2, -2.6)
-        pilot["root"].rotation_euler = (0, 0, math.radians(-90)); idle(pilot, ("head",), 0.04, 30)
-        pose(pilot, 0, None, waist=(0, -18, 0), la=(-40, 0, -20))
+        pilot = blocky.build(ctx.D, "pilot", PILOT); pilot["root"].parent = heli; pilot["root"].location = (-1.5, -1.0, -1.85)
+        pilot["root"].scale = (1 / 1.6,) * 3; pilot["root"].rotation_euler = (0, 0, math.radians(-90)); idle(pilot, ("head",), 0.04, 30)
+        pose(pilot, 0, None, ll=(-88, 0, 0), rl=(-88, 0, 0), waist=(20, 0, 0), la=(-60, 0, -20), ra=(-30, 0, 10))
         react(me, "shock", a9 + 20); ctx.sfx("wind", a9, 0.8)
         cam(st, "s9", rel(p, (3, -16, 4)), rel(p, (5, 0, 4)), 30, a9, b9, (-2, 3, 0.5), (0, 0, 0)); S.shot(st, "s9", a9, b9)
         a, b = L(10); react(pilot, "suspicious", a)
-        c = cam(st, "s10", rel(p, (3.6, -7.5, 6.6)), rel(p, (6.2, -0.7, 6.4)), 46, a, b, (0, 0.8, 0), (0, 0, 0)); S.shot(st, "s10", a, b, caption="high")
+        c = cam(st, "s10", rel(p, (1.6, -4.2, 5.0)), rel(p, (5.6, -1.1, 5.5)), 42, a, b, (0.3, 0.6, 0), (0, 0, 0)); S.shot(st, "s10", a, b, caption="high")
         a, b = L(11); react(me, "nervous", a); react(me, "happy", a + 8)
         c = cam(st, "s11", rel(p, (1.0, -6.5, 5.0)), rel(p, (0, 0, 4.7)), 50, a, b, (0, 0.8, 0), (0, 0, 0)); punch(c, a + 6, 1.2)
         S.shot(st, "s11", a, b)
         a, b = L(12); react(pilot, "grin", a); react(me, "big_eyes", a + 10)
-        ctx.overlay("live_banner.png", a + 6, L(13)[0] + 20, 7); ctx.sfx("live", a + 6)
+        ctx.overlays.append((ctx.A + "live_text.png", a + 6, b, 7, -300, 630, 1.0)); ctx.sfx("live", a + 6)
+        for f in range(a + 6, b, 16): ctx.overlays.append((ctx.A + "live_dot.png", f, min(f + 9, b), 8, -430, 630, 1.0))
         c = cam(st, "s12", rel(p, (4, -11, 5)), rel(p, (4, 0, 5)), 34, a, b, (0, 2, 0), (0, 0, 0)); punch(c, a + 8, 1.25); shake(c, a + 8, 10, 0.2)
         S.shot(st, "s12", a, b)
         # ---- 13: Canada, a goose joined me
@@ -412,26 +415,28 @@ def sky(ctx):
         g["root"].rotation_euler = (0, 0, math.radians(-90)); g["root"].keyframe_insert("rotation_euler", frame=sf[-1])
         toys.flap(g, a, b + 10); react(me, "suspicious", sf[1] + 4); react(me, "annoyed", sf[-1] + 4)
         ctx.sfx("honk", sf[1]); ctx.sfx("honk", sf[-1] + 6, 0.7)
-        cam(st, "s13a", rel(p, (6, -18, 10)), rel(p, (0, 0, -20)), 26, a, sf[1], (0, 4, -4), (0, 0, 10)); S.shot(st, "s13a", a, sf[1])
+        cam(st, "s13a", rel(p, (1.5, -11, 5.2)), rel(p, (-2.5, 0, 5.0)), 30, a, sf[1], (0.5, 1.5, 0), (2, 0, 0)); S.shot(st, "s13a", a, sf[1])
         c = cam(st, "s13b", rel(p, (2, -9, 4.6)), rel(p, (2, 0, 4.4)), 40, sf[1], b, (2.5, 0.8, 0.2), (3, 0, 0)); punch(c, sf[-1], 1.15)
         S.shot(st, "s13b", sf[1], b)
         # ---- 14: ocean, a cruise ship threw me a sandwich
         a, b = L(14); sf = sentence_frames(ctx, 14)
         p = put(a, "ocean", until=b, drift=(1, 0, 0.3)); react(me, "happy", sf[-1])
+        thrower = blocky.build(ctx.D, "thrower", {"shirt": (250, 250, 250), "pants": (40, 60, 120), "skin": (234, 190, 150), "hat": "cap", "hat_color": (40, 60, 120)})
+        at(thrower, 0, (2005.6, -12.1, 10.4), (2000, -30), None); pose(thrower, a + 2, 6, ra=(-160, 0, 10)); pose(thrower, a + 8, 4, ra=(-60, 0, 10))
         sw = toys.sandwich(); vis(sw, 0, False); vis(sw, a + 6, True)
-        K._key(sw, "location", a + 6, (2000, -12, 14), 1); K._key(sw, "location", sf[-1] - 2, rel(p, (1.6, -0.4, 2.4)))
+        K._key(sw, "location", a + 6, (2005.0, -13.0, 14.5), 1); K._key(sw, "location", sf[-1] - 2, rel(p, (1.6, -0.4, 2.4)))
         K._key(sw, "rotation_euler", a + 6, (0, 0, 0), 1); K._key(sw, "rotation_euler", sf[-1] - 2, (math.radians(720), math.radians(360), 0))
         sw2 = toys.sandwich(); sw2.parent = me["grips"]["la"]; sw2.location = (0, -0.3, 0); sw2.scale = (0.8, 0.8, 0.8); show_between(sw2, sf[-1] - 2, b)
         vis(sw, sf[-1] - 2, False); pose(me, sf[-1] - 8, 6, la=(-95, 0, -10)); ctx.sfx("whoosh", a + 8, 0.7); ctx.sfx("pop", sf[-1] - 2); ctx.sfx("nom", sf[-1] + 8, 0.7)
-        cam(st, "s14a", rel(p, (4, -9, 7)), (2000, -10, 2), 30, a, sf[-1], (-1, 1.5, -1), (0, 0, 0)); S.shot(st, "s14a", a, sf[-1])
+        cam(st, "s14a", rel(p, (8, -26, 6)), rel(p, (1, 10, -12)), 24, a, sf[-1], (-1.5, 3, -1), (0, 0, 3)); S.shot(st, "s14a", a, sf[-1])
         c = cam(st, "s14b", rel(p, (2.5, -7, 4.0)), rel(p, (0.8, 0, 3.4)), 42, sf[-1], b, (0, 1, 0), (0, 0, 0)); punch(c, sf[-1] + 2, 1.2)
         S.shot(st, "s14b", sf[-1], b)
         # ---- 15: London, on top of the tower for one minute
         a, b = L(15); sf = sentence_frames(ctx, 15)
-        at(me, a, (3000, -0.5, top - 4.3), 0, 1); pose(me, a, 1, ll=(-88, 0, 6), rl=(-88, 0, -6), ra=(-172, 0, 6), la=(-10, 0, -20)); react(me, "smile", a); react(me, "annoyed", sf[-1])
-        ctx.sfx("bell", a + 4, 1.0); ctx.sfx("tick", sf[-1], 0.6)
+        at(me, a, (3000, -0.5, top - 4.3), 0, 1); pose(me, a, 1, ll=(-88, 0, 6), rl=(-88, 0, -6), ra=(-172, 0, 6), la=(-10, 0, -20)); react(me, "smile", a); react(me, "angry", sf[-1] + 4, b + 12)
+        ctx.sfx("bell", a + 4, 1.0); ctx.sfx("angry", sf[-1] + 4, 0.8)
         orbit(st, "s15a", (3000, 0, top), 30, -6, -40, -10, a, sf[-1], 28, target_h=-8); S.shot(st, "s15a", a, sf[-1])
-        c = cam(st, "s15b", (3001.5, -8.5, top + 3.5), (3000, -0.5, top + 3.8), 45, sf[-1], b, (0, 1.2, 0), (0, 0, 0)); punch(c, sf[-1] + 6, 1.15)
+        c = cam(st, "s15b", (3001.0, -9.0, top + 1.4), (3000, -0.5, top + 0.9), 40, sf[-1], b, (-0.3, 3.0, -0.2), (0, 0, 0)); punch(c, sf[-1] + 6, 1.3)
         S.shot(st, "s15b", sf[-1], b, caption="high")
         # ---- 16: Paris, a mime pretended to pull me down
         a, b = L(16); sf = sentence_frames(ctx, 16)
@@ -456,12 +461,13 @@ def sky(ctx):
         cam(st, "s18", rel(p, (3, -9, 7)), rel(p, (0, 0, 7.5)), 34, a, b, (-1.5, 1.5, 0), (0, 0, 0)); S.shot(st, "s18", a, b)
         # ---- 19: tied to a truck, now I have a truck (it stays for the rest of the trip)
         a, b = L(19); sf = sentence_frames(ctx, 19); p = put(a, "sky", (60, 0, 0), until=b)
-        trk = toys.truck(); trk.parent = me["root"]; trk.location = (0, 0, -6.5); trk.scale = (0.7, 0.7, 0.7); show_between(trk, sf[-1] - 2, None)
-        rope = prim("cylY", (0.06, 0.06, 6.5), (0, 0, -3.25), mat((230, 230, 230), 0.5), parent=me["root"]); show_between(rope, sf[-1] - 2, None)
+        trk = toys.truck(); trk.parent = me["root"]; trk.location = (0, 0, -6.5); trk.scale = (0.7, 0.7, 0.7); show_between(trk, a + 8, None)
+        rope = prim("cylY", (0.06, 0.06, 6.5), (0, 0, -3.25), mat((230, 230, 230), 0.5), parent=me["root"]); show_between(rope, a + 8, None)
+        pose(me, a + 4, 6, la=(-40, 0, -10)); ctx.sfx("pop", a + 8, 0.8)
         for k, f in enumerate(range(sf[-1], L(32)[0], 16)): trk.rotation_euler = (math.radians(10 if k % 2 else -10), 0, 0); trk.keyframe_insert("rotation_euler", frame=f)
         react(me, "suspicious", a); react(me, "nervous", sf[-1] + 4); ctx.sfx("boing", sf[-1], 0.9); shake_c = None
-        cam(st, "s19a", rel(p, (2, -8, 3)), rel(p, (0, 0, 3)), 36, a, sf[-1], (0, 1, 0), (0, 0, 0)); S.shot(st, "s19a", a, sf[-1])
-        c = cam(st, "s19b", rel(p, (6, -16, -8)), rel(p, (0, 0, -1)), 28, sf[-1], b, (-1, 1, 2), (0, 0, 0)); shake(c, sf[-1], 10, 0.3)
+        cam(st, "s19a", rel(p, (10, -16, -0.5)), rel(p, (0, 0, -0.5)), 28, a, sf[-1], (-2, 2, 0), (0, 0, 0)); S.shot(st, "s19a", a, sf[-1])
+        c = cam(st, "s19b", rel(p, (2.5, -8, -9)), rel(p, (0, 0, 2.5)), 30, sf[-1], b, (-0.5, 1, 1), (0, 0, 0)); shake(c, sf[-1], 10, 0.3)
         S.shot(st, "s19b", sf[-1], b)
         # ---- 20: asked a bird to pop it, the bird asked for a ride
         a, b = L(20); sf = sentence_frames(ctx, 20); p = put(a, "sky", (90, 0, 0), until=b)

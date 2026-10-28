@@ -3,6 +3,8 @@ Finds every script line in the recordings, then builds work/voice.wav and work/l
 in script order, so captions, cuts and effects sync to the real performance.
     python3 voice_import.py stories/<story>.json
 story["voice_files"] = {"narrator": wav, "others": wav, "others_order": [speaker per line, in recorded order]}
+    optional "replace": {"<line index>": wav} for single lines re-recorded later (the original take is still used
+    to find every other line; the alignment reads those lines' original wording from "original_text")
 Sentences are found by matching the recording's sound against a local TTS reading of the same script (dynamic
 time warping on mel spectra), then snapped to the real pauses; word times inside a sentence follow its voiced parts.
 Short recordings with one piece per line (the other voices) are simply fitted to the pauses."""
@@ -165,13 +167,17 @@ def main(story_path):
     n_idx = [i for i, l in enumerate(lines) if l[0] == "narrator"]; o_idx = [i for i, l in enumerate(lines) if l[0] != "narrator"]
     assert [lines[i][0] for i in o_idx] == vf["others_order"], "others_order must match the script's other-voice lines"
     placed, spans = {}, {}
-    sent = [(i, x) for i in n_idx for x in split_sentences(lines[i][1])]
+    orig = {int(k): v for k, v in vf.get("original_text", {}).items()}  # wording as recorded, if changed since
+    sent = [(i, x) for i in n_idx for x in split_sentences(orig.get(i, lines[i][1]))]
     sspans, nsegs = align_sentences(nar, [x for _, x in sent])
     for i in n_idx:
         sp = [sspans[q] for q, (li, _) in enumerate(sent) if li == i]; spans[i] = sp
         placed[i] = (nar, [[a, b] for a, b in nsegs if b > sp[0][0] + 0.02 and a < sp[-1][1] - 0.02] or [[sp[0][0], sp[-1][1]]])
-    groups = fit_lines(segments(oth), expected_lengths([lines[i][1] for i in o_idx]))
+    groups = fit_lines(segments(oth), expected_lengths([orig.get(i, lines[i][1]) for i in o_idx]))
     for i, g in zip(o_idx, groups): placed[i] = (oth, g)
+    # single lines re-recorded later replace their part of the original take: {"line index": wav}
+    for k, path in vf.get("replace", {}).items():
+        i = int(k); rep = load(os.path.join(REPO, path)); placed[i] = (rep, segments(rep)); spans.pop(i, None)
     # stitch in script order with tight, natural gaps
     out, timed, t = [np.zeros(int(0.12 * SR), np.float32)], [], 0.12
     for i, (speaker, text) in enumerate(lines):

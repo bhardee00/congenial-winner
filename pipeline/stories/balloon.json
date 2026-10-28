@@ -198,5 +198,6 @@
    "creator": "Yosbums"
   }
  },
- "synth_music": true
+ "synth_music": false,
+ "music_file": null
 }
