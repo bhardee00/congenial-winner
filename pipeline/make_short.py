@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 D = os.environ.get('SHORTS_WORK', os.path.join(REPO, 'work')) + '/'
 OUT = D + "short/"
-W, H = 1080, 1920
+W, H = 1080, 1440  # 3:4 portrait
 YELLOW, BLACK, WHITE = (255, 226, 61), (0, 0, 0), (255, 255, 255)
 
 
@@ -46,21 +46,45 @@ def fetch_models(story):
 
 
 def captions(timed):
-    """One full-frame transparent PNG per spoken word (yellow, thick black outline), timed within each line."""
-    os.makedirs(OUT + "words", exist_ok=True); f = font(96); words = []
+    """One full-frame transparent PNG per spoken word (yellow, thick black outline), shown while it is said."""
+    os.makedirs(OUT + "words", exist_ok=True); f = font(78); words = []
     for l in timed:
-        ws = l["text"].split(); tot = sum(len(w) + 1 for w in ws); acc = 0
-        for w in ws:
-            s = l["start"] + acc / tot * (l["end"] - l["start"]); acc += len(w) + 1
-            words.append([w.strip(".,?!\"").lower(), s])
+        if "words" in l: words += [[w.strip(".,?!\"").lower(), s, e] for w, s, e in l["words"]]
+        else:  # older narration without word timings: spread the line by word length
+            ws = l["text"].split(); tot = sum(len(w) + 1 for w in ws); acc = 0
+            for w in ws:
+                s = l["start"] + acc / tot * (l["end"] - l["start"]); acc += len(w) + 1
+                words.append([w.strip(".,?!\"").lower(), s, s + (len(w) + 1) / tot * (l["end"] - l["start"])])
     out = []
-    for i, (w, s) in enumerate(words):
-        e = words[i + 1][1] if i + 1 < len(words) and words[i + 1][1] - s < 1.2 else s + 0.6
+    for i, (w, s, e) in enumerate(words):
+        nxt = words[i + 1][1] if i + 1 < len(words) else e + 0.6
+        e = nxt if nxt - e < 0.35 else e + 0.25  # hold until the next word unless there is a real pause
         p = OUT + f"words/w{i:03d}.png"
         im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-        d.text((W / 2, H * 0.66), w, font=f, anchor="mm", fill=YELLOW, stroke_width=10, stroke_fill=BLACK)
+        d.text((W / 2, H * 0.62), w, font=f, anchor="mm", fill=YELLOW, stroke_width=8, stroke_fill=BLACK)
         im.save(p, optimize=True); out.append((p, s, e))
     return out
+
+
+def sounds(story, timed):
+    """Synthesised effects and music (audio.py), plus spoken effects said by the voice model (story "voice_sfx")."""
+    sys.path.insert(0, HERE)
+    import audio
+    audio.make_sfx(OUT + "sfx")
+    if story.get("music_file"):  # your own track; muffled and quieter while the world is paused
+        src = os.path.join(REPO, story["music_file"])
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-ac", "1", "-ar", str(audio.SR), OUT + "music_normal.wav"], check=True)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-ac", "1", "-ar", str(audio.SR), "-af", "lowpass=f=700,volume=0.7",
+                        OUT + "music_paused.wav"], check=True)
+    elif story.get("synth_music"):
+        audio.make_music(OUT + "music_normal.wav", OUT + "music_paused.wav", timed[-1]["end"] + 4)
+    from kokoro_onnx import Kokoro
+    k = Kokoro(D + "tts/kokoro.onnx", D + "tts/voices.bin")
+    for name, (text, voice, speed) in story.get("voice_sfx", {}).items():
+        a, sr = k.create(text, voice=voice, speed=speed, lang="en-us")
+        tmp = OUT + f"sfx/{name}_raw.wav"; import soundfile as sf; sf.write(tmp, a, sr)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-ar", str(audio.SR), "-ac", "1", OUT + f"sfx/{name}.wav"], check=True)
+        os.remove(tmp)
 
 
 def card(text, name, size=150, y=0.2, color=WHITE, sub=None):
@@ -126,6 +150,7 @@ def main():
     fetch_models(story)
     json.dump(captions(timed), open(OUT + "words.json", "w"))
     images()
+    sounds(story, timed)
     args = ["blender", "-b", "--python-exit-code", "1", "-P", HERE + "/build_short.py", "--", story_path] + [a for a in sys.argv[2:] if a.startswith("--")]
     subprocess.run(args, check=True)
 

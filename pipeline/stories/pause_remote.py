@@ -86,6 +86,7 @@ def park(ctx):
 
         me = avatar.build(ctx.D); man = avatar.build(ctx.D, "man", MAN); kid = avatar.build(ctx.D, "kid", KID)
         guy = avatar.build(ctx.D, "guy", GUY); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         bd = beard(ctx, me); pbd = pigeon_beard(ctx, pg)
         L31a = L(31)[0]
         show_between(bd, L31a); show_between(pbd, L31a)
@@ -121,23 +122,27 @@ def park(ctx):
         a, b = L(0); P = b - 8
         react(me, "suspicious", 2); react(me, "grin", a + 22); press(me, P)
         S.flash(P); ctx.overlay("icon_pause.png", P, P + 24)
+        ctx.sfx("click", P - 1); ctx.sfx("pause", P + 1, 1.2); ctx.music(P + 1, "paused")
         C.look(pg, 12, 0, 30); C.look(pg, 26, 0, 0); C.look(pg, 34, 0, 30)
         camera(st, "c0", (4.6, -11.5, 4.4), (1.3, -1.0, 3.4), 40, a, b, (4.0, -9.8, 4.2), (1.3, -1.0, 3.6))
         S.shot(st, "c0", a, b)
         # 1: the world stopped
         a, b = L(1)
         react(me, "big_eyes", a + 2); react(kid, "shock", a - 1); hold_out(me, a + 4, up=-35)
+        ctx.sfx("pop", a + 2)
         camera(st, "c1", (0.5, -19, 6.0), (0.6, 0, 2.8), 30, a, b, (0.5, -17, 5.5), (0.6, 0, 3.0))
         S.shot(st, "c1", a, b, frozen=True)
         # 2: except me. and a pigeon
         a, b = L(2)
         pose(me, a + 4, head=(0, 0, 35)); pose(me, a + 16, head=(0, 0, -40)); react(me, "nervous", a + 16)
         C.look(pg, a + 10, -30, -10)
+        ctx.sfx("coo", a + 8, 0.8)
         camera(st, "c2", (4.2, -9.5, 3.2), (2.8, -1.8, 2.2), 35)
         S.shot(st, "c2", a, b, frozen=True)
         # 3: the pigeon looked at me like I owed it money
         a, b = L(3)
         C.look(pg, a + 6, 0, -22); C.blink(pg, b - 14, 4)
+        ctx.sfx("tick", a + 4, 0.5)
         camera(st, "c3", (3.7, 0.7, 3.2), (4.0, -2.6, 1.2), 42, a, b, (3.8, 0.2, 2.9), (4.0, -2.6, 1.2), fstop=2.8)
         S.shot(st, "c3", a, b, frozen=True)
         # 4: a man frozen mid-sneeze
@@ -148,6 +153,7 @@ def park(ctx):
         walk(me, a + 4, a5 + 18, (1.5, -1.0, 0), (-3.5, -1.6, 0)); turn(me, a5 + 24, (-5, -0.3))
         rest(me, a5 + 24, "head"); react(me, "determined", a5); pose(me, a5 + 26, la=(-70, 0, -20)); rest(me, a5 + 36, "la")
         react(me, "grin", a5 + 34)
+        ctx.sfx("pop", a5 + 28)
         camera(st, "c5", (-1.6, -10.5, 4.4), (-4.2, -0.8, 3.4), 35)
         S.shot(st, "c5", a5, b5, frozen=True)
         # 6: kid's ice cream frozen halfway to the ground
@@ -158,23 +164,27 @@ def park(ctx):
         # 7: I caught it. I ate it.
         turn(me, a7 + 2, (6.6, -1.0), 4); pose(me, a7 + 7, la=(-55, 0, -25), la_elbow=(-20, 0, 0)); react(me, "happy", a7 + 10)
         pose(me, a7 + 16, la=(-95, 0, -35), la_elbow=(-95, 0, 0)); rest(me, b7 + 4, "la", "la_elbow")
+        ctx.sfx("nom", a7 + 14)
         camera(st, "c7", (9.2, -4.6, 4.2), (5.9, -1.5, 3.2), 40)
         S.shot(st, "c7", a7, b7, frozen=True)
         # 8: I'm not proud of it.
         a, b = L(8)
         turn(me, a, 0, 4); react(me, "embarrassed", a)
+        ctx.sfx("pop", a, 0.7)
         camera(st, "c8", (4.6, -7.0, 4.9), (5.3, -2.3, 4.6), 55)
         S.shot(st, "c8", a, b, frozen=True)
         # 9: pressed play. nothing. dead batteries.
         a, b = L(9)
         react(me, "determined", a); press(me, a + 8); ctx.overlay("icon_play.png", a + 8, a + 17)
         react(me, "suspicious", a + 16); react(me, "annoyed", a + 30); hold_out(me, a + 34, up=-40)
+        ctx.sfx("click", a + 7); ctx.sfx("buzz", a + 12); ctx.sfx("sad", a + 30, 0.8)
         camera(st, "c9", (3.4, -8.6, 4.5), (5.3, -2.3, 3.7), 40)
         S.shot(st, "c9", a, b, frozen=True)
         # 10: the pigeon sighed
         a, b = L(10)
         K._key(pg["root"], "location", a, (7.3, -4.4, 0), 1); K._key(pg["root"], "rotation_euler", a, (0, 0, math.radians(-15)), 1)
         C.sigh(pg, a + 4); react(me, "suspicious", a + 20)
+        ctx.sfx("sigh", a + 4)
         camera(st, "c10", (7.9, -8.0, 1.7), (7.2, -4.4, 1.1), 45, fstop=3.5)
         S.shot(st, "c10", a, b, frozen=True)
 
@@ -184,23 +194,27 @@ def park(ctx):
         K._key(pg["root"], "location", a - 1, (3.2, -2.2, 0), 1); K._key(pg["root"], "rotation_euler", a - 1, (0, 0, math.radians(-120)), 1)
         react(me, "determined", a - 1); P = a + 5; press(me, P); react(me, "happy", P + 4)
         S.flash(P); ctx.overlay("icon_play.png", P, P + 22)
+        ctx.sfx("click", P - 1); ctx.sfx("play", P + 1, 1.2); ctx.music(P + 1, "normal")
         K._key(leaves, "location", P, (0, 0, 0), 1); K._key(leaves, "location", P + 45, (0.6, 0.4, -7.0)); vis(leaves, P + 46, False)
         camera(st, "c31", (0.9, -6.2, 4.7), (1.5, -1.0, 4.35), 50)
         S.shot(st, "c31", a, b)
         # 32: the man sneezed into his tissue
         a, b = L(32)
         pose(man, a + 5, ease=3, head=(28, 0, 0), waist=(10, 0, 0)); react(man, "shock", a + 5); react(man, "happy", a + 22)
+        ctx.sfx("achoo", a - 6, 1.3)
         camera(st, "c32", (-3.0, -7.8, 4.5), (-5.0, -0.5, 4.0), 45)
         S.shot(st, "c32", a, b)
         # 33: the kid looked at his empty hand
         a, b = L(33)
         pose(kid, a + 4, head=(30, 0, 0), ra=(-45, 0, 5)); react(kid, "sad", a + 6); react(kid, "suspicious", a + 22)
+        ctx.sfx("huh", a + 18, 1.2)
         camera(st, "c33", (8.2, -6.0, 3.0), (6.2, 0.0, 2.4), 40)
         S.shot(st, "c33", a, b)
         # 34: I put the remote back on the bench
         front = (BENCH_AT[0] + 0.9, BENCH_AT[1] - 2.0, 0)
         walk(me, a34 + 2, a34 + 30, (1.5, -1.0, 0), front); turn(me, a34 + 34, 180, 5)
         pose(me, a34 + 38, ra=(-60, 0, 0), ra_elbow=(-10, 0, 0)); rest(me, a34 + 48, "ra", "ra_elbow")
+        ctx.sfx("pop", a34 + 40, 0.6)
         react(me, "smile", a34)
         walk(me, b34 - 14, b34 + 4, front, (2.6, 0.2, 0)); turn(me, b34 + 10, (1.0, -10), 6)
         camera(st, "c34", (4.0, -11.5, 5.0), (1.0, 1.4, 3.0), 35)
@@ -215,6 +229,7 @@ def park(ctx):
         # 36: I said no.
         a, b = L(36)
         react(me, "annoyed", a); nod(me, a + 2, 2, 14, axis=2)
+        ctx.sfx("whoosh", a + 2, 0.5)
         camera(st, "c36", (1.6, -4.4, 4.8), (2.6, 0.2, 4.4), 50)
         S.shot(st, "c36", a, b)
         # 37: the pigeon landed next to him. It winked at me.
@@ -222,6 +237,7 @@ def park(ctx):
         C.fly(pg, a, a + 32, (3.2, -2.2, 0), (BENCH_AT[0] + 0.6, BENCH_AT[1] - 0.4, BENCH_SEAT))
         K._key(pg["root"], "rotation_euler", a + 32, (0, 0, math.radians(10)), 6)
         C.blink(pg, S.total - 28, 8)
+        ctx.sfx("flap", a); ctx.sfx("sparkle", S.total - 28)
         camera(st, "c37", (1.2, -12.0, 5.2), (-0.4, 2.6, 3.0), 32, a, S.total, (0.2, -8.2, 4.0), (-0.3, 2.9, 3.0))
         S.shot(st, "c37", a, S.total + 1)
     return st
@@ -246,14 +262,17 @@ def store(ctx):
         K.plane_image(ctx.A + "sign_noaa.png", (3.0, 1.66), (9, 1.3, 6.7), emit=0.4)
         K.plane_image(ctx.A + "sign_batteries.png", (3.4, 1.0), (-9, 1.3, 6.5), emit=0.4)
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
 
         a, b = L(11)
         at(me, 1, (-0.8, -0.6, 0), 180); react(me, "sad", a + 18); turn(me, a + 16, (3, -8), 8)
+        ctx.sfx("sad", a + 18, 0.7)
         K._key(pg["root"], "location", 1, (1.6, -1.2, 0), 1)
         camera(st, "s11", (3.0, -8.0, 5.4), (0.0, 2.2, 4.4), 30, a, b, (2.6, -7.0, 5.2), (0.0, 2.2, 4.4))
         S.shot(st, "s11", a, b, frozen=True)
         a, b = L(12)
         at(me, a - 1, (8.6, -0.7, 0), 0); react(me, "angry", a + 2, b + 6)
+        ctx.sfx("angry", a + 2)
         pose(me, a + 4, la=(-20, 0, -20), ra=(-20, 0, 20), la_elbow=(-60, 0, 0), ra_elbow=(-60, 0, 0))
         K._key(pg["root"], "location", a - 1, (10.4, -1.4, 0), 1); K._key(pg["root"], "rotation_euler", a - 1, (0, 0, math.radians(-20)), 1)
         camera(st, "s12", (7.6, -7.4, 4.8), (8.8, 0.8, 4.2), 35)
@@ -261,6 +280,7 @@ def store(ctx):
         a, b = L(13)
         rest(me, a + 4, "la", "ra", "la_elbow", "ra_elbow"); react(me, "annoyed", a + 8)
         C.look(pg, a + 10, -20, -25); C.sigh(pg, a + 30)
+        ctx.sfx("sigh", a + 30, 0.8)
         camera(st, "s13", (9.9, -5.6, 3.6), (9.4, -0.9, 3.2), 35)
         S.shot(st, "s13", a, b, frozen=True)
     return st
@@ -284,6 +304,7 @@ def ocean(ctx):
         for x, y, s in ((40, 70, 0.18), (-55, 80, 0.22), (-15, 110, 0.15)): place(ctx.D, ctx.M["iceberg"], (x, y, -2), random.uniform(0, 360), s)
         floaters(30, (-14, -6, 0.8), (14, 6, 3.5), (240, 250, 255), 0.14)  # frozen spray
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         a, b = L(14)
         tops = [(x, y, 1.8) for x, y in crests]
         n = len(tops) - 1; step = (b + 8 - a) / n
@@ -293,6 +314,7 @@ def ocean(ctx):
             mid = (p + q) / 2; mid.z += 1.8
             at(me, int((f + g) / 2), tuple(mid), 90, ease=None); at(me, g, tuple(q), 90, ease=None)
             pose(me, f + 2, ll=(-30, 0, 0), rl=(20, 0, 0), la=(-50, 0, -30), ra=(30, 0, 30)); pose(me, g - 1, ll=(0, 0, 0), rl=(0, 0, 0))
+            ctx.sfx("boing", f, 0.7)
         react(me, "happy", a)
         C.walk(pg, a, b + 8, (-12, 0.4, 1.6), (4.5, 0.4, 1.6), 4)
         camera(st, "o14", (-3.0, -16.0, 4.0), (-3.0, 0.0, 2.4), 32, a, b, (5.0, -16.0, 4.0), (5.0, 0.0, 2.4))
@@ -320,6 +342,7 @@ def paris(ctx):
         al = bpy.data.lights.new("fill", "AREA"); al.energy = 2500; al.size = 20
         ao = bpy.data.objects.new("fill", al); st.link(ao); ao.location = (0, -10, 10); ao.rotation_euler = (math.radians(50), 0, 0)
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         marker = prim("cylY", (0.12, 0.12, 0.7), (0, -0.05, -0.3), mat((20, 20, 20), 0.4), parent=me["grips"]["ra"])
         a, b = L(15); a2, b2 = L(16)
         show_between(sm, a + 22, a2 + 10); show_between(marker, 0, a2 + 30)
@@ -328,10 +351,12 @@ def paris(ctx):
         rest(me, a + 32, "ra", "ra_elbow"); turn(me, a + 34, (-3, -8), 6); react(me, "grin", a + 36)
         K._key(pg["root"], "location", 1, (-1.6, 0.2, 0), 1); K._key(pg["root"], "rotation_euler", 1, (0, 0, math.radians(30)), 1)
         ctx.overlay("card_paris.png", a, a + 38)
+        ctx.sfx("whoosh", a, 0.7); ctx.sfx("pop", a + 22)
         camera(st, "p15", (-5.0, -4.2, 4.8), (0.3, 2.2, 4.8), 32, a, b, (-4.4, -3.6, 4.8), (0.3, 2.2, 4.9))
         S.shot(st, "p15", a, b, frozen=True)
         turn(me, a2 + 2, 200, 4); pose(me, a2 + 8, ra=(-125, 0, -20), ra_elbow=(-30, 0, 0)); rest(me, a2 + 16, "ra", "ra_elbow")
         turn(me, a2 + 20, (-2, -8), 5); react(me, "nervous", a2 + 22); C.look(pg, a2 + 24, 30, -15)
+        ctx.sfx("pop", a2 + 10, 0.6); ctx.sfx("tick", a2 + 22, 0.4)
         camera(st, "p16", (-2.0, -4.6, 5.2), (0.2, 2.6, 5.0), 38)
         S.shot(st, "p16", a2, b2, frozen=True)
     return st
@@ -354,11 +379,13 @@ def japan(ctx):
         for _ in range(26):  # frozen wind behind the stopped train
             prim("box", (random.uniform(4, 12), 0.08, 0.08), (random.uniform(-90, -60), random.uniform(-5, 5), random.uniform(6.6, 13)), dust)
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         a, b = L(17)
         at(me, 1, (79.5, -2.0, 6.5), 70); react(me, "big_eyes", a + 10)
         pose(me, a + 14, head=(-20, 0, 0))
         K._key(pg["root"], "location", 1, (81, -3.0, 6.5), 1)
         ctx.overlay("card_japan.png", a, a + 38)
+        ctx.sfx("whoosh", a, 0.7); ctx.sfx("scared", a + 10, 0.8)
         camera(st, "j17", (100, -26, 11), (68, 0, 9), 32, a, b, (96, -22, 10), (70, 0, 9))
         S.shot(st, "j17", a, b, frozen=True)
     return st
@@ -385,10 +412,12 @@ def train_inside(ctx):
         ll = bpy.data.lights.new("cabin", "AREA"); ll.energy = 3500; ll.size = 25
         lo = bpy.data.objects.new("cabin", ll); st.link(lo); lo.location = (0, -2, 8.2)
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         a, b = L(18)
         sit(me, 1, 2.1, seats[-2.0], 0, lean=-12, ease=None)
         pose(me, 1, None, la=(-150, 0, 20), ra=(-150, 0, -20), la_elbow=(-120, 0, 0), ra_elbow=(-120, 0, 0), head=(-5, 0, 0))
         react(me, "happy", 2); react(me, "grin", a + 35)
+        ctx.sfx("ding", a + 35, 0.7)
         K._key(pg["root"], "location", 1, (2.0, 0.3, 2.1), 1); C.look(pg, a + 20, 25, -10)
         camera(st, "t18", (0.5, -10.5, 4.6), (0.0, 0.5, 3.4), 32, a, b, (0.5, -8.6, 4.4), (0.0, 0.5, 3.5))
         S.shot(st, "t18", a, b, frozen=True)
@@ -408,6 +437,7 @@ def road(ctx):
             prim("ball", (r * 2, r * 2, r), (x, y, -r * 0.2), mat((110, 160, 95), 0.9))
         rock = prim("ball", (2.6, 2.2, 1.6), (5.4, 0.6, 0.5), mat((130, 125, 120), 0.9))
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         bd = beard(ctx, me); pbd = pigeon_beard(ctx, pg)
         a19, b19 = L(19); a20, b20 = L(20); a21, b21 = L(21); a22, b22 = L(22)
         walk(me, a19, b20 - 8, (0.8, 12, 0), (0.8, -3, 0), 8); react(me, "determined", a19)
@@ -426,11 +456,13 @@ def road(ctx):
         for o, s in ((bd, 0.8), (pbd, 0.32)):
             K._key(o, "scale", 0, (0.001,) * 3); K._key(o, "scale", a21, (0.001,) * 3); K._key(o, "scale", b21, (s,) * 3)
         ctx.overlay("card_year.png", a21, b21)
+        ctx.sfx("whoosh", a21, 0.6); ctx.sfx("tick", a21 + 12)
         for i, (x, y) in enumerate(((-290, 230), (290, 330), (-40, 20))):
             ctx.overlays.append((ctx.A + f"clock{i}.png", a21 + 12 + i * 6, b21, 10 + i, x, y, 0.45))
         camera(st, "r21", (8.6, -9.5, 3.8), (4.6, 0.2, 2.8), 35)
         S.shot(st, "r21", a21, b21, frozen=True)
         react(me, "grin", a22 + 18); C.look(pg, a22 + 10, -35, 0)
+        ctx.sfx("sparkle", a22 + 4, 0.6)
         camera(st, "r22", (5.2, -7.2, 3.2), (4.4, -0.2, 2.3), 35)
         S.shot(st, "r22", a22, b22, frozen=True)
     return st
@@ -452,6 +484,7 @@ def iceland(ctx):
         ll = bpy.data.lights.new("lamp", "POINT"); ll.energy = 1800; ll.color = (1, 0.85, 0.6)
         lo = bpy.data.objects.new("lamp", ll); st.link(lo); lo.location = (0, -1, 8.5)
         me = avatar.build(ctx.D); clerk = avatar.build(ctx.D, "clerk", CLERK); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         beard(ctx, me); pigeon_beard(ctx, pg)
         at(clerk, 1, (3.5, 3.9, 0), 0); pose(clerk, 1, None, ra=(-150, 0, 30), ra_elbow=(-40, 0, 0)); react(clerk, "happy", 2)
         a, b = L(23); a2, b2 = L(24)
@@ -461,9 +494,11 @@ def iceland(ctx):
         pose(me, a + 20, ra=(-80, 0, -30)); turn(me, a + 34, (1, -8), 6); hold_out(me, a + 38, up=-75); react(me, "happy", a + 38)
         K._key(pg["root"], "location", 1, (-1.2, -1.4, 0), 1)
         ctx.overlay("card_iceland.png", a, a + 38)
+        ctx.sfx("whoosh", a, 0.7); ctx.sfx("ding", a + 38)
         camera(st, "i23", (2.6, -8.6, 4.4), (-1.6, 0.6, 3.6), 35)
         S.shot(st, "i23", a, b, frozen=True)
         react(me, "sad", a2 + 2)
+        ctx.sfx("sad", a2 + 2)
         camera(st, "i24", (0.2, -5.4, 4.6), (-2.0, 0.0, 4.1), 45)
         S.shot(st, "i24", a2, b2, frozen=True)
     return st
@@ -481,6 +516,7 @@ def snow(ctx):
         trees(ctx, [(-18, 10, "pine", 0.3), (20, 14, "pine", 0.33), (-26, 24, "pine", 0.36)])
         floaters(220, (-10, -8, 0.4), (10, 10, 9), (255, 255, 255), 0.09)  # snowflakes, paused
         me = avatar.build(ctx.D); pg = C.pigeon(ctx.D)
+        K.idle(me); K.idle(pg, ("head",), 0.06, 25)
         beard(ctx, me); pigeon_beard(ctx, pg)
         # the second battery, tucked under the wing on the side the camera sees
         bat = model_prop(ctx, "battery", 1.2, pg["body"], (0.1, -0.62, 0.85))
@@ -494,15 +530,19 @@ def snow(ctx):
         C.walk(pg, a26, a26 + 30, (6.0, -1.5, 0), (1.9, -0.9, 0), 5)
         K._key(pg["root"], "rotation_euler", a26 + 36, (0, 0, math.radians(-90)), 5)
         C.wing(pg, "l", b26 - 12, b27 + 4, 115)
+        ctx.sfx("coo", a26 + 18, 0.7); ctx.sfx("flap", b26 - 12, 0.5)
         camera(st, "n26", (4.0, -7.2, 2.2), (1.8, -0.6, 1.4), 40)
         S.shot(st, "n26", a26, b26, frozen=True)
         react(me, "big_eyes", a27 + 6)
+        ctx.sfx("pop", a27 + 6); ctx.sfx("ding", a27 + 8, 0.8)
         camera(st, "n27", (2.4, -4.4, 1.5), (1.7, -0.8, 1.0), 50, fstop=3.0)
         S.shot(st, "n27", a27, b27, frozen=True)
         react(me, "cry", a28, b30)
+        ctx.sfx("cry", a28)
         camera(st, "n28", (0.6, -5.4, 3.2), (0.0, -0.3, 2.9), 45)
         S.shot(st, "n28", a28, b28, frozen=True)
         C.look(pg, a29 + 4, -55, -25); C.look(pg, a29 + 34, 160, 0, hold=10)
+        ctx.sfx("coo", a29 + 30, 0.5)
         camera(st, "n29", (3.6, -6.6, 2.6), (1.0, -0.4, 2.0), 40)
         S.shot(st, "n29", a29, b29, frozen=True)
         K._key(pg["root"], "rotation_euler", a30 - 1, (0, 0, math.radians(180)), 1); C.look(pg, a30 - 1, 0, 0, hold=1)

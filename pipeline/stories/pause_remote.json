@@ -217,5 +217,19 @@
    "name": "Mona lisa PAINTING in frame",
    "creator": "Builder_Boy"
   }
- }
+ },
+ "voice_sfx": {
+  "achoo": [
+   "Ah... ah... AH-CHOO!",
+   "am_puck",
+   1.2
+  ],
+  "huh": [
+   "Huh?",
+   "af_sky",
+   1.0
+  ]
+ },
+ "synth_music": false,
+ "music_file": null
 }

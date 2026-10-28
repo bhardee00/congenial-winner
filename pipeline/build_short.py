@@ -17,11 +17,19 @@ class Ctx:
         self.D = D; self.A = D + "short/"; self.story = story; self.timed = timed
         self.M = {k: v["id"] for k, v in story["models"].items()}
         self.short = K.Short(story["title"], timed)
-        self.overlays = []
+        self.overlays = []; self.cues = []; self.music_switches = []
 
     def L(self, i): return self.short.line_frames(i)
 
     def overlay(self, name, f0, f1, channel=7): self.overlays.append((self.A + name, f0, f1, channel))
+
+    def sfx(self, name, f, gain=1.0):
+        """Sound effect at frame f (a name from audio.py or a story voice_sfx)."""
+        self.cues.append(((f - 1) / K.FPS, name, gain))
+
+    def music(self, f, mode):
+        """Switch the music to "paused" (music box) or "normal" (band) at frame f."""
+        self.music_switches.append(((f - 1) / K.FPS, mode))
 
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -32,7 +40,12 @@ mod.build(ctx)
 
 S = ctx.short
 words = [(p, S.frame(s), S.frame(e)) for p, s, e in json.load(open(ctx.A + "words.json"))]
-S.assemble(D + "voice.wav", words, ctx.overlays)
+import audio
+mixed = ctx.A + "mix.wav"
+use_music = story.get("music_file") or story.get("synth_music")  # otherwise add music on YouTube
+audio.mix(mixed, D + "voice.wav", ctx.A + "sfx", ctx.cues, S.total / K.FPS,
+          (ctx.A + "music_normal.wav", ctx.A + "music_paused.wav", ctx.music_switches) if use_music else None)
+S.assemble(mixed, words, ctx.overlays)
 out_blend = os.path.join(REPO, "render", story["slug"] + ".blend")
 S.output("//" + story["slug"] + ".mp4")
 for o in bpy.data.objects:
