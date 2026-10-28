@@ -302,15 +302,49 @@ class Short:
                 s.color_saturation = 0.45
                 cb = s.modifiers.new("cold", 'COLOR_BALANCE'); cb.color_balance.gain = (0.9, 0.97, 1.12)
         se.sequences.new_sound("voice", voice, 30, 1)
-        for path, f0, f1, ch, *pos in overlays:
-            o = se.sequences.new_image(os.path.basename(path), path, ch, f0, fit_method='ORIGINAL' if pos else 'FIT')
-            o.frame_final_duration = max(1, f1 - f0); o.blend_type = 'ALPHA_OVER'
-            if pos:  # smaller picture placed at (x, y) pixels from the centre
-                o.transform.offset_x, o.transform.offset_y = pos[0], pos[1]
-                o.transform.scale_x = o.transform.scale_y = pos[2]
-        for path, f0, f1 in words:
-            o = se.sequences.new_image(os.path.basename(path), path, 9, f0); o.frame_final_duration = max(1, f1 - f0)
-            o.blend_type = 'ALPHA_OVER'
+        items = [(p, f0, f1, ch, *(pos or (0, 0, 1))) for p, f0, f1, ch, *pos in overlays]
+        items += [(p, f0, f1, 9, 0, 0, 1) for p, f0, f1 in words]
+        ov = self._overlay_scene(items)
+        o = se.sequences.new_scene("overlay", ov, 100, 1)
+        o.frame_final_start = 1; o.frame_final_end = self.total + 1; o.channel = 5; o.blend_type = 'ALPHA_OVER'
+
+    def _overlay_scene(self, items):
+        """Captions, cards and icons as flat pictures in a transparent scene laid over the shots. (Image strips in
+        the video editor can't be packed into the .blend, so they'd be missing on another computer; these can.)
+        items: (png, first frame, end frame, layer, x px, y px from centre, scale)."""
+        import bmesh
+        sc = bpy.data.scenes.new("OVERLAY"); sc.render.engine = 'BLENDER_EEVEE'
+        sc.render.resolution_x, sc.render.resolution_y = W, H; sc.render.fps = FPS; sc.render.film_transparent = True
+        sc.eevee.taa_render_samples = 8; sc.view_settings.view_transform = 'Standard'
+        sc.frame_start = 1; sc.frame_end = self.total
+        cd = bpy.data.cameras.new("overlay_cam"); cd.type = 'ORTHO'; cd.ortho_scale = H / 100  # 1 unit = 100 px
+        cam = bpy.data.objects.new("overlay_cam", cd); sc.collection.objects.link(cam); cam.location = (0, 0, 10); sc.camera = cam
+        me = bpy.data.meshes.new("overlay_plane"); bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=0.5)
+        bm.to_mesh(me); bm.free(); uv = me.uv_layers.new()
+        for poly in me.polygons:
+            for li in poly.loop_indices:
+                co = me.vertices[me.loops[li].vertex_index].co; uv.data[li].uv = (co.x + 0.5, co.y + 0.5)
+        me.materials.append(None)
+        mats = {}
+        for path, f0, f1, layer, x, y, s in items:
+            if path not in mats:  # unlit: the picture's own colours, see-through where it is transparent
+                m = bpy.data.materials.new(os.path.basename(path)); m.use_nodes = True; nt = m.node_tree; nn = nt.nodes
+                nn.remove(nn["Principled BSDF"]); img = nn.new("ShaderNodeTexImage")
+                img.image = bpy.data.images.load(path, check_existing=True)
+                em = nn.new("ShaderNodeEmission"); tr = nn.new("ShaderNodeBsdfTransparent"); mix = nn.new("ShaderNodeMixShader")
+                nt.links.new(img.outputs["Color"], em.inputs["Color"]); nt.links.new(img.outputs["Alpha"], mix.inputs["Fac"])
+                nt.links.new(tr.outputs[0], mix.inputs[1]); nt.links.new(em.outputs[0], mix.inputs[2])
+                nt.links.new(mix.outputs[0], nn["Material Output"].inputs["Surface"])
+                m.blend_method = 'BLEND'; m.shadow_method = 'NONE'; mats[path] = m
+            m = mats[path]; iw, ih = m.node_tree.nodes["Image Texture"].image.size
+            o = bpy.data.objects.new(os.path.basename(path), me); sc.collection.objects.link(o)
+            o.material_slots[0].link = 'OBJECT'; o.material_slots[0].material = m
+            o.location = (x / 100, y / 100, layer * 0.01); o.scale = (iw * s / 100, ih * s / 100, 1)
+            for f, on in ((0, False), (f0, True), (f1, False)):
+                o.hide_render = not on; o.keyframe_insert("hide_render", frame=f)
+            for fc in o.animation_data.action.fcurves:
+                for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
+        return sc
 
     def flash(self, f, length=7, channel=8):
         c = self.se.sequences.new_effect(f"flash{f}", 'COLOR', channel, frame_start=f, frame_end=f + length)
