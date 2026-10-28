@@ -554,6 +554,12 @@ def build(ctx):
     for sn, avs in sets.items():
         sc = sorted(sched.get(sn, [(0, "none")]))
         if sc[0][0] > 0: sc = [(0, "none")] + sc
-        for name, av in avs.items():
-            for f, k in sc: vis(av["root"], f, k == name)
+        for name, av in avs.items():  # hide by shrinking to nothing (vis() would also switch every face on)
+            r = av["root"]; base = av.get("scale", 1.0)
+            for f, k in sc:
+                v = base if k == name else 0.0001; r.scale = (v, v, v); r.keyframe_insert("scale", frame=f)
+            for fc in r.animation_data.action.fcurves:
+                if fc.data_path == "scale":
+                    for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
+            r.scale = (base,) * 3
     hs.__exit__(None, None, None)
