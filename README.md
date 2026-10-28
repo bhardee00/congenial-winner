@@ -13,8 +13,22 @@ Makes vertical (1080x1920) narrated, captioned Roblox-style animated Shorts with
 - `pipeline/finish.py` – one-word yellow captions, freeze effect, final MP4 encode
 - `pipeline/web_v1_*` – first (low-quality) three.js version, kept for reference
 
-Next: add Creator Store models (the key now has `creator-store-product:read`), then a one-command `make_short`
-that takes a story idea and produces the finished video.
+## Making a short
+```
+python3 pipeline/make_short.py pipeline/stories/pause_remote.json [--preview]
+```
+Narrates the story (Adam voice, 1.3x), downloads the free Creator Store models it lists (free, script-free only;
+credits written to `render/<slug>_credits.txt`), draws the captions/cards, then builds every set in Blender and packs
+everything into `render/<slug>.blend`. `--preview` also renders one small frame per shot into `work/short/preview/`.
+
+Render the final 1080x1920 MP4 (with voice and captions) on any PC with Blender 4.0:
+```
+blender -b render/I_Found_a_Remote_That_Pauses_the_World.blend -a
+```
+It writes `render/I_Found_a_Remote_That_Pauses_the_World.mp4` next to the .blend.
+
+Pipeline pieces: `shortkit.py` (sets, cameras, acting, the edit), `stories/<name>.py` (a story's sets and shots),
+`characters.py` (rigged pigeon), `models.py` / `rbx_model.py` (Creator Store models), `faces.py` (expressions).
 
 ## Avatar
 ```

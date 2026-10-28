@@ -5,6 +5,7 @@ import json, math
 import bpy
 from mathutils import Matrix, Vector
 import models
+from anim import key, value
 
 PIGEON = 8889620440
 PINK = (212, 144, 189)
@@ -51,17 +52,16 @@ def pigeon(D, name="pigeon", scale=0.6, coll=None):
     return {"root": root, **piv, "eyes": eyes, "scale": scale, "turn": turn}
 
 
-def _k(o, path, f, v=None):
-    if v is not None: setattr(o, path, v)
-    o.keyframe_insert(path, frame=f)
+def _k(o, path, f, v=None, ease=None):
+    key(o, path, f, v, ease)
 
 
 def walk(pg, f0, f1, a, b, step=5):
     """Walk from a to b (world xy, z) between frames, legs alternating and the pigeon head-bob."""
     r = pg["root"]; a, b = Vector(a), Vector(b)
     yaw = math.atan2(b.y - a.y, b.x - a.x) + math.pi / 2  # rest pose faces -Y
-    _k(r, "location", f0, a); _k(r, "location", f1, b)
-    _k(r, "rotation_euler", f0, (0, 0, yaw)); _k(r, "rotation_euler", f1, (0, 0, yaw))
+    _k(r, "location", f0, a, 1); _k(r, "location", f1, b)
+    _k(r, "rotation_euler", f0, (0, 0, yaw), 4); _k(r, "rotation_euler", f1, (0, 0, yaw))
     for fc in r.animation_data.action.fcurves:
         if fc.data_path == "location":
             for kp in fc.keyframe_points[-2:]: kp.interpolation = 'LINEAR'
@@ -75,30 +75,28 @@ def walk(pg, f0, f1, a, b, step=5):
     _k(pg["head"], "location", f1 + step, hb)
 
 
-def look(pg, f, yaw=0, pitch=0, hold=None):
+def look(pg, f, yaw=0, pitch=0, hold=6):
     """Turn the head (degrees; yaw + looks to the pigeon's left, pitch + looks down)."""
-    h = pg["head"]
-    if hold is not None: _k(h, "rotation_euler", f - hold)
-    _k(h, "rotation_euler", f, (0, math.radians(pitch), math.radians(yaw)))
+    _k(pg["head"], "rotation_euler", f, (0, math.radians(pitch), math.radians(yaw)), hold or 6)
 
 
 def wing(pg, side, f0, f1, angle=110):
     w = pg["wing_" + side]; s = 1 if side == "r" else -1
-    _k(w, "rotation_euler", f0, (0, 0, 0)); _k(w, "rotation_euler", f0 + 8, (math.radians(angle * s), 0, 0))
+    _k(w, "rotation_euler", f0, (0, 0, 0), 1); _k(w, "rotation_euler", f0 + 8, (math.radians(angle * s), 0, 0))
     _k(w, "rotation_euler", f1 - 6, (math.radians(angle * s), 0, 0)); _k(w, "rotation_euler", f1, (0, 0, 0))
 
 
 def blink(pg, f, length=6):
     """A wink from the side the camera sees (the eye block goes through the head)."""
     for e in pg["eyes"]:
-        s = e.scale.copy()
+        s = Vector(value(e, "scale", f - 1))
         _k(e, "scale", f - 1, s); _k(e, "scale", f + 2, (s.x, s.y, s.z * 0.12))
         _k(e, "scale", f + 2 + length, (s.x, s.y, s.z * 0.12)); _k(e, "scale", f + 5 + length, s)
 
 
 def sigh(pg, f0, length=30):
-    b = pg["body"]; h = pg["head"]
-    _k(b, "location", f0, (0, 0, 0)); _k(b, "location", f0 + 8, (0, 0, 0.12))
+    b = pg["body"]
+    _k(b, "location", f0, (0, 0, 0), 1); _k(b, "location", f0 + 8, (0, 0, 0.12))
     _k(b, "location", f0 + 20, (0, 0, -0.08)); _k(b, "location", f0 + length, (0, 0, 0))
     look(pg, f0 + 20, 0, 25); look(pg, f0 + length + 10, 0, 0)
 
@@ -108,7 +106,7 @@ def fly(pg, f0, f1, a, b, arc=3.0):
     r = pg["root"]; a, b = Vector(a), Vector(b)
     for i in range(0, 11):
         t = i / 10; p = a.lerp(b, t); p.z += math.sin(t * math.pi) * arc
-        _k(r, "location", int(f0 + (f1 - f0) * t), p)
+        _k(r, "location", int(f0 + (f1 - f0) * t), p, 1 if i == 0 else None)
     for f in range(f0, f1, 4):
         up = ((f - f0) // 4) % 2 == 0
         for side, s in (("r", 1), ("l", -1)): _k(pg["wing_" + side], "rotation_euler", f, (math.radians((100 if up else 20) * s), 0, 0))

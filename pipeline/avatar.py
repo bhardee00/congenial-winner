@@ -4,6 +4,7 @@ build(D) returns {"root", pivot name -> empty ("torso", "waist", "head", "la", "
 Rotating a pivot bends that joint; pivots have no rotation at rest so (-80, 0, 50) on "ra" raises the right arm."""
 import json, math, os, glob
 import bpy, bmesh
+from anim import key, value
 from mathutils import Vector
 
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets") + "/"
@@ -84,7 +85,7 @@ def build(D, name="me", look=None):
     # default head: rounded block plus swappable face decals
     head = piv["head"]; hc = Vector(rig["head"]["center"]) - Vector(J["head"]); s = rig["head"]["size"]
     bpy.ops.mesh.primitive_cube_add(size=1, location=hc)
-    h = bpy.context.active_object; h.name = "Head"; h.scale = (s[0] * 1.04, s[2], s[1]); h.parent = head
+    h = bpy.context.view_layer.objects.active; h.name = "Head"; h.scale = (s[0] * 1.04, s[2], s[1]); h.parent = head
     h.location = hc
     bpy.ops.object.transform_apply(scale=True)
     bv = h.modifiers.new("b", "BEVEL"); bv.width = 0.32; bv.segments = 5; bv.limit_method = 'NONE'
@@ -103,7 +104,7 @@ def build(D, name="me", look=None):
         pb = nn["Principled BSDF"]; pb.inputs["Roughness"].default_value = 0.5
         m.node_tree.links.new(img.outputs["Color"], pb.inputs["Base Color"]); m.node_tree.links.new(img.outputs["Alpha"], pb.inputs["Alpha"])
         bpy.ops.mesh.primitive_plane_add(size=s[0] * 0.88, location=hc + Vector((0, -s[2] / 2 - 0.012, 0)), rotation=(math.radians(90), 0, 0))
-        fo = bpy.context.active_object; fo.name = "face_" + k; fo.data.materials.append(m); fo.parent = head
+        fo = bpy.context.view_layer.objects.active; fo.name = "face_" + k; fo.data.materials.append(m); fo.parent = head
         fo.location = hc + Vector((0, -s[2] / 2 - 0.012, 0))
         faces[k] = fo
     for k, fo in faces.items(): fo.hide_render = fo.hide_viewport = k != "smile"
@@ -111,6 +112,7 @@ def build(D, name="me", look=None):
     grips = {k: _empty("grip_" + k, Vector(g) - Vector(J[k + "_wrist"]), piv[k + "_wrist"]) for k, g in rig["grips"].items()}
     if look and look.get("scale"): root.scale = (look["scale"],) * 3
     return {"root": root, **piv, "faces": faces, "grips": grips, "skin": sm, "face_pos": faces["smile"].location.copy(),
+            "joints": J, "scale": look.get("scale", 1.0) if look else 1.0,
             "eyes": [hc + Vector((x, -s[2] / 2 - 0.03, 0.06)) for x in (-0.22, 0.22)], "reacts": []}
 
 
@@ -128,17 +130,17 @@ def react(av, face, f0, f1=None):
     if face in ("shock", "big_eyes"):
         for f, sc in ((f0 - 1, 1.0), (f0 + 3, 1.28), (f0 + 8, 1.0)):
             fo.scale = (sc, sc, sc); fo.keyframe_insert("scale", frame=f)
-        h = av["head"]; base = h.rotation_euler.copy()
+        h = av["head"]; base = value(h, "rotation_euler", f0)
         for f, dx in ((f0, 0), (f0 + 3, -9), (f0 + 9, 0)):
-            h.rotation_euler = (base.x + math.radians(dx), base.y, base.z); h.keyframe_insert("rotation_euler", frame=f)
+            key(h, "rotation_euler", f, (base[0] + math.radians(dx), base[1], base[2]))
     if face == "angry":
         fac = av["skin"].node_tree.nodes["flush"].inputs["Fac"]
         for f, v in ((f0, 0), (f0 + 10, 0.55), (f1 - 8, 0.55), (f1, 0)):
             fac.default_value = v; fac.keyframe_insert("default_value", frame=f)
-        h = av["head"]; base = h.rotation_euler.copy()
+        h = av["head"]; base = value(h, "rotation_euler", f0 + 6)
         for i, f in enumerate(range(f0 + 6, min(f1, f0 + 30), 2)):  # quick shake
-            h.rotation_euler = (base.x, base.y + math.radians(4 if i % 2 else -4), base.z); h.keyframe_insert("rotation_euler", frame=f)
-        h.rotation_euler = base; h.keyframe_insert("rotation_euler", frame=min(f1, f0 + 32))
+            key(h, "rotation_euler", f, (base[0], base[1] + math.radians(4 if i % 2 else -4), base[2]))
+        key(h, "rotation_euler", min(f1, f0 + 32), base)
     if face == "cry":
         _tears(av, f0, f1)
 
@@ -154,7 +156,7 @@ def _tears(av, f0, f1, every=7):
     for i, f in enumerate(range(f0 + 4, f1 - 10, every)):
         eye = av["eyes"][i % 2]
         bpy.ops.mesh.primitive_uv_sphere_add(radius=0.055, segments=12, ring_count=8)
-        t = bpy.context.active_object; t.name = "tear"; t.data.materials.append(m); t.parent = av["head"]
+        t = bpy.context.view_layer.objects.active; t.name = "tear"; t.data.materials.append(m); t.parent = av["head"]
         t.scale = (0.8, 0.8, 1.3)
         for fr, off, vis in ((f - 1, 0, False), (f, 0, True), (f + 12, -0.75, True), (f + 13, -0.75, False)):
             t.location = eye + Vector((0, -0.02, off)); t.keyframe_insert("location", frame=fr)

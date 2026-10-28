@@ -1,0 +1,134 @@
+"""One command from story to a packed, render-ready .blend:
+    python3 pipeline/make_short.py pipeline/stories/pause_remote.json [--preview]
+1. narration (tts.py, cached until the lines change)  2. free Creator Store models (downloaded, converted, credited)
+3. caption words, title cards and other images  4. Blender builds every set + the edit -> render/<slug>.blend
+Render it anywhere with Blender 4.0:  blender -b render/<slug>.blend -a   (writes render/<slug>.mp4)
+--preview also renders a few low-res frames into work/short/preview/ to check the shots here."""
+import os, sys, json, hashlib, subprocess, math
+from PIL import Image, ImageDraw, ImageFont
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(HERE)
+D = os.environ.get('SHORTS_WORK', os.path.join(REPO, 'work')) + '/'
+OUT = D + "short/"
+W, H = 1080, 1920
+YELLOW, BLACK, WHITE = (255, 226, 61), (0, 0, 0), (255, 255, 255)
+
+
+def font(size):
+    f = ImageFont.truetype(D + "Fredoka.ttf", size)
+    try: f.set_variation_by_name("Bold")
+    except Exception: pass
+    return f
+
+
+def narration(story):
+    lines = [l[1] for l in story["lines"]]
+    key = hashlib.sha1(json.dumps([lines, open(HERE + "/tts.py").read()]).encode()).hexdigest()
+    stamp = D + "voice.key"
+    if os.path.exists(D + "voice.wav") and os.path.exists(stamp) and open(stamp).read() == key:
+        return
+    json.dump(lines, open(D + "lines.json", "w"))
+    subprocess.run([sys.executable, HERE + "/tts.py"], check=True)
+    open(stamp, "w").write(key)
+
+
+def fetch_models(story):
+    """Download + convert each free model once, and write the credits list for the video description."""
+    sys.path.insert(0, HERE)
+    import store, rbx_model
+    for name, m in story["models"].items():
+        if not os.path.exists(D + f"models/{m['id']}.json"):
+            store.get(m["id"], m); rbx_model.convert(m["id"])
+    with open(os.path.join(REPO, "render", story["slug"] + "_credits.txt"), "w") as f:
+        f.write("Free models from the Roblox Creator Store:\n")
+        for name, m in story["models"].items(): f.write(f'- {m["name"]} by {m["creator"]} (asset {m["id"]})\n')
+
+
+def captions(timed):
+    """One full-frame transparent PNG per spoken word (yellow, thick black outline), timed within each line."""
+    os.makedirs(OUT + "words", exist_ok=True); f = font(96); words = []
+    for l in timed:
+        ws = l["text"].split(); tot = sum(len(w) + 1 for w in ws); acc = 0
+        for w in ws:
+            s = l["start"] + acc / tot * (l["end"] - l["start"]); acc += len(w) + 1
+            words.append([w.strip(".,?!\"").lower(), s])
+    out = []
+    for i, (w, s) in enumerate(words):
+        e = words[i + 1][1] if i + 1 < len(words) and words[i + 1][1] - s < 1.2 else s + 0.6
+        p = OUT + f"words/w{i:03d}.png"
+        im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+        d.text((W / 2, H * 0.66), w, font=f, anchor="mm", fill=YELLOW, stroke_width=10, stroke_fill=BLACK)
+        im.save(p, optimize=True); out.append((p, s, e))
+    return out
+
+
+def card(text, name, size=150, y=0.2, color=WHITE, sub=None):
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.text((W / 2, H * y), text, font=font(size), anchor="mm", fill=color, stroke_width=12, stroke_fill=BLACK)
+    if sub: d.text((W / 2, H * y + size * 0.9), sub, font=font(int(size * 0.4)), anchor="mm", fill=WHITE, stroke_width=6, stroke_fill=BLACK)
+    im.save(OUT + name)
+
+
+def icon(kind, name):
+    """Big pause / play symbol flashed when the remote is pressed."""
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im); cx, cy = W / 2, H * 0.36
+    if kind == "pause":
+        for x in (-95, 45):
+            d.rounded_rectangle((cx + x - 8, cy - 158, cx + x + 58, cy + 158), 22, fill=WHITE, outline=BLACK, width=12)
+    else:
+        d.polygon([(cx - 110, cy - 160), (cx - 110, cy + 160), (cx + 160, cy)], fill=WHITE, outline=BLACK, width=12)
+    im.save(OUT + name)
+
+
+def sign(lines, name, bg=(200, 30, 30), fg=WHITE, size=(900, 500)):
+    im = Image.new("RGBA", size, bg + (255,)); d = ImageDraw.Draw(im)
+    d.rectangle((10, 10, size[0] - 10, size[1] - 10), outline=fg, width=14)
+    n = len(lines)
+    for i, (t, s) in enumerate(lines):
+        d.text((size[0] / 2, size[1] * (i + 1) / (n + 1)), t, font=font(s), anchor="mm", fill=fg)
+    im.save(OUT + name)
+
+
+def smile_decal(name):
+    im = Image.new("RGBA", (400, 200), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.arc((30, -170, 370, 170), 20, 160, fill=(25, 15, 12, 255), width=38)
+    im.save(OUT + name)
+
+
+def clock(hour, minute, name):
+    s = 600; im = Image.new("RGBA", (s, s), (0, 0, 0, 0)); d = ImageDraw.Draw(im); c = s / 2
+    d.ellipse((10, 10, s - 10, s - 10), fill=WHITE, outline=BLACK, width=26)
+    for k in range(12):
+        a = k / 12 * math.tau; d.line((c + math.sin(a) * 230, c - math.cos(a) * 230, c + math.sin(a) * 260, c - math.cos(a) * 260), fill=BLACK, width=14)
+    for ang, ln, w in (((hour % 12 + minute / 60) / 12 * math.tau, 150, 26), (minute / 60 * math.tau, 225, 16)):
+        d.line((c, c, c + math.sin(ang) * ln, c - math.cos(ang) * ln), fill=BLACK, width=w)
+    d.ellipse((c - 22, c - 22, c + 22, c + 22), fill=(200, 40, 40))
+    im.save(OUT + name)
+
+
+def images():
+    card("PARIS", "card_paris.png"); card("JAPAN", "card_japan.png"); card("ICELAND", "card_iceland.png")
+    card("1 YEAR LATER", "card_year.png", 120, sub="(probably)")
+    icon("pause", "icon_pause.png"); icon("play", "icon_play.png")
+    sign([("AA BATTERIES", 110), ("SOLD OUT", 150)], "sign_soldout.png")
+    sign([("SORRY!", 120), ("NO AA", 160)], "sign_noaa.png", bg=(240, 190, 30), fg=(40, 30, 20))
+    sign([("BATTERIES", 120)], "sign_batteries.png", bg=(30, 90, 170), size=(900, 260))
+    smile_decal("smile_decal.png")
+    for i, (h, m) in enumerate(((3, 10), (8, 45), (11, 55))): clock(h, m, f"clock{i}.png")
+
+
+def main():
+    story_path = os.path.abspath(sys.argv[1]); story = json.load(open(story_path))
+    os.makedirs(OUT, exist_ok=True); os.makedirs(os.path.join(REPO, "render"), exist_ok=True)
+    narration(story)
+    timed = json.load(open(D + "lines_timed.json"))
+    fetch_models(story)
+    json.dump(captions(timed), open(OUT + "words.json", "w"))
+    images()
+    args = ["blender", "-b", "--python-exit-code", "1", "-P", HERE + "/build_short.py", "--", story_path] + [a for a in sys.argv[2:] if a.startswith("--")]
+    subprocess.run(args, check=True)
+
+
+if __name__ == "__main__":
+    main()
