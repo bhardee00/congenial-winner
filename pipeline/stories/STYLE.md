@@ -4,7 +4,9 @@
 pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 
 ## Format
-- 1080x1440 (3:4), no black bars, 30 fps, H.264 + AAC, ~60–95 s.
+- 1080x1440 (3:4), no black bars, 30 fps, H.264 + AAC.
+- Length 1:20–2:30, aim for **~2:00** every time. At our voice speeds that is ~540 words / ~55–60 lines
+  (balloon: 406 words = 1:30).
 - R6 blocky characters only (blocky.py). Narrator uses the user's avatar.
 - No background music unless asked. Synthesized SFX (audio.py) on every action.
 - Free assets only. Credit any Creator Store model in `models` (written to `render/<slug>_credits.txt`).
@@ -22,6 +24,17 @@ pacing and fixes. Start a new story by copying `balloon.json` + `balloon.py`.
 - The user records them: one narrator file plus one file with all other lines, in script order (`others_order`).
 - To fix a single line, record just that line and add it under `voice_files.replace`
   (keep the recorded wording in `original_text`).
+
+## Emotion (faces.py / avatar.react)
+- Change the main character's expression on **every line**, and again on the punchline beat inside it.
+  Side characters react too (crowds turn and react together).
+- 27 faces: smile, happy, grin, smug, laugh, love, starstruck, relieved, determined, suspicious, confused,
+  annoyed, blank, nervous, worried, embarrassed, shock, big_eyes, terrified, scream, sad, cry, angry, furious,
+  disgusted, dizzy, sleepy.
+- react() adds the extras automatically: an emote pop (! ? sweat anger steam hearts zzz stars; `emote_kind="bulb"`
+  for ideas), a head squash on shock, a red flush and shake on anger, a droop on sad, a shake on laugh, tears on cry.
+  Every character blinks on its own.
+- Big emotional beats get a punch-in on the face.
 
 ## Pacing and camera
 - New shot every 1–3 s; a cut on every new sentence or beat.

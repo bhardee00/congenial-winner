@@ -37,6 +37,8 @@ bpy.context.scene.name = "SHORT"  # the active scene is what `blender -b file.bl
 ctx = Ctx()
 mod = importlib.import_module(story["module"])
 mod.build(ctx)
+import avatar
+avatar.finish(ctx.short.line_frames(len(timed) - 1)[1] + 200)  # blinks, now that every expression change is known
 
 S = ctx.short
 words = [(p, S.frame(s), S.frame(e)) for p, s, e in json.load(open(ctx.A + "words.json"))]

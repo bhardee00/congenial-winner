@@ -155,8 +155,10 @@ def build(D, name="me", look=None):
     if look and look.get("scale"): root.scale = (look["scale"],) * 3
     s = look.get("scale", 1.0) if look else 1.0
     eyes = [hc + Vector((x, -hs * 0.5 - 0.03, 0.06)) for x in (-0.22, 0.22)]
-    return {"root": root, **piv, "faces": faces, "grips": grips, "skin": sm, "reacts": [], "eyes": eyes,
-            "joints": {"ll": [0.5, 0, 2.0]}, "scale": s, "face_pos": faces["smile"].location.copy()}
+    av = {"root": root, **piv, "faces": faces, "grips": grips, "skin": sm, "reacts": [], "eyes": eyes,
+          "joints": {"ll": [0.5, 0, 2.0]}, "scale": s, "face_pos": faces["smile"].location.copy(), "name": name}
+    avatar.ALL.append(av)
+    return av
 
 
 def _faceplane():
