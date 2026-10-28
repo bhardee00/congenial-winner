@@ -24,7 +24,8 @@ def font(size):
 
 def narration(story):
     if story.get("voice_files"):  # recorded voices (e.g. ElevenLabs): place each line in the recordings
-        files = [os.path.join(REPO, story["voice_files"][k]) for k in ("narrator", "others")]
+        vf = story["voice_files"]
+        files = [os.path.join(REPO, vf[k]) for k in ("narrator", "others")] + [os.path.join(REPO, f) for f in vf.get("replace", {}).values()]
         key = hashlib.sha1((json.dumps(story["lines"]) + "".join(str(os.path.getsize(f)) for f in files)
                             + open(HERE + "/voice_import.py").read()).encode()).hexdigest()
         stamp = D + "voice.key"

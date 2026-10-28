@@ -21,7 +21,7 @@
   ],
   [
    "narrator",
-   "I sweep the street after the parade. I was reaching for a gum wrapper."
+   "I swept the street after the parade. I was reaching for a gum wrapper."
   ],
   [
    "narrator",
@@ -53,7 +53,7 @@
   ],
   [
    "pilot",
-   "Great, we're live."
+   "Don't care. We're live."
   ],
   [
    "narrator",
@@ -189,7 +189,15 @@
    "pilot",
    "mom",
    "girl"
-  ]
+  ],
+  "original_text": {
+   "4": "I sweep the street after the parade. I was reaching for a gum wrapper.",
+   "12": "Great, we're live."
+  },
+  "replace": {
+   "4": "assets/voice/balloon_line04_swept_1.33x.wav",
+   "12": "assets/voice/balloon_line12_pilot_1.68x.wav"
+  }
  },
  "models": {
   "beard": {
