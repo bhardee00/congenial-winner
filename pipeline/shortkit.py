@@ -340,6 +340,7 @@ class Short:
         self.master = bpy.data.scenes.new("SHORT") if "SHORT" not in bpy.data.scenes else bpy.data.scenes["SHORT"]
         m = self.master; m.render.resolution_x, m.render.resolution_y = W, H; m.render.fps = FPS
         m.view_settings.view_transform = 'Standard'
+        m.sync_mode = 'AUDIO_SYNC'  # play the narration when previewing in Blender ("Play Every Frame" is silent)
         self.se = m.sequence_editor_create()
         self.total = self.frame(timed[-1]["end"] + end_pad)
         m.frame_start = 1; m.frame_end = self.total
