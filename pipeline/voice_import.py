@@ -180,7 +180,7 @@ def main(story_path):
         for (a0, b0), i in zip(vf["others_spans"], o_idx):
             spans[i] = [(a0, b0)]
             placed[i] = (oth, [[max(a, a0), min(b, b0)] for a, b in osegs if b > a0 + 0.02 and a < b0 - 0.02] or [[a0, b0]])
-    elif len(o_idx) >= 4:
+    elif len(o_idx) >= 8:
         ospans, osegs = align_sentences(oth, [orig.get(i, lines[i][1]) for i in o_idx])
         for q, i in enumerate(o_idx):
             a0, b0 = ospans[q]; spans[i] = [(a0, b0)]

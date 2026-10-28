@@ -55,9 +55,14 @@ def fetch_models(story):
         if story.get("music_credit"): f.write(f'\nMusic: {story["music_credit"]}\n')
 
 
+CAPTION_FONT = os.path.join(REPO, "assets", "fonts", "LiberationSans-Bold.ttf")  # free Arial look-alike (SIL OFL)
+CAPTION_Y = 0.70  # one fixed spot for every word, like the user's example
+
+
 def captions(timed):
-    """One full-frame transparent PNG per spoken word (yellow, thick black outline), shown while it is said."""
-    os.makedirs(OUT + "words", exist_ok=True); f = font(72); words = []
+    """One full-frame transparent PNG per spoken word: white, bold sans, thin black outline, lowercase, in one fixed
+    spot (CAPTION_Y), shown while it is said - matching the user's example. Used by every short."""
+    os.makedirs(OUT + "words", exist_ok=True); f = ImageFont.truetype(CAPTION_FONT, 92); words = []
     for l in timed:
         if "words" in l: words += [[w.strip(".,?!\"").lower(), s, e] for w, s, e in l["words"]]
         else:  # older narration without word timings: spread the line by word length
@@ -71,7 +76,8 @@ def captions(timed):
         e = nxt if nxt - e < 0.35 else e + 0.25  # hold until the next word unless there is a real pause
         p = OUT + f"words/w{i:03d}.png"
         im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-        d.text((W / 2, H * 0.62), w, font=f, anchor="mm", fill=YELLOW, stroke_width=8, stroke_fill=BLACK)
+        d.text((W / 2 + 3, H * CAPTION_Y + 4), w, font=f, anchor="mm", fill=(0, 0, 0, 110), stroke_width=4, stroke_fill=(0, 0, 0, 110))  # soft shadow
+        d.text((W / 2, H * CAPTION_Y), w, font=f, anchor="mm", fill=WHITE, stroke_width=4, stroke_fill=BLACK)
         im.save(p, optimize=True); out.append((p, s, e))
     return out
 

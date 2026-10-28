@@ -154,7 +154,8 @@ def show_between(o, f0, f1=None):
 
 
 # ---------------- cameras ----------------
-CAPTION_Y = {"top": 0.17, "mid": 0.5, "low": 0.74}  # caption height (share of the frame from the top) per band
+CAPTION_Y = {"top": 0.17, "mid": 0.5, "low": 0.74, "fixed": 0.70}  # caption height (share of the frame from the top)
+CAPTION_MODE = "fixed"  # the user wants captions in one steady spot; "auto" moves them off faces shot by shot
 
 
 def _handheld(cam, amount=1.0):
@@ -388,7 +389,7 @@ class Short:
         bands = [(f0, f1, self._caption_band(st, cam, f0, f1)) for (st, cam, f0, f1, fr) in self.shots]
         def lift(f):  # caption PNGs have the word at 62% down the frame; move it into the shot's band
             band = next((b for a, e, b in bands if a <= f < e), "low")
-            return int(H * (CAPTION_Y[band] - 0.38))
+            return 0 if band == "fixed" else int(H * (CAPTION_Y[band] - 0.38))  # fixed: the PNG is drawn in place
         items += [(p, f0, f1, 9, 0, lift(f0), 1) for p, f0, f1 in words]
         ov = self._overlay_scene(items)
         o = se.sequences.new_scene("overlay", ov, 100, 1)
@@ -397,6 +398,8 @@ class Short:
     def _caption_band(self, st, cam, f0, f1):
         """Where the caption goes in this shot: the shot's own choice, or (auto) the lowest band that keeps clear
         of every character's face on screen in the middle of the shot - like the reference channel does."""
+        if CAPTION_MODE == "fixed": return "fixed"
+        if CAPTION_MODE == "fixed": return "fixed"
         want = self.shot_opts.get((st.name, f0), {}).get("caption", "auto")
         if want in ("top", "mid", "low"): return want
         if want == "high": return "top"
