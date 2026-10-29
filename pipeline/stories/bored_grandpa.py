@@ -77,6 +77,7 @@ def grandpas(ctx, prefix, keys):
 
 def build(ctx):
     S, L, A = ctx.short, ctx.L, ctx.A
+    timed = ctx.timed
     kit = Kit(ctx); seg, wf, sh = kit.seg, kit.wf, kit.sh
 
     def shf(st, f0, f1, who, dist=3.0, ang=0.0, lens=26, push=0.12, dz=0.15, **kw):
@@ -412,7 +413,7 @@ def build(ctx):
     # 26: "Juice box. Now."
     (a, s1), (_, b) = seg(26, "now")
     react(g4, "angry", a, b + 6); pose(g4, a, 3, ra=(-90, 0, 0)); kit.speak(g4, 26)
-    shf(hs, a, s1, G4, 2.0, 10, pz=a + 2, amount=1.2)
+    shf(hs, a, s1, G4, 2.2, 60, pz=a + 2, amount=1.2)
     sh(ins, s1, b, (24.2, -3.0, 1.6), (24, 0, 0.9), 30, dl=(0, 0.8, 0), cap="auto"); ctx.sfx("pop", s1 + 1, 0.7)
     rest(g4, b, "ra")
     # 27: naps, cartoons, bit the mailman
@@ -569,6 +570,13 @@ def build(ctx):
     a, b = L(50); react(c_g10, "smug", a); kit.speak(c_g10, 50)
     sh(cl, a, b, (-1.4, 1.6, 3.6), (-2.2, -1.0, 3.4), 26, pz=wf(50, "there"), amount=1.3); ctx.sfx("boing", wf(50, "there"), 0.5)
     rest(c_g10, b, "ra")
+
+    # ======================= every held beat has a sound in it (a silent gap sounds like an audio bug) =======================
+    beat_sfx = {"2": "boing", "6": "crickets", "7": "sparkle", "9": "ding", "14": "boing", "16": "scared", "18": "crickets",
+                "22": "pop", "25": "crickets", "28": "boing", "31": "sad", "39": "ding", "41": "sparkle", "47": "crickets", "50": "boing"}
+    for k, nm in beat_sfx.items():
+        i = int(k)
+        if str(i) in ctx.story.get("beats", {}): ctx.sfx(nm, S.frame(timed[i]["end"]) + 2, 0.6)
 
     # ======================= head motion for narration on whoever is "me" on screen =======================
     for i, (who, _) in enumerate(ctx.story["lines"]):

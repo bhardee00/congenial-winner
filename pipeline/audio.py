@@ -475,7 +475,7 @@ def mix(out_path, voice_path, sfx_dir, cues, seconds, music=None, voice_extra=()
         mode = lp(mode, 3, 1)  # quick crossfades
         duck = 1 - 0.45 * np.clip(lp(vo, 4, 1) * 6, 0, 1)  # lower the music while someone talks
         fade = np.minimum(1, (n - np.arange(n)) / (1.5 * SR))
-        out += (a * (1 - mode) * 0.16 + b * mode * 0.2) * duck * fade
+        out += (a * (1 - mode) * 0.2 + b * mode * 0.32) * duck * fade  # always audible under the voice, never silent
     peak = np.abs(out).max()
     out = np.tanh(out / max(peak, 1e-6) * 1.15) * 0.92  # gentle limiter
     write(out_path, out)
