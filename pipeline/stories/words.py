@@ -433,10 +433,10 @@ def build(ctx):
     sh(ins, s1, b, (73, 2.0, 4.4), (81, 2.0, 3.6), 24, dl=(1, 0, 0)); ctx.sfx("sad", s1 + 4, 0.3)
 
     # ======================= 25-27: sign language =======================
-    (a, s1), (_, b) = seg(25, "i")
-    walk(me_i, a - 4, a + (s1 - a) // 2, (159, -9, 0), (159, -3.0, 0), 9, 22); react(me_i, "determined", a)
-    sh(ins, a, a + (s1 - a) // 2, (160, -11, 5.0), (160, 3, 4.0), 22, dl=(0, 1.5, 0)); ctx.sfx("step", a + 3, 0.4)
-    sh(ins, a + (s1 - a) // 2, s1, (163.3, -3.8, 3.6), (163, -0.5, 3.3), 30, dl=(0, 0.8, 0)); ctx.sfx("pop", a + (s1 - a) // 2 + 2, 0.5)
+    (a, sb), (_, s1), (_, b) = seg(25, "got", ("i", 1))  # walk in, the book, then the mirror
+    walk(me_i, a - 4, sb + 4, (159, -9, 0), (159, -3.0, 0), 9, 22); react(me_i, "determined", a)
+    sh(ins, a, sb, (160, -11, 5.0), (160, 3, 4.0), 22, dl=(0, 1.5, 0)); ctx.sfx("step", a + 3, 0.4); ctx.sfx("step", a + 12, 0.4)
+    sh(ins, sb, s1, (163.3, -3.8, 3.6), (163, -0.5, 3.3), 30, dl=(0, 0.8, 0), pz=sb + 3, amount=1.15); ctx.sfx("pop", sb + 2, 0.5)
     at(me_i, s1, (120, 2.0, 0), 180); rest(me_i, s1, ease=1); react(me_i, "determined", s1)
     sh(ins, s1, b, (123.5, -6, 5.2), (120, 4, 4.4), 24, dl=(-0.5, 1, 0)); ctx.sfx("rustle", s1 + 2, 0.4)
     # 26: Hello. Thank you. Help. And Max's favorite sign: freeze.  (camera = the mirror)
