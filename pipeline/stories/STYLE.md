@@ -116,3 +116,15 @@ This is now the main style to copy 1:1.
 - **Captions:** small white bold sans, one word, fixed in the lower middle (matches ours).
 - **Audio:** the mix sits around -18 dB mean with peaks near 0 dB. The voice is up front, with a light music bed and
   SFX on actions (whoosh, stone crack, gasp, the counter ticking down).
+
+## From "Ten Thousand Words" on (reference #2 look)
+- **No dead air (user request):** voices flow with no pauses. Story json `"tight": {"max_pause": 0.1, "line_gap": 0.06}`
+  shortens every pause inside a line and between lines (voice_import.py). Use it on every new short.
+- **Town kit (pipeline/town.py, assets/town):** free CC0 Kenney houses, cars, road pieces and furniture, plus Poly Haven
+  sky and ground textures. `town.sky(set)`, `town.place("suburban/building-type-c", loc, yaw)`, `town.street()`,
+  `town.tree()`, `town.pine()`. Kenney houses face +Y, and cars and furniture face -Y at yaw 0.
+  Scales: houses x24, cars x4.2, furniture x7.5.
+- **Clothes:** printed shirts and pants (plaid, floral, stripes, dots, denim) via look `shirt_tex` / `pants_tex`
+  (town.cloth_png makes them in the story's _images.py).
+- **Chest counter:** `town.counter(av, {frame: badge png})`. A dark rounded badge with mint numbers, ticking down one per
+  spoken word (with a soft "counter" tick sound). Big mint countdown numbers go over the climax as overlays.

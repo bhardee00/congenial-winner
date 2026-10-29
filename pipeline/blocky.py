@@ -63,6 +63,18 @@ def _mat(name, color=None, tex=None, rough=0.55):
     return m
 
 
+def _patmat(name, path, scale=0.5, rough=0.7):
+    """Printed cloth (plaid, florals, stripes) without UVs: the picture is box-projected in object space."""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; pb = nt.nodes["Principled BSDF"]
+    pb.inputs["Roughness"].default_value = rough
+    tc = nt.nodes.new("ShaderNodeTexCoord"); mp = nt.nodes.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (scale,) * 3
+    img = nt.nodes.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(path, check_existing=True)
+    img.projection = 'BOX'; img.projection_blend = 0.2
+    nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs[0], img.inputs[0])
+    nt.links.new(img.outputs["Color"], pb.inputs["Base Color"])
+    return m
+
+
 def build(D, name="me", look=None):
     rig = json.load(open(D + "avatar/rig.json"))
     skin = (look or {}).get("skin", tuple(rig["skin"]))
@@ -84,6 +96,11 @@ def build(D, name="me", look=None):
     else:
         mt = _mat(name + "_shirt", look.get("shirt", (80, 120, 200))); mal = mar = _mat(name + "_sleeve", look.get("sleeves", look.get("shirt", (80, 120, 200))))
         mll = mlr = _mat(name + "_pants", look.get("pants", (50, 50, 70))); rt = rr = rlf = None
+        # printed clothes (look["shirt_tex"] / ["pants_tex"] = picture path; sleeves follow the shirt unless "sleeves" is set)
+        if look.get("shirt_tex"):
+            mt = _patmat(name + "_shirt", look["shirt_tex"], look.get("tex_scale", 0.5))
+            if "sleeves" not in look: mal = mar = mt
+        if look.get("pants_tex"): mll = mlr = _patmat(name + "_pants", look["pants_tex"], look.get("tex_scale", 0.5))
     _box(name + "_torso", (2, 1, 2), (0, 0, 1.0), mt, waist, rt)
     _box(name + "_arm_l", (1, 1, 2), (0, 0, -0.5), mal, la, rlf)
     _box(name + "_arm_r", (1, 1, 2), (0, 0, -0.5), mar, ra, rr)

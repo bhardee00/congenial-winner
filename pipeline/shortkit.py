@@ -262,7 +262,7 @@ def turn(av, f, face, ease=12):
 
 def walk(av, f0, f1, a, b, step=10, swing=26):
     """Walk from a to b: root moves linearly, faces the way it walks, arms and legs swing."""
-    at(av, f0, a, b, ease=4); at(av, f1, b, b, ease=None)
+    at(av, f0, a, b, ease=4); at(av, f1, b, None, ease=None)  # keeps facing the way it walked
     for fc in av["root"].animation_data.action.fcurves:
         if fc.data_path == "location":
             for kp in fc.keyframe_points:

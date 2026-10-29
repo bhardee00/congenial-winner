@@ -1,0 +1,291 @@
+{
+ "title": "Everyone In My Town Only Gets 10,000 Words 🤐",
+ "slug": "Ten_Thousand_Words",
+ "module": "words",
+ "models": {},
+ "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
+ "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
+ "synth_music": false,
+ "voice_speeds": {
+  "narrator": 1.6,
+  "others": 1.75
+ },
+ "voice_files": {
+  "narrator": "assets/voice/words_narrator_1.60x.wav",
+  "others": "assets/voice/words_others_1.75x.wav",
+  "others_order": [
+   "grandma",
+   "kid",
+   "kid",
+   "mom",
+   "max",
+   "kid",
+   "kid",
+   "grandma"
+  ],
+  "others_spans": [
+   [
+    0.0,
+    0.3
+   ],
+   [
+    0.48,
+    1.81
+   ],
+   [
+    1.96,
+    4.71
+   ],
+   [
+    4.87,
+    6.65
+   ],
+   [
+    6.8,
+    7.47
+   ],
+   [
+    7.71,
+    11.47
+   ],
+   [
+    11.53,
+    12.35
+   ],
+   [
+    12.47,
+    15.07
+   ]
+  ]
+ },
+ "tight": {
+  "max_pause": 0.1,
+  "line_gap": 0.06
+ },
+ "lines": [
+  [
+   "narrator",
+   "In my town, everyone is born with ten thousand words. When your counter hits zero, your voice is gone. Forever."
+  ],
+  [
+   "narrator",
+   "The number glows right on your chest, so everyone knows exactly how much you've got left."
+  ],
+  [
+   "narrator",
+   "So nobody here talks much."
+  ],
+  [
+   "narrator",
+   "Mr. Henderson orders at the diner by pointing. Pancakes. Syrup. The waitress. She's his wife."
+  ],
+  [
+   "narrator",
+   "The mayor gives his speeches on cue cards. Forty cards. The last one just says \"Thanks.\""
+  ],
+  [
+   "narrator",
+   "Grandma Pearl has nine thousand words saved. She says she's saving them for something important."
+  ],
+  [
+   "grandma",
+   "Not yet."
+  ],
+  [
+   "narrator",
+   "She's been saying that for thirty years."
+  ],
+  [
+   "narrator",
+   "Then there's Mr. Gibbs. His counter says zero. He used his last word at a football game. The word was \"fumble.\" It wasn't even a fumble."
+  ],
+  [
+   "narrator",
+   "And then there's me."
+  ],
+  [
+   "narrator",
+   "I narrated every video game I played. Out loud."
+  ],
+  [
+   "kid",
+   "And he's going for it! Oh! He missed!"
+  ],
+  [
+   "narrator",
+   "I gave my dog Biscuit live commentary every time he chased a squirrel."
+  ],
+  [
+   "kid",
+   "Biscuit's closing in! Five feet! He's up the tree! Biscuit loses again!"
+  ],
+  [
+   "narrator",
+   "I sang in the shower. Every song. Both parts."
+  ],
+  [
+   "narrator",
+   "I thought ten thousand was basically infinity."
+  ],
+  [
+   "narrator",
+   "It wasn't."
+  ],
+  [
+   "narrator",
+   "On my eleventh birthday, I blew out the candles and looked down at my chest."
+  ],
+  [
+   "narrator",
+   "Fourteen."
+  ],
+  [
+   "mom",
+   "Fourteen? Fourteen?! What did you do with them?!"
+  ],
+  [
+   "narrator",
+   "That cost her eight words. She didn't care."
+  ],
+  [
+   "narrator",
+   "After that, I stopped talking. No \"good morning.\" No \"thanks.\" Not even \"bless you.\""
+  ],
+  [
+   "narrator",
+   "At dinner, my little brother Max asked me for the ketchup."
+  ],
+  [
+   "max",
+   "Can you pass the ketchup?"
+  ],
+  [
+   "narrator",
+   "I just stared at him. I wanted to answer so bad."
+  ],
+  [
+   "narrator",
+   "So I went to the library and got a book on sign language. I practiced every night in the mirror."
+  ],
+  [
+   "narrator",
+   "Hello. Thank you. Help. And Max's favorite sign: freeze."
+  ],
+  [
+   "narrator",
+   "Because Max and I had a game. When I made the sign for freeze, he had to stop and not move a muscle. Max was undefeated."
+  ],
+  [
+   "narrator",
+   "Then came the block party."
+  ],
+  [
+   "narrator",
+   "The whole town was there. Nobody was talking, of course. Just chewing."
+  ],
+  [
+   "narrator",
+   "Max chased a balloon right into the street."
+  ],
+  [
+   "narrator",
+   "Behind him, the ice cream truck started backing up. Beep. Beep. Beep."
+  ],
+  [
+   "narrator",
+   "The driver couldn't see him. Max couldn't hear the beeping over the music."
+  ],
+  [
+   "narrator",
+   "Fifty people saw it. Fifty people had words to spare. Nobody said a thing."
+  ],
+  [
+   "narrator",
+   "Mr. Henderson pointed. Grandma Pearl opened her mouth. Then she closed it."
+  ],
+  [
+   "narrator",
+   "So I ran. And I yelled."
+  ],
+  [
+   "kid",
+   "Max! Stop! Truck! Behind you! Max! Move! Please! Max! Max!"
+  ],
+  [
+   "narrator",
+   "Ten words. He didn't even turn around. The music was too loud."
+  ],
+  [
+   "narrator",
+   "I had four left."
+  ],
+  [
+   "kid",
+   "Max! Look at me!"
+  ],
+  [
+   "narrator",
+   "On the last word, my voice just stopped. Like someone unplugged it. Zero."
+  ],
+  [
+   "narrator",
+   "But Max turned around. He saw me."
+  ],
+  [
+   "narrator",
+   "So I did the only thing I had left. I made the sign for freeze."
+  ],
+  [
+   "narrator",
+   "Max froze. Mid-step. Not one muscle."
+  ],
+  [
+   "narrator",
+   "The truck rolled past him. Six inches away."
+  ],
+  [
+   "narrator",
+   "The driver finally saw him and slammed the brakes. Ice cream went everywhere."
+  ],
+  [
+   "narrator",
+   "Max ran over and hugged me. Then he signed something back. He'd been practicing too. Thank you."
+  ],
+  [
+   "narrator",
+   "My mom squeezed us so hard I would've said \"ow,\" if I could."
+  ],
+  [
+   "narrator",
+   "Then Grandma Pearl walked into the middle of the street."
+  ],
+  [
+   "grandma",
+   "That boy saved a life with fourteen words. What are the rest of you saving yours for?"
+  ],
+  [
+   "narrator",
+   "Turns out, that was the something important."
+  ],
+  [
+   "narrator",
+   "After that, the town changed."
+  ],
+  [
+   "narrator",
+   "Everyone learned sign language. The mayor signs his speeches now. They're way shorter."
+  ],
+  [
+   "narrator",
+   "Mr. Gibbs signs \"fumble\" at every game. It's still never a fumble."
+  ],
+  [
+   "narrator",
+   "And me? I've got zero words left."
+  ],
+  [
+   "narrator",
+   "But I've never been heard more."
+  ]
+ ]
+}

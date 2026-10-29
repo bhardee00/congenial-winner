@@ -192,21 +192,38 @@ def main(story_path):
     for k, path in vf.get("replace", {}).items():
         i = int(k); rep = load(os.path.join(REPO, path)); placed[i] = (rep, segments(rep)); spans.pop(i, None)
     # stitch in script order with tight, natural gaps
+    tight = story.get("tight"); mp = tight.get("max_pause", 0.1) if tight else 0
     out, timed, t = [np.zeros(int(0.12 * SR), np.float32)], [], 0.12
     for i, (speaker, text) in enumerate(lines):
         audio, g = placed[i]
         if i in spans: g = [[max(a, spans[i][0][0]), min(b, spans[i][-1][1])] for a, b in g]
         s0, e0 = max(0, g[0][0] - 0.03), g[-1][1] + 0.05
-        clip = audio[int(s0 * SR):int(e0 * SR)]
-        words = [[w, round(t + a - s0, 3), round(t + b - s0, 3)] for w, a, b in word_times(text, g, spans.get(i))]
+        keep = [[s0, e0]]
+        if tight:  # no dead air: every pause inside the line is shortened to max_pause
+            keep = [[s0, g[0][1]]]
+            for (_, b1), (a2, b2) in zip(g, g[1:]):
+                if a2 - b1 > mp: keep[-1][1] = b1 + mp / 2; keep.append([a2 - mp / 2, b2])
+                else: keep[-1][1] = b2
+            keep[-1][1] = e0
+        clip = np.concatenate([audio[int(a * SR):int(b * SR)] for a, b in keep])
+
+        def remap(x):  # time in the take -> time in the tightened clip
+            off = 0.0
+            for a, b in keep:
+                if x <= b: return off + max(0.0, x - a)
+                off += b - a
+            return off
+        words = [[w, round(t + remap(a), 3), round(t + remap(b), 3)] for w, a, b in word_times(text, g, spans.get(i))]
         timed.append({"speaker": speaker, "text": text, "start": t, "end": t + len(clip) / SR, "words": words})
         nxt = lines[i + 1][0] if i + 1 < len(lines) else None
         gap = 0.1 if (nxt and (nxt != "narrator" or speaker != "narrator")) else 0.18
+        if tight: gap = tight.get("line_gap", 0.06)
         gap += float(story.get("beats", {}).get(str(i), 0))  # held beat after a punchline/reveal (story "beats")
         out += [clip, np.zeros(int(gap * SR), np.float32)]; t += len(clip) / SR + gap
     raw = W + "voice_raw.wav"; sf.write(raw, np.concatenate(out), SR)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", "loudnorm=I=-14:TP=-1.0", "-ar", str(SR), W + "voice.wav"], check=True)
     json.dump(timed, open(W + "lines_timed.json", "w"), indent=1)
+    json.dump({i: placed[i][1] for i in placed}, open(W + "line_spans.json", "w"))  # where each line sits in its take (for checking)
     print(f"voice: {t:.1f}s, {len(lines)} lines")
 
 

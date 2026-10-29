@@ -406,6 +406,66 @@ def sfx_clap():  # one person clapping slowly
     return out
 
 
+def sfx_beep():  # truck reversing: three beeps
+    out = np.zeros(int(1.6 * SR))
+    for k in range(3):
+        d = 0.32; place(out, (tone(1100, d, "square") * 0.6 + tone(2200, d) * 0.2) * env(d, 0.004, 0.02) * 0.55, k * 0.5)
+    return lp(out, 6000)
+
+
+def sfx_screech():  # brakes slammed
+    d = 1.1; t = t_(d); f = 2600 + 400 * np.sin(2 * np.pi * 23 * t) - 900 * t
+    x = np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.5 + hp(lp(noise(d), 7000), 1800) * 0.5
+    return x * env(d, 0.02, 0.35) * 0.75
+
+
+def sfx_bark():  # dog: two barks
+    out = np.zeros(int(0.8 * SR))
+    for at in (0, 0.32):
+        d = 0.18; f = sweep(520, 260, d)
+        x = lp(tone(f, d, "saw") + 0.6 * lp(noise(d), 1500), 2200) * env(d, 0.005, 0.1, 1.5)
+        place(out, x * 0.8, at)
+    return out
+
+
+def sfx_shower():  # running water
+    d = 2.0; x = hp(lp(noise(d), 6000), 900) * (0.8 + 0.2 * np.sin(2 * np.pi * 9 * t_(d)))
+    return x * env(d, 0.15, 0.4) * 0.45
+
+
+def sfx_blip():  # video game: quick arcade blips
+    out = np.zeros(int(0.7 * SR))
+    for k, n in enumerate((72, 76, 79, 84)):
+        d = 0.09; place(out, tone(note(n), d, "square") * env(d, 0.002, 0.03) * 0.4, k * 0.1)
+    return out
+
+
+def sfx_jingle():  # ice cream truck tune (music-box chime)
+    out = np.zeros(int(3.0 * SR))
+    for i, n in enumerate((76, 74, 72, 74, 76, 76, 76, 74, 74, 74, 76, 79, 79)):
+        d = 0.5; x = tone(note(n), d) + 0.35 * tone(note(n) * 3, d) + 0.15 * tone(note(n) * 5.4, d)
+        place(out, x * env(d, 0.002, shape=3) * 0.32, i * 0.22)
+    return out
+
+
+def sfx_cheer():  # crowd cheer and claps
+    d = 2.0; x = hp(lp(noise(d), 3000), 300) * env(d, 0.2, 1.0) * 0.6
+    for k in range(40):
+        at = rng.uniform(0, 1.7); cd = 0.03; place(x, hp(noise(cd), 1200) * env(cd, 0.001, shape=3) * 0.5, at)
+    return x
+
+
+def sfx_chew():  # crunchy chewing
+    out = np.zeros(int(1.2 * SR))
+    for k in range(5):
+        d = 0.1; place(out, hp(lp(noise(d), 2500), 500) * env(d, 0.003, shape=2) * 0.5, k * 0.22)
+    return out
+
+
+def sfx_counter():  # chest counter ticking down one word: a soft digital tick
+    d = 0.07; return (tone(1800, d) * 0.5 + tone(3600, d) * 0.2) * env(d, 0.001, shape=4) * 0.6
+
+
 SFX = {k[4:]: v for k, v in globals().items() if k.startswith("sfx_")}
 
 
