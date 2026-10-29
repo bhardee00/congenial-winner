@@ -94,3 +94,25 @@ Drafts: pipeline/stories/ideas/.
 2. `python3 pipeline/make_short.py pipeline/stories/<story>.json --preview` and check the frames in `work/short/preview/`.
 3. Push `render/<slug>.blend`. The user opens it in Blender 4.0, checks the scene is SHORT,
    then does Render → Render Animation.
+
+## Reference #2: the step-counter short (part_1 52 s + part_2 61 s, analysed frame by frame)
+This is now the main style to copy 1:1.
+- **Story shape:** a town-wide rule with a number attached ("everyone gets 1,000,000 steps for life; at 0 your legs
+  turn to stone"). First-person kid narrator with a mom and a baby sister.
+  1. Hook: the rule and the number in the first line.
+  2. A tour of the town coping with the rule (old man on a bench with stone legs, a "NO RUNNING – EMERGENCIES ONLY"
+     sign, grandmas on a zip line, the mailman on a pogo stick, kids wheelbarrowed to school).
+  3. How I wasted mine (laps, dog races) → birthday reveal: 300 left, mom screams.
+  4. Coping (wheelbarrow, practising handstands).
+  5. Crisis: the baby's stroller rolls toward the river and everyone freezes because nobody wants to spend theirs.
+  6. I spend everything; the big countdown 300 → 0; legs turn to stone; I use the skill I practised (walk on hands) and save her.
+  7. Mom hugs us. "After that, the town changed": everyone does what I did. A wide town ending.
+- **Signature visual:** a glowing green/teal counter on EVERY character's chest. Full-screen counter inserts at key
+  moments, and big on-screen countdown numbers during the climax.
+- **Cuts:** part 1 (setup) about 1.7 s per shot, a cut on every sentence. Part 2 (the climax) has longer follow-cam
+  run shots (3–11 s) broken by quick reaction cuts and counter inserts. The stroller roll gets slow-motion-feeling shots.
+- **Look:** a realistic-lit Brookhaven-style suburb (detailed houses, trees, cars, a park on a hill, a river,
+  "STEPWELL ELEMENTARY", a 24/7 supermarket). Warm daylight, soft shadows, classic Roblox faces on R6 bodies.
+- **Captions:** small white bold sans, one word, fixed in the lower middle (matches ours).
+- **Audio:** the mix sits around -18 dB mean with peaks near 0 dB. The voice is up front, with a light music bed and
+  SFX on actions (whoosh, stone crack, gasp, the counter ticking down).
