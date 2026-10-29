@@ -53,6 +53,8 @@ def fetch_models(story):
         f.write("Free models from the Roblox Creator Store:\n")
         for name, m in story["models"].items(): f.write(f'- {m["name"]} by {m["creator"]} (asset {m["id"]})\n')
         if story.get("music_credit"): f.write(f'\nMusic: {story["music_credit"]}\n')
+        if "town" in open(os.path.join(HERE, "stories", story["module"] + ".py")).read():  # uses the town kit
+            f.write("\n" + open(os.path.join(REPO, "assets", "town", "CREDITS.txt")).read())
 
 
 CAPTION_FONT = os.path.join(REPO, "assets", "fonts", "LiberationSans-Bold.ttf")  # free Arial look-alike (SIL OFL)
