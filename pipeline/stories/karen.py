@@ -10,6 +10,7 @@ import blocky, toys, town
 from avatar import react
 from storykit import Kit, wall_mat, hold
 from acting import act, tilt, chatter, bounce_walk
+import vfx
 
 random.seed(14)
 SKIN = (234, 190, 150)
@@ -182,6 +183,7 @@ def build(ctx):
     K._key(drop, "scale", s2 + 9, (1, 1, 1), 1); K._key(drop, "scale", s2 + 11, (1.6, 1.6, 0.35))
     react(baby, "shock", s2 + 9)
     sh(sp, s2, b, (0.5, -3.6, 1.1), (-1.6, 0.0, 0.5), 24, dl=(-0.2, 0.3, 0)); ctx.sfx("splat", s2 + 9, 0.8)
+    with sp: vfx.burst("splash", (-1.6, 0.1, 0.9), s2 + 9, 2.2, (0.5, -3.6, 1.1), (255, 190, 215), step=2)
     act(baby, b, None)
     # 6: "My sister didn't cry. She blew a raspberry so hard, the sprinkles flew into Karen's hair."
     (a, s1), (_, s2), (_, b) = seg(6, "she", "the")
@@ -201,6 +203,8 @@ def build(ctx):
         K._key(o, "location", f_fly + 11, (0, -300, 0), 1)
     rest(baby, s2, "head", ease=2); react(baby, "chad", s2); react(karen, "shock", f_fly + 10)
     sh(sp, s2, b, (4.5, -6.0, 5.0), (-1.0, 0.0, 4.0), 24, dl=(-0.3, 0.5, 0)); ctx.sfx("whoosh", s2 + 2, 0.6); ctx.sfx("pop", f_fly + 10, 0.6)
+    with sp:
+        for k, dx in enumerate((-0.6, 0.5)): vfx.burst("glint", (0.4 + dx, 0.0, 5.6 + 0.3 * k), f_fly + 10 + k * 4, 1.4, (4.5, -6.0, 5.0), step=1)
     # 7: Karen: "That baby just attacked me!"
     a, b = L(7); react(karen, "furious", a, b + 10); act(karen, a, "arms_out"); chatter(karen, a, b, 1.6, 8)
     c = shf(sp, a, b, ((0.4, 0.2), (-2.5, -1.6), 4.75), 3.0, 0, pz=a + 2, amount=1.2); shake(c, a + 2, 10, 0.3)
@@ -234,6 +238,7 @@ def build(ctx):
     act(mom, a + 4, None); rest(mom, a + 4, "head"); react(mom, "chad", a + 6)
     shf(sp, a, s1, ((3.4, -2.6), 0, 4.75), 2.6, -15)
     sh(sp, s1, s2, (3.4, -4.7, 3.6), (3.4, -2.6, 3.3), 28, pz=wf(13, "owner"), amount=1.2); ctx.sfx("sparkle", L(13)[0] + 10, 0.6); ctx.sfx("ding", wf(13, "owner"), 0.5)
+    with sp: vfx.burst("ring", (3.4, -3.3, 3.4), L(13)[0] + 10, 3.0, (3.4, -4.7, 3.6), (255, 200, 225)); vfx.burst("glint", (4.1, -3.4, 4.0), wf(13, "owner"), 1.6, (3.4, -4.7, 3.6), step=1)
     S.flash(L(13)[0] + 10, 4)
     bounce_walk(mom, s2, b - 2, (3.4, -2.6, 0), (7.6, 1.0, 0), 6)
     sh(sp, s2, b, (-9, -12, 7.5), (2, 1, 3.0), 22, dl=(1, 1, 0)); ctx.sfx("step", s2 + 3, 0.4); ctx.sfx("step", s2 + 9, 0.4)
@@ -248,6 +253,7 @@ def build(ctx):
     shf(sp, s1, s2, ((-0.8, 6.6), 0, 4.75), 2.2, 15, lens=28); ctx.sfx("ding", s1 + 2, 0.4)
     act(mom, s2, "point"); react(karen, "meltdown", s2 + 2, b + 30)
     c = sh(sp, s2, b, (-0.8, 4.2, 4.9), (-0.8, 1.5, 4.75), 26, pz=s2 + 3, amount=1.3); shake(c, s2 + 3, 10, 0.3); ctx.sfx("scared", s2 + 2, 0.6)
+    with sp: vfx.burst("burst", (-0.8, 2.2, 4.9), s2 + 3, 2.6, (-0.8, 4.2, 4.9), (255, 240, 200), step=1)
     # 15: "Karen dropped her phone right into the sprinkles."
     (a, s1), (_, b) = seg(15, "right")
     act(karen, a, "phone", 1); pose(karen, a + 4, 3, ra=(-20, 0, 0)); act(mom, a, "cross")
@@ -255,6 +261,7 @@ def build(ctx):
     K._key(fphone, "rotation_euler", a + 4, (0, 0, 0), 1); K._key(fphone, "rotation_euler", s1 + 6, (math.radians(70), math.radians(20), 0))
     sh(sp, a, s1, (1.4, 3.7, 5.8), (-0.8, 1.5, 4.4), 26, dl=(-0.2, -0.2, 0)); ctx.sfx("whoosh", a + 4, 0.4)
     sh(sp, s1, b, (0.2, 1.6, 5.4), (-0.4, 3.9, 4.1), 30, pz=s1 + 6, amount=1.2); ctx.sfx("splat", s1 + 6, 0.7)
+    with sp: vfx.burst("puff", (-0.4, 3.9, 4.3), s1 + 6, 1.1, (0.2, 1.6, 5.4), (255, 220, 240), step=2)
     bounce_walk(karen, b, b + 50, (-0.8, 1.5, 0), (-14, -6, 0), 6)
     # 16-18: the new flavor
     a, b = L(16); S.flash(a, 6); ctx.sfx("whoosh", a, 0.6)
