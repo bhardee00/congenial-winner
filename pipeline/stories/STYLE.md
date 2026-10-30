@@ -180,3 +180,5 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
   - The background is alive: extras swim, walk past, ride slides, sit under umbrellas.
   - The camera watches and follows (medium and wide shots, pans with walkers, tilts up with climbers). Close-ups only for big reactions.
   - Shots last until the action finishes (~2-4 s).
+- **Captions from the water park short on (user request):** top, UPPERCASE, with a THICK black stroke so they pop:
+  `"captions": {"y": 0.115, "upper": true, "size": 70, "stroke": 10}`.
