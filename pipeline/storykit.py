@@ -84,3 +84,9 @@ class Kit:
         a, b = self.L(i); f0 = f0 or a; f1 = f1 or b
         fr = [self.S.frame(w[1]) for w in self.timed[i].get("words", []) if f0 <= self.S.frame(w[1]) < f1]
         avatar.talk(av, fr or list(range(f0, f1, 8)), amount)
+
+    def mouth(self, av, i, f0=None, f1=None):
+        """Lip flaps for av saying line i (or its words between f0 and f1)."""
+        a, b = self.L(i); f0 = f0 or a; f1 = f1 or b
+        ws = [(w[0], self.S.frame(w[1]), self.S.frame(w[2])) for w in self.timed[i].get("words", [])]
+        avatar.lipsync(av, [w for w in ws if f0 <= w[1] < f1])

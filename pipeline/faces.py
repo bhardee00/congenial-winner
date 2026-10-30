@@ -269,6 +269,27 @@ def face_meltdown(d):  # ugly cry: brows up, eyes shut tight, waterfalls of tear
     d.ellipse(s(395, 600, 615, 780), fill=INK); d.ellipse(s(445, 690, 565, 770), fill=(235, 95, 120, 255))
 
 
+# ---------------- talking mouths: face_<name>_talk = the same face with the mouth (re)drawn open ----------------
+HAPPY = {"smile", "happy", "grin", "laugh", "love", "starstruck", "smug", "chad", "relieved", "sideeye"}
+ANGRY = {"angry", "furious", "annoyed", "disgusted", "determined", "suspicious"}
+OPEN = {"shock", "scream", "laugh", "happy", "meltdown", "terrified", "big_eyes"}
+
+
+def talk_mouth(d, name):
+    """Clear the mouth area and draw it open. Faces that are already open-mouthed get a smaller mouth, so talking
+    alternates between big and small."""
+    d.rectangle(s(290, 555, 740, 845), fill=(0, 0, 0, 0))
+    if name in OPEN:
+        ell(d, 500, 670, 55, 40, INK); ell(d, 500, 692, 30, 14, (235, 95, 120, 255))
+    elif name in HAPPY:
+        d.chord(s(395, 580, 605, 760), 0, 180, fill=INK); ell(d, 500, 718, 55, 22, (235, 95, 120, 255))
+    elif name in ANGRY:
+        d.rounded_rectangle(s(385, 600, 615, 790), 60 * S, fill=INK); d.rectangle(s(415, 615, 585, 645), fill=WHITE)
+        ell(d, 500, 755, 70, 26, (235, 95, 120, 255))
+    else:
+        ell(d, 500, 670, 62, 52, INK); ell(d, 500, 700, 36, 18, (235, 95, 120, 255))
+
+
 def emote(name, fn, size=512):
     im = Image.new("RGBA", (size * S, size * S), (0, 0, 0, 0)); fn(ImageDraw.Draw(im))
     im.resize((size, size), Image.LANCZOS).save(os.path.join(OUT, f"emote_{name}.png"))
@@ -325,6 +346,9 @@ def main():
         if BLINK["used"]:  # same face with the eyes shut, for automatic blinking
             im = canvas(); BLINK["on"] = True; fn(ImageDraw.Draw(im)); BLINK["on"] = False
             im.resize((1024, 1024), Image.LANCZOS).save(os.path.join(OUT, f"face_{name}_blink.png")); blinks.append(name)
+    for name, fn in FACES.items():
+        im = canvas(); d = ImageDraw.Draw(im); fn(d); talk_mouth(d, name)
+        im.resize((1024, 1024), Image.LANCZOS).save(os.path.join(OUT, f"face_{name}_talk.png"))
     emotes()
     print("faces:", ", ".join(FACES)); print("blink variants:", ", ".join(blinks))
 

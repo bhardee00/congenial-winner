@@ -270,3 +270,6 @@ def build(ctx):
     # head motion for whoever is narrating on screen
     for i, (who, _) in enumerate(ctx.story["lines"]):
         if who == "narrator" and i in (0, 5, 16, 18): kit.speak(me, i, 0.4)
+    # mouths move on every spoken line
+    for i, (who, _) in enumerate(ctx.story["lines"]):
+        if who in ("karen", "mom"): kit.mouth(karen if who == "karen" else mom, i)

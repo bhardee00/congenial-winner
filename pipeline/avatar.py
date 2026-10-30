@@ -306,7 +306,7 @@ def blink(av, f0, f1, seed=0):
         cur = "smile"
         for rf, k in reacts:
             if rf <= f: cur = k
-        near = any(abs(rf - f) < 8 for rf, _ in reacts)
+        near = any(abs(rf - f) < 8 for rf, _ in reacts) or any(a - 3 <= f <= b + 3 for a, b in av.get("talk", []))
         b = av["faces"].get(cur + "_blink")
         if b and not near:
             fo = av["faces"][cur]
@@ -317,9 +317,36 @@ def blink(av, f0, f1, seed=0):
         f += rnd.randint(65, 125)
 
 
+def lipsync(av, words):
+    """Mouth flaps while av talks: words = [(text, first frame, last frame)]. The face switches to its open-mouth
+    version (face_<name>_talk) once per syllable; applied in finish(), when every expression change is known."""
+    import re
+    for w, f0, f1 in words:
+        n = max(1, len(re.findall(r"[aeiouy]+", w.lower().rstrip("e")) or [1]))
+        span = max(4, f1 - f0) / n
+        for k in range(n):
+            o = int(f0 + k * span); c = int(o + max(2, span * 0.6))
+            if c - o >= 2: av.setdefault("talk", []).append((o, c))
+
+
+def _mouths(av):
+    reacts = sorted(av["reacts"]); last = -10
+    for o, c in sorted(av.get("talk", [])):
+        if o <= last + 1 or any(o - 2 <= rf <= c + 2 for rf, _ in reacts): continue
+        cur = "smile"
+        for rf, k in reacts:
+            if rf <= o: cur = k
+        t = av["faces"].get(cur + "_talk"); fo = av["faces"].get(cur)
+        if not t or not fo: continue
+        for x, on0 in ((fo, cur == "smile"), (t, False)):
+            if not (x.animation_data and x.animation_data.action): _vis(x, on0, 0)
+        _vis(fo, False, o); _vis(t, True, o); _vis(t, False, c); _vis(fo, True, c); last = c
+
+
 def finish(total):
-    """Call once after the story is built: every character blinks for the whole short."""
-    for av in ALL: blink(av, 0, total)
+    """Call once after the story is built: every character blinks for the whole short, and mouths move on speech."""
+    for av in ALL:
+        blink(av, 0, total); _mouths(av)
 
 
 def _vis(o, on, f):
