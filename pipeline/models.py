@@ -105,6 +105,7 @@ def place(D, asset_id, loc=(0, 0, 0), rot_z=0.0, scale=1.0, name=None, coll=None
                 M = M @ Matrix.Diagonal(Vector([f[k] / max(sz[k], 1e-6) for k in range(3)] + [1])) @ Matrix.Translation(-(lo + hi) / 2)
             else:
                 M = M @ Matrix.Diagonal(Vector(list(it.get("scale", (1, 1, 1))) + [1]))
+                if it.get("center"): M = M @ Matrix.Translation(-(lo + hi) / 2)
         else:
             me = _unit(it["kind"]); M = M @ Matrix.Diagonal(Vector(list(it["size"]) + [1]))
         if not me.materials: me.materials.append(None)  # one slot; each object fills it with its own material

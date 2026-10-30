@@ -143,8 +143,12 @@ def accessory(asset_id):
     h = next((x for r in roots for x in r.walk() if x.props.get("Name") == "Handle" and x.cls in PARTS), None)
     if h is None: raise RuntimeError(f"{asset_id}: no Handle")
     att = next((c for c in h.children if c.cls == "Attachment"), None)
-    A = cf(att.props["CFrame"]) if att else np.eye(4)
-    T = np.eye(4); T[:3, 3] = HEAD_ATT.get(att.props.get("Name") if att else "", (0, 0.6, 0))
+    T = np.eye(4)
+    if att:
+        A = cf(att.props["CFrame"]); T[:3, 3] = HEAD_ATT.get(att.props.get("Name"), (0, 0.6, 0))
+    else:  # legacy Hat: Handle = Head * (0, 0.5, 0) * AttachmentPoint:inverse()
+        owner = next((x for r in roots for x in r.walk() if "AttachmentPoint" in x.props), None)
+        A = cf(owner.props["AttachmentPoint"]) if owner else np.eye(4); T[:3, 3] = (0, 0.5, 0)
     base = {"color": color(h), "alpha": 1 - float(h.props.get("Transparency", 0)), "mat": "plastic", "rpos": [0, 0, 0], "rsize": [1, 1, 1]}
     size = np.array(h.props.get("size") or h.props.get("Size") or (1, 1, 1), float)
     sm = next((c for c in h.children if c.cls == "SpecialMesh"), None)
@@ -157,7 +161,7 @@ def accessory(asset_id):
         Mo = np.eye(4); Mo[:3, 3] = np.array(sm.props.get("Offset", (0, 0, 0)), float)
         tex = aid(sm.props.get("TextureId", ""))
         it = {**base, "kind": "mesh", "mesh": mesh_file(aid(sm.props["MeshId"])), "scale": list(sm.props.get("Scale", (1, 1, 1))),
-              "M": Mo, "tex": fetch(tex, "png") if tex else None}
+              "M": Mo, "tex": fetch(tex, "png") if tex else None, "center": True}  # Roblox centres a FileMesh on its part
     else: raise RuntimeError(f"{asset_id}: Handle has no mesh")
     it["M"] = (R2B @ T @ np.linalg.inv(A) @ it["M"]).round(5).tolist()
     out = W + f"{asset_id}_acc.json"
