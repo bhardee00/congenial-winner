@@ -10,7 +10,6 @@ import blocky, toys, town
 from avatar import react
 from storykit import Kit, wall_mat, hold
 from acting import act, tilt, chatter, bounce_walk
-import vfx
 
 random.seed(14)
 SKIN = (234, 190, 150)
@@ -171,19 +170,24 @@ def build(ctx):
     shf(sp, a, b, (KP, (-2, 6), 4.75), 2.4, 12, pz=wf(4, "chocolatey"), amount=1.15); ctx.sfx("boing", wf(4, "chocolatey"), 0.35)
     act(karen, b, None)
     # 5: "When my sister finally got her cone, Karen bumped the stroller. The scoop landed right on the floor."
-    (a, s1), (_, s2), (_, b) = seg(5, "karen", "the")
+    (a, s1), (_, s2), (_, b) = seg(5, "karen", ("the", 1))
     at(karen, a, (-4.6, 1.8, 0), (-2, 6), ease=1); react(baby, "starstruck", a); act(baby, a, "hold", 1); pose(baby, a, 1, ra=(-70, 0, -10))
     shf(sp, a, s1, ((-2, -1.25), 180, 2.95), 1.9, 20, lens=26); ctx.sfx("sparkle", a + 2, 0.5)
-    react(karen, "annoyed", s1); bounce_walk(karen, s1, s2 - 2, (-4.6, 1.8, 0), (0.4, 0.2, 0), 6)
-    K._key(strl, "location", s1 + 8, (-2, -1.4, 0), 1); K._key(strl, "location", s1 + 11, (-2.6, -1.7, 0)); K._key(strl, "location", s1 + 18, (-2.5, -1.6, 0))
-    K._key(strl, "rotation_euler", s1 + 8, (0, 0, math.radians(180)), 1); K._key(strl, "rotation_euler", s1 + 11, (0, 0, math.radians(172)))
-    bz = baby["root"].location.z; K._key(baby["root"], "location", s1 + 8, (-2, -1.25, bz), 1); K._key(baby["root"], "location", s1 + 11, (-2.6, -1.55, bz)); K._key(baby["root"], "location", s1 + 18, (-2.5, -1.45, bz))
-    c = sh(sp, s1, s2, (8, -3.0, 5.4), (-1.5, -0.6, 3.0), 24, dl=(-0.5, 0, 0)); shake(c, s1 + 10, 8, 0.25); ctx.sfx("boing", s1 + 9, 0.6); ctx.sfx("gasp", s1 + 12, 0.3)
-    K._key(drop, "location", 0, (0, -300, 0), 1); K._key(drop, "location", s2, (-2.3, -0.4, 2.7), 1); K._key(drop, "location", s2 + 9, (-1.6, 0.1, 0.25))
+    # Karen walks straight into the stroller: shoulder/hip check on contact, the stroller lurches, then she walks on
+    hit = s1 + int((s2 - s1) * 0.45)
+    react(karen, "annoyed", s1); bounce_walk(karen, s1, hit, (-4.6, 1.8, 0), (-2.2, 0.35, 0), 6)
+    pose(karen, hit - 2, 2, waist=(8, 0, -22), ra=(-35, 0, 30)); pose(karen, hit + 4, 4, waist=(0, 0, 0)); rest(karen, hit + 6, "ra", ease=4)
+    react(karen, "smug", hit + 2)
+    K._key(strl, "location", hit, (-2, -1.4, 0), 1); K._key(strl, "location", hit + 3, (-2.7, -1.9, 0.25)); K._key(strl, "location", hit + 6, (-2.6, -1.75, 0)); K._key(strl, "location", hit + 12, (-2.5, -1.6, 0))
+    K._key(strl, "rotation_euler", hit, (0, 0, math.radians(180)), 1); K._key(strl, "rotation_euler", hit + 3, (math.radians(-6), 0, math.radians(168))); K._key(strl, "rotation_euler", hit + 8, (0, 0, math.radians(172)))
+    bz = baby["root"].location.z; K._key(baby["root"], "location", hit, (-2, -1.25, bz), 1); K._key(baby["root"], "location", hit + 3, (-2.7, -1.75, bz + 0.25)); K._key(baby["root"], "location", hit + 6, (-2.6, -1.6, bz)); K._key(baby["root"], "location", hit + 12, (-2.5, -1.45, bz))
+    react(baby, "shock", hit + 2); pose(baby, hit + 1, 2, head=(-15, 0, 10)); rest(baby, hit + 8, "head", ease=4)
+    bounce_walk(karen, hit + 6, s2 - 2, (-2.2, 0.35, 0), (0.4, 0.2, 0), 6)
+    c = sh(sp, s1, s2, (-7.0, -5.8, 4.8), (-2.3, -0.4, 3.0), 24, dl=(0.4, 0.3, 0)); shake(c, hit + 1, 8, 0.3); ctx.sfx("boing", hit, 0.7); ctx.sfx("gasp", hit + 3, 0.4)
+    K._key(drop, "location", 0, (0, -300, 0), 1); K._key(drop, "location", s2, (-2.8, -0.9, 2.7), 1); K._key(drop, "location", s2 + 9, (-2.0, -0.2, 0.25))
     K._key(drop, "scale", s2 + 9, (1, 1, 1), 1); K._key(drop, "scale", s2 + 11, (1.6, 1.6, 0.35))
     react(baby, "shock", s2 + 9)
-    sh(sp, s2, b, (0.5, -3.6, 1.1), (-1.6, 0.0, 0.5), 24, dl=(-0.2, 0.3, 0)); ctx.sfx("splat", s2 + 9, 0.8)
-    with sp: vfx.burst("splash", (-1.6, 0.1, 0.9), s2 + 9, 2.2, (0.5, -3.6, 1.1), (255, 190, 215), step=2)
+    sh(sp, s2, b, (0.2, -3.8, 1.2), (-2.0, -0.2, 0.5), 24, dl=(-0.2, 0.3, 0)); ctx.sfx("splat", s2 + 9, 0.8)
     act(baby, b, None)
     # 6: "My sister didn't cry. She blew a raspberry so hard, the sprinkles flew into Karen's hair."
     (a, s1), (_, s2), (_, b) = seg(6, "she", "the")
@@ -203,8 +207,6 @@ def build(ctx):
         K._key(o, "location", f_fly + 11, (0, -300, 0), 1)
     rest(baby, s2, "head", ease=2); react(baby, "chad", s2); react(karen, "shock", f_fly + 10)
     sh(sp, s2, b, (4.5, -6.0, 5.0), (-1.0, 0.0, 4.0), 24, dl=(-0.3, 0.5, 0)); ctx.sfx("whoosh", s2 + 2, 0.6); ctx.sfx("pop", f_fly + 10, 0.6)
-    with sp:
-        for k, dx in enumerate((-0.6, 0.5)): vfx.burst("glint", (0.4 + dx, 0.0, 5.6 + 0.3 * k), f_fly + 10 + k * 4, 1.4, (4.5, -6.0, 5.0), step=1)
     # 7: Karen: "That baby just attacked me!"
     a, b = L(7); react(karen, "furious", a, b + 10); act(karen, a, "arms_out"); chatter(karen, a, b, 1.6, 8)
     c = shf(sp, a, b, ((0.4, 0.2), (-2.5, -1.6), 4.75), 3.0, 0, pz=a + 2, amount=1.2); shake(c, a + 2, 10, 0.3)
@@ -223,22 +225,23 @@ def build(ctx):
     (a, s1), (_, b) = seg(10, "and")
     at(karen, a, (0.4, 0.2, 0), (0.4, -6), ease=1); react(karen, "determined", a); act(karen, a + 2, "phone")
     shf(sp, a, s1, ((0.4, 0.2), (0.4, -6), 4.75), 2.8, 15); ctx.sfx("whoosh", a + 2, 0.3)
-    sh(ins, s1, b, (0, -6.5, 3.5), (0, 0, 3.5), 34, dl=(0, 1.2, 0)); ctx.sfx("live", s1, 0.7)
+    SELFIE = ((0.55, -2.3, 5.05), (0.4, 0.4, 4.6))  # Karen's front camera: her face with the shop behind her
+    sh(sp, s1, b, SELFIE[0], SELFIE[1], 19, dl=(0, 0.15, 0)); ctx.overlay("phone_live.png", s1, b); ctx.sfx("live", s1, 0.7)
     # 11: Karen: "This shop lets children eat ice cream! I want the owner. Now!"
     (a, s1), (_, b) = seg(11, "i")
     react(karen, "angry", a); chatter(karen, a, b, 1.8, 7)
-    shf(sp, a, s1, ((0.4, 0.2), (0.4, -6), 4.75), 2.8, 0, lens=26)
+    sh(sp, a, s1, SELFIE[0], SELFIE[1], 19); ctx.overlay("phone_live.png", a, s1)
     react(karen, "furious", s1, b + 8)
     c = shf(sp, s1, b, ((0.4, 0.2), (0.4, -6), 4.75), 1.9, 5, lens=28, pz=wf(11, "now"), amount=1.3); shake(c, wf(11, "now"), 12, 0.35)
     # 12: "Her live had zero viewers."
     a, b = L(12)
-    sh(ins, a, b, (10, -6.0, 3.5), (10, 0, 3.6), 34, pz=wf(12, "zero"), amount=1.25); ctx.sfx("crickets", a, 0.7)
+    for f0_, f1_ in ((seg(10, "and")[1][0], seg(11, "i")[0][1]), (a, b)): K.vis(kphone, f0_, False); K.vis(kphone, f1_, True)  # the phone is the camera here
+    react(karen, "nervous", a); sh(sp, a, b, SELFIE[0], SELFIE[1], 19, pz=wf(12, "zero"), amount=1.15); ctx.overlay("phone_live_zero.png", a, b); ctx.sfx("crickets", a, 0.7)
     # 13: "Then Mom put her phone down, tied on a pink apron that said owner, and walked behind the counter."
     (a, s1), (_, s2), (_, b) = seg(13, "tied", ("and", 0))
     act(mom, a + 4, None); rest(mom, a + 4, "head"); react(mom, "chad", a + 6)
     shf(sp, a, s1, ((3.4, -2.6), 0, 4.75), 2.6, -15)
     sh(sp, s1, s2, (3.4, -4.7, 3.6), (3.4, -2.6, 3.3), 28, pz=wf(13, "owner"), amount=1.2); ctx.sfx("sparkle", L(13)[0] + 10, 0.6); ctx.sfx("ding", wf(13, "owner"), 0.5)
-    with sp: vfx.burst("ring", (3.4, -3.3, 3.4), L(13)[0] + 10, 3.0, (3.4, -4.7, 3.6), (255, 200, 225)); vfx.burst("glint", (4.1, -3.4, 4.0), wf(13, "owner"), 1.6, (3.4, -4.7, 3.6), step=1)
     S.flash(L(13)[0] + 10, 4)
     bounce_walk(mom, s2, b - 2, (3.4, -2.6, 0), (7.6, 1.0, 0), 6)
     sh(sp, s2, b, (-9, -12, 7.5), (2, 1, 3.0), 22, dl=(1, 1, 0)); ctx.sfx("step", s2 + 3, 0.4); ctx.sfx("step", s2 + 9, 0.4)
@@ -253,7 +256,6 @@ def build(ctx):
     shf(sp, s1, s2, ((-0.8, 6.6), 0, 4.75), 2.2, 15, lens=28); ctx.sfx("ding", s1 + 2, 0.4)
     act(mom, s2, "point"); react(karen, "meltdown", s2 + 2, b + 30)
     c = sh(sp, s2, b, (-0.8, 4.2, 4.9), (-0.8, 1.5, 4.75), 26, pz=s2 + 3, amount=1.3); shake(c, s2 + 3, 10, 0.3); ctx.sfx("scared", s2 + 2, 0.6)
-    with sp: vfx.burst("burst", (-0.8, 2.2, 4.9), s2 + 3, 2.6, (-0.8, 4.2, 4.9), (255, 240, 200), step=1)
     # 15: "Karen dropped her phone right into the sprinkles."
     (a, s1), (_, b) = seg(15, "right")
     act(karen, a, "phone", 1); pose(karen, a + 4, 3, ra=(-20, 0, 0)); act(mom, a, "cross")
@@ -261,7 +263,6 @@ def build(ctx):
     K._key(fphone, "rotation_euler", a + 4, (0, 0, 0), 1); K._key(fphone, "rotation_euler", s1 + 6, (math.radians(70), math.radians(20), 0))
     sh(sp, a, s1, (1.4, 3.7, 5.8), (-0.8, 1.5, 4.4), 26, dl=(-0.2, -0.2, 0)); ctx.sfx("whoosh", a + 4, 0.4)
     sh(sp, s1, b, (0.2, 1.6, 5.4), (-0.4, 3.9, 4.1), 30, pz=s1 + 6, amount=1.2); ctx.sfx("splat", s1 + 6, 0.7)
-    with sp: vfx.burst("puff", (-0.4, 3.9, 4.3), s1 + 6, 1.1, (0.2, 1.6, 5.4), (255, 220, 240), step=2)
     bounce_walk(karen, b, b + 50, (-0.8, 1.5, 0), (-14, -6, 0), 6)
     # 16-18: the new flavor
     a, b = L(16); S.flash(a, 6); ctx.sfx("whoosh", a, 0.6)

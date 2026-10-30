@@ -182,3 +182,5 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
   - Shots last until the action finishes (~2-4 s).
 - **Captions from the water park short on (user request):** top, UPPERCASE, with a THICK black stroke so they pop:
   `"captions": {"y": 0.115, "upper": true, "size": 70, "stroke": 10}`.
+- **VFX (user feedback):** don't overdo it. The ice cream short should have none. Use effects only rarely, where a gag
+  truly needs one, and ask first.

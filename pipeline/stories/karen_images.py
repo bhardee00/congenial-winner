@@ -40,6 +40,23 @@ def make(out, font):
         d.rounded_rectangle((30, 150, 330 if not big else 560, 220 if not big else 300), 20, fill=(20, 20, 30, 200))
         d.text((50, 185 if not big else 225), "0 watching", font=font(44 if not big else 80), anchor="lm", fill=WHITE)
         im.save(out + f"{name}.png")
+
+    # LIVE phone overlays (full frame, see-through screen so the selfie camera view of the shop shows through)
+    W, H = 1080, 1440
+    for name, big in (("phone_live", False), ("phone_live_zero", True)):
+        im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+        d.rounded_rectangle((20, 20, W - 20, H - 20), 110, outline=(18, 18, 22, 255), width=60)
+        d.rounded_rectangle((W / 2 - 150, 50, W / 2 + 150, 100), 25, fill=(18, 18, 22, 255))  # notch
+        d.rounded_rectangle((110, 230, 330, 320), 22, fill=(235, 40, 50, 255)); d.ellipse((132, 258, 166, 292), fill=WHITE)
+        d.text((248, 276), "LIVE", font=font(64), anchor="mm", fill=WHITE)
+        if big:
+            d.rounded_rectangle((W / 2 - 330, 1000, W / 2 + 330, 1160), 50, fill=(15, 15, 25, 210))
+            d.text((W / 2, 1080), "0 watching", font=font(110), anchor="mm", fill=WHITE)
+        else:
+            d.rounded_rectangle((350, 240, 640, 310), 20, fill=(15, 15, 25, 170)); d.text((495, 276), "0 watching", font=font(44), anchor="mm", fill=WHITE)
+        d.rounded_rectangle((110, H - 230, W - 250, H - 140), 45, fill=(255, 255, 255, 90)); d.text((150, H - 185), "Say something...", font=font(44), anchor="lm", fill=(255, 255, 255, 230))
+        d.ellipse((W - 220, H - 235, W - 120, H - 135), fill=(245, 90, 120, 200)); d.text((W - 170, H - 185), "<3", font=font(40), anchor="mm", fill=WHITE)
+        im.save(out + f"{name}.png")
     # OWNER apron front, the shop sign, the "BANNED" stamp
     im = Image.new("RGBA", (600, 700), (245, 130, 170, 255)); d = ImageDraw.Draw(im)
     d.rounded_rectangle((20, 20, 580, 680), 60, outline=WHITE, width=16)

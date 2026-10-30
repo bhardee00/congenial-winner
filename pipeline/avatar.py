@@ -306,7 +306,8 @@ def blink(av, f0, f1, seed=0):
         cur = "smile"
         for rf, k in reacts:
             if rf <= f: cur = k
-        near = any(abs(rf - f) < 8 for rf, _ in reacts) or any(a - 3 <= f <= b + 3 for a, b in av.get("talk", []))
+        # stay clear of expression changes, including the double blink's second half (f+6..f+8)
+        near = any(-12 <= rf - f <= 14 for rf, _ in reacts) or any(a - 3 <= f <= b + 12 for a, b in av.get("talk", []))
         b = av["faces"].get(cur + "_blink")
         if b and not near:
             fo = av["faces"][cur]
