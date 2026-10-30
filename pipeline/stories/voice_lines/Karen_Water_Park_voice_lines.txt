@@ -24,7 +24,7 @@ The next day, there was a new sign by the pool.
 
 No Karens in the deep end. Signed with one tiny wet footprint.
 
-========== FILE 2: OTHER VOICES (speed 1.70x) ==========
+========== FILE 2: OTHER VOICES (speed 1.50x) ==========
 Order: Karen, Me, Karen, Karen, Karen, Mom, Karen, Karen, Grandma, Karen, Grandma, Karen, Grandma
 Leave a short pause between lines.
 
