@@ -471,6 +471,15 @@ def sfx_raspberry():  # baby blowing a raspberry: pffbbbt
     return lp(x, 1800) * env(d, 0.02, 0.3) * 0.9
 
 
+def sfx_whistle():  # lifeguard whistle: two shrill trilled blasts
+    out = np.zeros(int(1.2 * SR))
+    for at, d in ((0, 0.35), (0.45, 0.6)):
+        t = t_(d); f = 3100 * (1 + 0.04 * np.sign(np.sin(2 * np.pi * 28 * t)))
+        x = np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.25 * hp(noise(d), 3000)
+        place(out, x * env(d, 0.01, 0.06) * 0.5, at)
+    return out
+
+
 SFX = {k[4:]: v for k, v in globals().items() if k.startswith("sfx_")}
 
 

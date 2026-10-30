@@ -117,5 +117,87 @@
    "narrator",
    "No Karens in the deep end. Signed with one tiny wet footprint."
   ]
- ]
+ ],
+ "voice_files": {
+  "narrator": "assets/voice/pool_narrator_1.30x.wav",
+  "others": "assets/voice/pool_others_1.50x.wav",
+  "others_order": [
+   "karen",
+   "me",
+   "karen",
+   "karen",
+   "karen",
+   "mom",
+   "karen",
+   "karen",
+   "grandma",
+   "karen",
+   "grandma",
+   "karen",
+   "grandma"
+  ],
+  "others_spans": [
+   [
+    0.4,
+    2.8
+   ],
+   [
+    2.95,
+    3.66
+   ],
+   [
+    3.85,
+    5.67
+   ],
+   [
+    5.87,
+    7.52
+   ],
+   [
+    7.72,
+    9.11
+   ],
+   [
+    9.29,
+    10.2
+   ],
+   [
+    10.34,
+    11.52
+   ],
+   [
+    11.7,
+    14.03
+   ],
+   [
+    14.17,
+    15.37
+   ],
+   [
+    15.44,
+    16.02
+   ],
+   [
+    16.16,
+    16.96
+   ],
+   [
+    17.08,
+    17.77
+   ],
+   [
+    17.93,
+    19.54
+   ]
+  ]
+ },
+ "beats": {
+  "4": 0.6,
+  "6": 0.7,
+  "9": 0.5,
+  "11": 0.5,
+  "13": 0.6,
+  "18": 0.9,
+  "21": 0.9
+ }
 }

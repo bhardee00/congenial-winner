@@ -372,7 +372,12 @@ class Short:
 
     def assemble(self, voice, words, overlays=()):
         se = self.se
-        for i, (st, cam, f0, f1, frozen) in enumerate(sorted(self.shots, key=lambda s: s[2])):
+        shots = sorted(self.shots, key=lambda s: s[2])
+        # a shot that runs past the next one's start is trimmed there (overlapping strips get pushed around and
+        # leave black gaps in the edit)
+        shots = [(st, cam, f0, min(f1, shots[i + 1][2]) if i + 1 < len(shots) else f1, fr) for i, (st, cam, f0, f1, fr) in enumerate(shots)]
+        self.shots = shots
+        for i, (st, cam, f0, f1, frozen) in enumerate(shots):
             st.scene.frame_start = 1; st.scene.frame_end = self.total
             # added on a free channel at full length (scene frame = video frame), trimmed, then moved down to 1
             s = se.sequences.new_scene(f"{st.name}_{f0}", st.scene, 100 + i, 1)

@@ -117,7 +117,7 @@ def build(st, A, seed=3):
     # kiddie pool
     kx, ky, kr = KIDDIE
     town._cyl((kx, ky, -0.45), kr + 0.6, kr + 0.6, 0.9, mat((250, 250, 250), 0.4), 40, "kiddie_rim")
-    town._cyl((kx, ky, -0.12), kr, kr, 0.06, water_mat((110, 205, 235)), 40, "kiddie_water")
+    town._cyl((kx, ky, 0.04), kr, kr, 0.06, mat((95, 195, 235), 0.05), 40, "kiddie_water")
     out["kiddie"] = (kx, ky)
     # loungers, umbrellas, towels
     chairs = [(4, -5), (8, -5), (12, -5), (-6, -5), (-10, -5), (18, -9), (-14, -9)]
