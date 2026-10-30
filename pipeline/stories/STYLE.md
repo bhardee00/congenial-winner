@@ -159,3 +159,17 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
   - `acting.py`: act(av, f, "point" | "cross" | "hips" | "head" | "facepalm" | "shrug" | "arms_out" | "arms_up" | "wave" | "phone" | "hold" | "hug" | "fists" | "stop"), chatter() for talking sway, tilt(), bounce_walk().
   - New meme faces: sideeye, chad, raspberry, meltdown.
   - Story json `"captions": {"y": 0.115, "upper": true, "size": 66, "stroke": 5}` gives UPPERCASE captions at the top.
+
+## User feedback on the ice cream short (apply from the water park short on)
+- "Very fast pace which is good, but almost too fast to understand." Hold shots long enough to read the action
+  (about 1.5-3 s). Show WHO is doing WHAT in medium or wide shots, and don't cut on every word.
+- More DIALOGUE: characters talk to each other; the narrator only links the scenes.
+- More ANIMATION during conflict: show the whole action (grab, pop, splash, throw, climb, flip, slide), not just the result.
+- MOUTH MOVEMENT while talking: the mouth opens and closes on the syllables of every spoken line.
+- From the side-by-side comparison:
+  - Pull the camera back to waist or chest framing.
+  - Use real Roblox-style hair, smaller faces drawn higher with thinner lines, and the classic head shape.
+  - Use neutral soft colour (no blue tint, no extra saturation).
+  - Fill the set with props.
+  - Draw shirts with collars and logos.
+  - Use a rounder caption font.
