@@ -8,7 +8,7 @@
  "synth_music": false,
  "voice_speeds": {
   "narrator": 1.3,
-  "others": 1.7
+  "others": 1.5
  },
  "tight": {
   "max_pause": 0.1,
