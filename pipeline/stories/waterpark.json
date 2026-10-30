@@ -1,0 +1,121 @@
+{
+ "title": "A Karen Didn't Want My Baby Brother At The Water Park 🏊",
+ "slug": "Karen_Water_Park",
+ "module": "waterpark",
+ "models": {},
+ "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
+ "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
+ "synth_music": false,
+ "voice_speeds": {
+  "narrator": 1.3,
+  "others": 1.7
+ },
+ "tight": {
+  "max_pause": 0.1,
+  "line_gap": 0.06
+ },
+ "captions": {
+  "y": 0.115,
+  "upper": true,
+  "size": 70,
+  "stroke": 10
+ },
+ "lines": [
+  [
+   "narrator",
+   "A Karen tried to kick my baby brother out of the water park."
+  ],
+  [
+   "karen",
+   "Excuse me! Is that a baby? In my pool?"
+  ],
+  [
+   "me",
+   "He's just floating."
+  ],
+  [
+   "karen",
+   "Diapers in the pool? That's disgusting!"
+  ],
+  [
+   "narrator",
+   "Then she grabbed his floatie and popped it with her fingernail."
+  ],
+  [
+   "karen",
+   "Oops. Guess he can't swim now."
+  ],
+  [
+   "narrator",
+   "Max just looked at her. Then he kicked his little legs and splashed her right in the face."
+  ],
+  [
+   "karen",
+   "My hair! I just got it done!"
+  ],
+  [
+   "mom",
+   "It's a water park, ma'am."
+  ],
+  [
+   "narrator",
+   "So Karen stomped over to our chairs and threw our towels on the ground."
+  ],
+  [
+   "karen",
+   "These chairs are for adults only."
+  ],
+  [
+   "narrator",
+   "Then she marched up to the lifeguard tower and blew the whistle herself."
+  ],
+  [
+   "karen",
+   "Whoever's in charge, get down here! That baby needs to leave!"
+  ],
+  [
+   "narrator",
+   "The lifeguard climbed down and slowly took off her sunglasses."
+  ],
+  [
+   "narrator",
+   "It was Grandma."
+  ],
+  [
+   "grandma",
+   "Ma'am, that baby isn't a guest."
+  ],
+  [
+   "karen",
+   "Then what is he?"
+  ],
+  [
+   "grandma",
+   "He's the swim teacher."
+  ],
+  [
+   "narrator",
+   "Max climbed all the way up the high dive, and did a perfect backflip."
+  ],
+  [
+   "karen",
+   "That's impossible!"
+  ],
+  [
+   "grandma",
+   "You're banned. You can take the slide out."
+  ],
+  [
+   "narrator",
+   "Karen went down the big slide, and landed right in the kiddie pool."
+  ],
+  [
+   "narrator",
+   "The next day, there was a new sign by the pool."
+  ],
+  [
+   "narrator",
+   "No Karens in the deep end. Signed with one tiny wet footprint."
+  ]
+ ]
+}

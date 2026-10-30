@@ -184,3 +184,10 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
   `"captions": {"y": 0.115, "upper": true, "size": 70, "stroke": 10}`.
 - **VFX (user feedback):** don't overdo it. The ice cream short should have none. Use effects only rarely, where a gag
   truly needs one, and ask first.
+
+## Approved by the user after the ice cream short ("came out a lot better")
+- **MOUTH MOVEMENT on every short:** call `kit.mouth(av, i)` for every spoken (non-narrator) line, so the speaker's mouth
+  opens and closes per syllable. Each face has a face_<name>_talk version (faces.py).
+- Faces must never stack. Blinks stay clear of expression changes (avatar.blink); check with a keyframe scan if unsure.
+- The LIVE phone shows the selfie camera view of the real set behind the speaker, with the phone UI as an overlay.
+- Physical contact must actually touch: if the line says she bumped it, she walks into it and it reacts.
