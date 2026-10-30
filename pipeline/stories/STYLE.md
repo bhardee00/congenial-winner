@@ -128,3 +128,30 @@ This is now the main style to copy 1:1.
   (town.cloth_png makes them in the story's _images.py).
 - **Chest counter:** `town.counter(av, {frame: badge png})`. A dark rounded badge with mint numbers, ticking down one per
   spoken word (with a soft "counter" tick sound). Big mint countdown numbers go over the climax as overlays.
+
+## Reference #3: the "Karen at the supermarket" short (46 s, analysed frame by frame)
+The user wants this TYPE of video (not this story): simple, clear, every shot explains what is happening.
+- **Story formula:** first-person kid narrator with family (a baby sibling in the cart, a calm sassy mom).
+  1. One public place (a supermarket).
+  2. An entitled stranger (Karen) picks on the family's weakest member (the baby).
+  3. She escalates three times: complains, rams the cart, folds their cart in half and throws the bottle.
+  4. The family answers calmly and cleverly (baby: "goo goo gaga", mom: a side-eye one-liner, smug).
+  5. Karen does something even bigger: screams for the manager, goes LIVE on her phone.
+  6. Twist reveal: the manager bows to the family; the founder's statue is grandma/mom ("my mom owns the store").
+  7. Karen is banned forever.
+  8. Callback gag: a "NO KARENS" sign signed with the baby's tiny footprint.
+- **Length and pace:** 46 s and about 43 cuts, so roughly 1.1 s per shot. A cut on every phrase.
+- **Camera:** mostly still or a slow push at eye level. Medium shots of the speaker, with the listener's shoulder or cart in frame.
+  Close-ups for each reaction. A few wides showing the store aisle and who stands where. A full-screen insert for props
+  (phone LIVE screen, fish tank, the sign).
+- **Acting (copy this):**
+  - Characters mostly stand and gesture: point, arms crossed, hand on head, hand on hip, both arms out, shrug.
+  - Talking = small head tilts and a slight body sway, not big nods.
+  - Every line has a big expressive face, including Roblox meme faces (side-eye smug, chad grin, scream, crying, angry brows).
+  - Walks are short and purposeful (marching in, storming out), with a stiff, bouncy Roblox walk.
+  - Physical gags are quick and readable: the cart flips and groceries fly, a pink perfume cloud, cartoon stars on impact,
+    a thrown bottle, falling confetti.
+- **Look:** a bright pastel store. A checkered mint/cream floor, a green trim band, colourful shelves, a SALE sign, flat soft
+  lighting. Characters wear layered Roblox clothing and big hair accessories.
+- **Captions:** ONE word, UPPERCASE, white bold with a black outline, near the TOP of the frame (~12%).
+- **Audio:** loud and clear (mean -15 dB), with the narrator on top and quick SFX on gags.
