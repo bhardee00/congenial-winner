@@ -1,6 +1,6 @@
 KAREN AT THE ICE CREAM SHOP - voice lines (ElevenLabs Adam, change audio pitch ON)
 
-========== FILE 1: NARRATOR (speed 1.60x) ==========
+========== FILE 1: NARRATOR (speed 1.30x) ==========
 
 A Karen cut in front of my baby sister at the ice cream shop.
 
@@ -28,7 +28,7 @@ Karen Tears. It's salty.
 
 My sister picked the name.
 
-========== FILE 2: OTHER VOICES (speed 1.75x) ==========
+========== FILE 2: OTHER VOICES (speed 1.78x) ==========
 Order: Karen, Karen, Karen, Mom, Karen, Mom
 Leave a short pause between lines.
 
