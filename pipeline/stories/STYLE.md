@@ -173,3 +173,10 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
   - Fill the set with props.
   - Draw shirts with collars and logos.
   - Use a rounder caption font.
+- **THIRD-PERSON ANIMATION (user confirmed "yes exactly"):** every line is a little scene played out on screen, as if
+  watching it happen.
+  - Characters walk in, turn to each other, gesture while arguing and react while others talk. Nobody stands frozen.
+  - Narration is ACTED OUT: "she grabbed his floatie and popped it" means we watch her walk over, kneel, grab and pop it.
+  - The background is alive: extras swim, walk past, ride slides, sit under umbrellas.
+  - The camera watches and follows (medium and wide shots, pans with walkers, tilts up with climbers). Close-ups only for big reactions.
+  - Shots last until the action finishes (~2-4 s).
