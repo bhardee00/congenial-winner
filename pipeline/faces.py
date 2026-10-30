@@ -240,6 +240,35 @@ def face_blank(d):  # dead inside: o_o
     thick(d, [(440, 680), (570, 680)], 24)
 
 
+def face_sideeye(d):  # the mom side-eye: heavy lids, pupils hard to one side, flat little smirk
+    brows(d, [(270, 300), (420, 292)], [(575, 292), (725, 300)], 24)
+    for x in (EYE_L, EYE_R):
+        ell(d, x, 410, 70, 44, WHITE); ell(d, x + 34, 418, 26, 26, INK)
+        thick(d, [(x - 72, 392), (x + 72, 392)], 26)
+    thick(d, [(430, 680), (560, 680), (600, 662)], 22)
+
+
+def face_chad(d):  # confident meme grin: low brows, narrow eyes, big lopsided smile, chin line
+    brows(d, [(270, 300), (420, 315)], [(575, 315), (725, 300)], 34)
+    for x in (EYE_L, EYE_R): thick(d, [(x - 50, 400), (x + 50, 395)], 26)
+    arc(d, 520, 600, 170, 90, 15, 150, 30); thick(d, [(470, 800), (560, 800)], 18)
+    thick(d, [(690, 560), (715, 600)], 16)
+
+
+def face_raspberry(d):  # pfffbt: eyes squeezed shut, cheeks puffed, tongue out
+    for x, sgn in ((EYE_L, 1), (EYE_R, -1)): thick(d, [(x - 55, 370 + 0 * sgn), (x + 15 * sgn, 410), (x - 55 + 110, 370)][:3], 24)
+    ell(d, 495, 660, 110, 55, INK); d.pieslice(s(440, 640, 560, 790), 0, 180, fill=(235, 95, 120, 255))
+    thick(d, [(500, 690), (500, 760)], 8, (180, 60, 80, 255))
+    for x in (250, 750): ell(d, x, 590, 60, 32, BLUSH)
+
+
+def face_meltdown(d):  # ugly cry: brows up, eyes shut tight, waterfalls of tears, wide wailing mouth
+    brows(d, [(270, 300), (420, 230)], [(580, 230), (730, 300)])
+    for x in (EYE_L, EYE_R): arc(d, x, 420, 60, 40, 200, 340, 26)
+    for x in (EYE_L, EYE_R): d.rectangle(s(x - 22, 430, x + 22, 900), fill=TEAR)
+    d.ellipse(s(395, 600, 615, 780), fill=INK); d.ellipse(s(445, 690, 565, 770), fill=(235, 95, 120, 255))
+
+
 def emote(name, fn, size=512):
     im = Image.new("RGBA", (size * S, size * S), (0, 0, 0, 0)); fn(ImageDraw.Draw(im))
     im.resize((size, size), Image.LANCZOS).save(os.path.join(OUT, f"emote_{name}.png"))

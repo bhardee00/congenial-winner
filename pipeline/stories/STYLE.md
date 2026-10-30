@@ -155,3 +155,7 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
   lighting. Characters wear layered Roblox clothing and big hair accessories.
 - **Captions:** ONE word, UPPERCASE, white bold with a black outline, near the TOP of the frame (~12%).
 - **Audio:** loud and clear (mean -15 dB), with the narrator on top and quick SFX on gags.
+- **Built for reference #3 (karen.py is the template):**
+  - `acting.py`: act(av, f, "point" | "cross" | "hips" | "head" | "facepalm" | "shrug" | "arms_out" | "arms_up" | "wave" | "phone" | "hold" | "hug" | "fists" | "stop"), chatter() for talking sway, tilt(), bounce_walk().
+  - New meme faces: sideeye, chad, raspberry, meltdown.
+  - Story json `"captions": {"y": 0.115, "upper": true, "size": 66, "stroke": 5}` gives UPPERCASE captions at the top.

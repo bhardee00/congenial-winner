@@ -61,10 +61,13 @@ CAPTION_FONT = os.path.join(REPO, "assets", "fonts", "LiberationSans-Bold.ttf") 
 CAPTION_Y = 0.70  # one fixed spot for every word, like the user's example
 
 
-def captions(timed):
+def captions(timed, style=None):
     """One full-frame transparent PNG per spoken word: white, bold sans, thin black outline, lowercase, in one fixed
-    spot (CAPTION_Y), shown while it is said - matching the user's example. Used by every short."""
-    os.makedirs(OUT + "words", exist_ok=True); f = ImageFont.truetype(CAPTION_FONT, 92); words = []
+    spot (CAPTION_Y), shown while it is said - matching the user's example. Used by every short.
+    style (story "captions"): {"y": share of the frame from the top, "upper": true, "size": px} - e.g. reference #3
+    puts small UPPERCASE words near the top."""
+    st = style or {}; cy = st.get("y", CAPTION_Y); up = st.get("upper", False); sw = st.get("stroke", 4)
+    os.makedirs(OUT + "words", exist_ok=True); f = ImageFont.truetype(CAPTION_FONT, st.get("size", 92)); words = []
     for l in timed:
         if "words" in l: words += [[w.strip(".,?!\"").lower(), s, e] for w, s, e in l["words"]]
         else:  # older narration without word timings: spread the line by word length
@@ -77,9 +80,9 @@ def captions(timed):
         nxt = words[i + 1][1] if i + 1 < len(words) else e + 0.6
         e = nxt if nxt - e < 0.35 else e + 0.25  # hold until the next word unless there is a real pause
         p = OUT + f"words/w{i:03d}.png"
-        im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-        d.text((W / 2 + 3, H * CAPTION_Y + 4), w, font=f, anchor="mm", fill=(0, 0, 0, 110), stroke_width=4, stroke_fill=(0, 0, 0, 110))  # soft shadow
-        d.text((W / 2, H * CAPTION_Y), w, font=f, anchor="mm", fill=WHITE, stroke_width=4, stroke_fill=BLACK)
+        im = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im); w = w.upper() if up else w
+        d.text((W / 2 + 3, H * cy + 4), w, font=f, anchor="mm", fill=(0, 0, 0, 110), stroke_width=sw, stroke_fill=(0, 0, 0, 110))  # soft shadow
+        d.text((W / 2, H * cy), w, font=f, anchor="mm", fill=WHITE, stroke_width=sw, stroke_fill=BLACK)
         im.save(p, optimize=True); out.append((p, s, e))
     return out
 
@@ -195,7 +198,7 @@ def main():
     narration(story)
     timed = json.load(open(D + "lines_timed.json"))
     fetch_models(story)
-    json.dump(captions(timed), open(OUT + "words.json", "w"))
+    json.dump(captions(timed, story.get("captions")), open(OUT + "words.json", "w"))
     images()
     extra = os.path.join(HERE, "stories", story["module"] + "_images.py")  # story-specific pictures (no bpy needed)
     if os.path.exists(extra):

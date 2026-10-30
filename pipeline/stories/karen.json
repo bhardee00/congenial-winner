@@ -1,0 +1,139 @@
+{
+ "title": "A Karen Cut Us In Line At The Ice Cream Shop 🍦",
+ "slug": "Karen_Ice_Cream",
+ "module": "karen",
+ "models": {},
+ "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
+ "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
+ "synth_music": false,
+ "voice_speeds": {
+  "narrator": 1.3,
+  "others": 1.7
+ },
+ "voice_files": {
+  "narrator": "assets/voice/karen_narrator_1.30x.wav",
+  "others": "assets/voice/karen_others_1.70x.wav",
+  "others_order": [
+   "karen",
+   "karen",
+   "karen",
+   "mom",
+   "karen",
+   "mom"
+  ],
+  "others_spans": [
+   [
+    1.45,
+    2.95
+   ],
+   [
+    3.0,
+    4.25
+   ],
+   [
+    4.45,
+    5.3
+   ],
+   [
+    5.4,
+    6.65
+   ],
+   [
+    6.8,
+    8.98
+   ],
+   [
+    9.06,
+    10.52
+   ]
+  ]
+ },
+ "tight": {
+  "max_pause": 0.1,
+  "line_gap": 0.06
+ },
+ "lines": [
+  [
+   "narrator",
+   "A Karen cut in front of my baby sister at the ice cream shop."
+  ],
+  [
+   "karen",
+   "Move. Babies don't even eat ice cream."
+  ],
+  [
+   "narrator",
+   "My sister looked up at her and said, \"Goo goo gaga.\""
+  ],
+  [
+   "narrator",
+   "Then Karen ordered twelve samples. She tried every single one. Then she asked for twelve more."
+  ],
+  [
+   "karen",
+   "Chocolate tastes way too chocolatey."
+  ],
+  [
+   "narrator",
+   "When my sister finally got her cone, Karen bumped the stroller. The scoop landed right on the floor."
+  ],
+  [
+   "narrator",
+   "My sister didn't cry. She blew a raspberry so hard, the sprinkles flew into Karen's hair."
+  ],
+  [
+   "karen",
+   "That baby just attacked me!"
+  ],
+  [
+   "narrator",
+   "Mom didn't even look up from her phone."
+  ],
+  [
+   "mom",
+   "She's one. You're forty-five."
+  ],
+  [
+   "narrator",
+   "So Karen pulled out her phone and went live."
+  ],
+  [
+   "karen",
+   "This shop lets children eat ice cream! I want the owner. Now!"
+  ],
+  [
+   "narrator",
+   "Her live had zero viewers."
+  ],
+  [
+   "narrator",
+   "Then Mom put her phone down, tied on a pink apron that said owner, and walked behind the counter."
+  ],
+  [
+   "mom",
+   "Hi. I'm the owner. You're banned."
+  ],
+  [
+   "narrator",
+   "Karen dropped her phone right into the sprinkles."
+  ],
+  [
+   "narrator",
+   "The next day, there was a new flavor on the menu."
+  ],
+  [
+   "narrator",
+   "Karen Tears. It's salty."
+  ],
+  [
+   "narrator",
+   "My sister picked the name."
+  ]
+ ],
+ "captions": {
+  "y": 0.115,
+  "upper": true,
+  "size": 66,
+  "stroke": 5
+ }
+}

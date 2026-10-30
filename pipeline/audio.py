@@ -466,6 +466,11 @@ def sfx_counter():  # chest counter ticking down one word: a soft digital tick
     d = 0.07; return (tone(1800, d) * 0.5 + tone(3600, d) * 0.2) * env(d, 0.001, shape=4) * 0.6
 
 
+def sfx_raspberry():  # baby blowing a raspberry: pffbbbt
+    d = 0.9; t = t_(d); x = lp(noise(d), 900) * (0.6 + 0.4 * np.sign(np.sin(2 * np.pi * 38 * t))) + 0.3 * tone(sweep(140, 90, d), d, "saw")
+    return lp(x, 1800) * env(d, 0.02, 0.3) * 0.9
+
+
 SFX = {k[4:]: v for k, v in globals().items() if k.startswith("sfx_")}
 
 

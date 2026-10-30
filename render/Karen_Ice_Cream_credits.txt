@@ -1,0 +1,9 @@
+Free models from the Roblox Creator Store:
+
+Music: Lurking Behind - The Fly Guy Five (royalty free)
+
+Free assets used for the town (all CC0 / public domain, no attribution required):
+- Kenney (www.kenney.nl): City Kit Suburban, Car Kit, City Kit Roads (suburban/, cars/, roads/)
+- Poly Haven (polyhaven.com): leafy_grass, clean_asphalt, concrete_pavement textures (tex/),
+  fire_hydrant, painted_wooden_bench models (ph/), kloofendal_48d_partly_cloudy_puresky sky (sky.hdr)
+- Kenney Furniture Kit (furniture/)
