@@ -132,6 +132,39 @@ def convert(asset_id):
     return out, len(items), skipped
 
 
+HEAD_ATT = {"HairAttachment": (0, 0.6, 0), "HatAttachment": (0, 0.6, 0), "FaceFrontAttachment": (0, 0, -0.6),
+            "FaceCenterAttachment": (0, 0, 0)}  # R6 head attachments (studs from the head's centre)
+
+
+def accessory(asset_id):
+    """A worn accessory (hair, hat) placed the way Roblox does it: the Handle's attachment snaps onto the matching R6
+    head attachment. Output work/models/<id>_acc.json, items in Blender axes relative to the head's centre."""
+    roots = read_model(open(W + f"{asset_id}.rbxm", "rb").read())
+    h = next((x for r in roots for x in r.walk() if x.props.get("Name") == "Handle" and x.cls in PARTS), None)
+    if h is None: raise RuntimeError(f"{asset_id}: no Handle")
+    att = next((c for c in h.children if c.cls == "Attachment"), None)
+    A = cf(att.props["CFrame"]) if att else np.eye(4)
+    T = np.eye(4); T[:3, 3] = HEAD_ATT.get(att.props.get("Name") if att else "", (0, 0.6, 0))
+    base = {"color": color(h), "alpha": 1 - float(h.props.get("Transparency", 0)), "mat": "plastic", "rpos": [0, 0, 0], "rsize": [1, 1, 1]}
+    size = np.array(h.props.get("size") or h.props.get("Size") or (1, 1, 1), float)
+    sm = next((c for c in h.children if c.cls == "SpecialMesh"), None)
+    if h.cls == "MeshPart" and aid(h.props.get("MeshId", "")):
+        sa = next((c for c in h.children if c.cls == "SurfaceAppearance"), None)
+        tex = aid(sa.props.get("ColorMap", "")) if sa else aid(h.props.get("TextureID", ""))
+        it = {**base, "kind": "mesh", "mesh": mesh_file(aid(h.props["MeshId"])), "fit": size.tolist(), "M": np.eye(4),
+              "tex": fetch(tex, "png") if tex else None}
+    elif sm is not None and aid(sm.props.get("MeshId", "")):
+        Mo = np.eye(4); Mo[:3, 3] = np.array(sm.props.get("Offset", (0, 0, 0)), float)
+        tex = aid(sm.props.get("TextureId", ""))
+        it = {**base, "kind": "mesh", "mesh": mesh_file(aid(sm.props["MeshId"])), "scale": list(sm.props.get("Scale", (1, 1, 1))),
+              "M": Mo, "tex": fetch(tex, "png") if tex else None}
+    else: raise RuntimeError(f"{asset_id}: Handle has no mesh")
+    it["M"] = (R2B @ T @ np.linalg.inv(A) @ it["M"]).round(5).tolist()
+    out = W + f"{asset_id}_acc.json"
+    json.dump({"id": asset_id, "items": [it], "skipped": {}}, open(out, "w"))
+    return out
+
+
 if __name__ == "__main__":
     for a in sys.argv[1:]:
         try: print(a, *convert(a))

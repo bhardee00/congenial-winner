@@ -189,3 +189,16 @@ def _faceplane():
             co = me.vertices[me.loops[li].vertex_index].co; uv.data[li].uv = (co.x + 0.5, co.y + 0.5)
     me.materials.append(None)
     return me
+
+
+def wear(D, av, asset_id, scale=1.04):
+    """Put a free Roblox accessory (hair/hat, from store.py + rbx_model.accessory) on a blocky head, snapped to the
+    head's attachment the way Roblox does it. Returns the accessory's root."""
+    import models
+    p = D + f"models/{asset_id}_acc.json"
+    if not os.path.exists(p):
+        import store, rbx_model
+        store.get(asset_id, {"id": asset_id, "name": f"accessory {asset_id}", "creator": "?"}); rbx_model.accessory(asset_id)
+    r = models.place(D, f"{asset_id}_acc", (0, 0, 0), 0, scale, f"{av['name']}_acc{asset_id}", bpy.context.scene.collection)
+    r.parent = av["head"]; r.location = (0, 0, 0.62)
+    return r
