@@ -25,6 +25,11 @@ GESTURES = {
     "hug": dict(ra=(-85, 0, -35), la=(-85, 0, 35)),
     "fists": dict(ra=(-40, 0, -12), la=(-40, 0, 12)),              # angry fists down at the sides, a bit forward
     "stop": dict(ra=(-100, 0, 0), la=(-100, 0, 0)),                # both hands out: stop / freeze
+    "shush": dict(ra=(-152, 0, -34)),                              # finger to the lips
+    "both_head": dict(ra=(-165, 0, -28), la=(-165, 0, 28)),        # both hands on the head (meltdown)
+    "reach": dict(ra=(-78, 0, -12)),                               # reaching forward to grab
+    "read": dict(ra=(-62, 0, -18), la=(-62, 0, 18)),               # holding a book open in front
+    "clap": dict(ra=(-70, 0, -32), la=(-70, 0, 32)),
 }
 ARMS = ("ra", "la", "ra_elbow", "la_elbow")
 

@@ -90,3 +90,24 @@ class Kit:
         a, b = self.L(i); f0 = f0 or a; f1 = f1 or b
         ws = [(w[0], self.S.frame(w[1]), self.S.frame(w[2])) for w in self.timed[i].get("words", [])]
         avatar.lipsync(av, [w for w in ws if f0 <= w[1] < f1])
+
+
+# ---------------- camera line-of-sight checks ----------------
+def _owner_root(o):
+    while o.parent: o = o.parent
+    return o
+
+
+def clear_view(scene, loc, tgt, subject_root=None, margin=0.7):
+    """True if nothing stands between a camera at loc and the point tgt (the subject itself may be hit first).
+    Also False when the camera starts inside something (a hit right at the lens)."""
+    from mathutils import Vector
+    dg = bpy.context.evaluated_depsgraph_get() if scene == bpy.context.scene else scene.view_layers[0].depsgraph
+    dg.update()
+    o, t = Vector(loc), Vector(tgt); d = t - o; dist = d.length
+    if dist < 0.3: return False
+    hit, p, n, i, ob, M = scene.ray_cast(dg, o, d.normalized(), distance=dist)
+    if not hit: return True
+    if (p - o).length < 0.25: return False                  # starts inside geometry
+    if subject_root is not None and ob is not None and _owner_root(ob) == subject_root: return True
+    return (p - t).length < margin                          # hit right at the subject point

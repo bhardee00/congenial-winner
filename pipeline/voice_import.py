@@ -206,6 +206,10 @@ def main(story_path):
                 else: keep[-1][1] = b2
             keep[-1][1] = e0
         clip = np.concatenate([audio[int(a * SR):int(b * SR)] for a, b in keep])
+        st_ = vf.get("pitch", {}).get(speaker)  # e.g. a baby: semitones up (plays faster, like a sped-up tape)
+        if st_:
+            r_ = 2 ** (st_ / 12); clip = np.interp(np.arange(0, len(clip) - 1, r_), np.arange(len(clip)), clip).astype(np.float32)
+            keep = [[a, a + (b - a) / r_] for a, b in keep]
 
         def remap(x):  # time in the take -> time in the tightened clip
             off = 0.0
