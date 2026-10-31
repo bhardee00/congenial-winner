@@ -191,3 +191,12 @@ The user wants this TYPE of video (not this story): simple, clear, every shot ex
 - Faces must never stack. Blinks stay clear of expression changes (avatar.blink); check with a keyframe scan if unsure.
 - The LIVE phone shows the selfie camera view of the real set behind the speaker, with the phone UI as an overlay.
 - Physical contact must actually touch: if the line says she bumped it, she walks into it and it reacts.
+
+## User feedback on the water park short (liked it; apply from the library short on)
+"Not enough footage of what is happening; the events need to be shown better." The user approved adding ~1-2 s of
+action time after big moments (the short runs ~60 s instead of ~52).
+- Every event gets THREE beats: setup (lead-up) -> the action itself in close-up -> the reaction.
+- Close-up inserts of the key object at the moment it happens (the pop, the item landing, the whistle at her lips, etc.).
+- The camera follows the action: track walkers, tilt up with climbers, follow falls, slides and throws to the end.
+- Crowd and side-character reactions after each big moment (pointing, laughing, gasping, cheering).
+- Use story "beats" (0.8-1.6 s) after action moments, filled with the action, its sound effect and the music. Never silence on a still frame.
