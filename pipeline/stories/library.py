@@ -93,7 +93,7 @@ def build(ctx):
         rat_leo, rat_karen, rat_drop = rattle(), rattle(), rattle()
         hold(leo, rat_leo, "la", (0, -0.25, 0.1), (60, 0, 0))
         hold(karen, rat_karen, "ra", (0, -0.25, 0.1), (60, 0, 0))
-        mom_book = LS.book((150, 80, 160), (1.4, 0.15, 1.8)); hold(mom, mom_book, "ra", (0.55, -0.6, 0.35), (0, 0, 0))
+        mom_book = LS.book((150, 80, 160), (1.4, 0.15, 1.8)); hold(mom, mom_book, "la", (-0.55, -0.6, 0.35), (0, 0, 0))
         r_books = []
         for av in (r1, r2):
             bk = LS.book((60, 110, 190), (1.3, 0.15, 1.7)); hold(av, bk, "ra", (0.5, -0.6, 0.35), (0, 0, 0)); r_books.append(bk)
@@ -130,7 +130,7 @@ def build(ctx):
     for k in range(3): ctx.sfx("step", s1 + k * 8, 0.3)
     react(leo, "happy", s2); pose(leo, s2 + 4, 6, head=(-10, 0, 8))
     page_turn0 = s2 + 6
-    shf(s2, b, (LEO, 0, 4.05), 2.6, 15, lens=26)  # Leo happily reading
+    sh(lb, s2, b, (TX - 0.9, TY - 0.4, 4.6), (TX, TY + 2.5, 3.9), 28, dl=(0.1, 0.4, 0))  # Leo happily reading
     # ======================= 1: "Shh! Is that a baby? In my library?" =======================
     (a, s1), (_, b) = seg(1, "is")
     at(karen, a, (2.0, -0.2, 0), (TX, TY + 2.5), ease=3); react(karen, "angry", a)
@@ -138,7 +138,7 @@ def build(ctx):
     say(karen, 1, None, 1.3, (me, leo, mom))
     shf(a, s1, ((2.0, -0.2), (TX, 2.5), 4.75), 3.6, 25, lens=24)
     life.act2(karen, s1, "point"); react(karen, "disgusted", s1 + 2); react(leo, "confused", s1 + 6); react(me, "confused", s1 + 4)
-    sh(lb, s1, b, (4.6, -2.4, 4.9), (TX + 0.4, TY + 2.0, 3.6), 24, dl=(-0.4, 0.2, 0))  # over Karen's shoulder at Leo
+    sh(lb, s1, b, (TX - 3.5, TY + 3.0, 7.0), (2.0, -0.2, 4.4), 24, dl=(0.3, -0.2, 0))  # over Leo's head at Karen pointing
     # ======================= 2: me "He's just reading." =======================
     a, b = L(2)
     act(karen, a, "hips"); react(me, "blank", a); life.act2(me, a + 2, "shrug"); say(me, 2, None, 0.9, (karen,))
@@ -152,7 +152,7 @@ def build(ctx):
     shf(a, s1, ((2.0, -0.2), (TX, 2.5), 4.75), 3.0, 10, lens=26)
     react(karen, "laugh", s1); pose(karen, s1, 3, waist=(-10, 0, 0)); pose(karen, b, 5, waist=(0, 0, 0))
     react(mom, "sideeye", s1 + 4); life.look(mom, s1 + 2, (2.0, -0.2, 4.7))
-    shf(s1, b, (MOM, 0, 4.8), 3.0, -30, lens=26)  # Mom's side-eye over her book
+    sh(lb, s1, b, (1.4, 0.6, 5.0), (MOM[0], MOM[1], 4.8), 26, dl=(-0.3, 0.2, 0))  # Mom's side-eye over her book
     # ======================= 4: "Leo turned the page. Then he said one word." =======================
     (a, s1), (_, b) = seg(4, "then")
     # insert: the page turns
@@ -163,17 +163,17 @@ def build(ctx):
     pose(leo, s1, 6, head=(8, 0, 0)); react(leo, "blank", s1); life.look(leo, s1 + 2, (2.0, -0.2, 4.7), 8)
     for av in (me, mom): react(av, "nervous", s1 + 8); life.look(av, s1 + 6, (TX, TY + 2.5, 4.0))
     react(karen, "suspicious", s1 + 4)
-    shf(s1, b, (LEO, (2.0, -0.2), 4.05), 2.2, 10, lens=28, push=0.25)  # slow push in: everyone waits
+    sh(lb, s1, b, (TX - 0.8, TY - 0.9, 4.4), (TX, TY + 2.5, 4.0), 26, dl=(0.2, 0.9, -0.1))  # slow push in: everyone waits
     ctx.sfx("heartbeat", s1 + 4, 0.25)
     # ======================= 5: Leo "Goo." =======================
     a, b = L(5)
     react(leo, "chad", a - 1); kit.mouth(leo, 5); pose(leo, a, 3, head=(0, 8, 0))
-    shf(a, b + 2, (LEO, (2.0, -0.2), 4.05), 1.8, 10, lens=30, pz=a + 1, amount=1.12); ctx.sfx("pop", a, 0.2)
+    sh(lb, a, b + 2, (TX - 0.5, TY + 0.2, 4.3), (TX, TY + 2.5, 4.05), 30, pz=a + 1, amount=1.12); ctx.sfx("pop", a, 0.2)
     # ======================= 6: Karen "Shh!" =======================
     a, b = L(6)
     react(karen, "furious", a, b + 20); act(karen, a - 2, "shush", 3); kit.mouth(karen, 6)
     pose(karen, a - 2, 3, waist=(22, 0, 0))  # leans in over the table
-    c = shf(a - 1, b + 2, ((2.0, -0.2), (TX, 2.5), 4.75), 2.4, 15, lens=26, pz=a + 1, amount=1.2); shake(c, a + 1, 6, 0.2)
+    c = sh(lb, a - 1, b + 2, (-1.6, 1.8, 5.4), (0.8, 0.5, 4.5), 26, pz=a + 1, amount=1.2); shake(c, a + 1, 6, 0.2)
     for av in (r1, r2, r3): life.look(av, a + 3, (2.0, -0.2, 4.7), 5); react(av, "annoyed", a + 5)
     # ======================= 7: the rattle (+ action beat) =======================
     a, b = L(7); g = wf(7, "grabbed"); dr = wf(7, "dropped")
@@ -199,7 +199,7 @@ def build(ctx):
     rb_ = b + 12
     react(leo, "sad", rb_); pose(leo, rb_, 6, head=(-14, 0, 0), la=(-30, 0, 0)); life.look(leo, rb_, (RET[0], RET[1], 3.0), 8)
     react(me, "shock", rb_ + 2); life.look(me, rb_, (RS[0], RS[1], 4.7)); act(mom, rb_ + 6, None); react(mom, "annoyed", rb_ + 8); life.look(mom, rb_ + 4, (RS[0], RS[1], 4.7))
-    shf(rb_, L(8)[0], (LEO, (RS[0], RS[1]), 4.05), 2.4, 20, lens=28); ctx.sfx("sad", rb_ + 2, 0.35)
+    sh(lb, rb_, L(8)[0], (TX - 0.6, TY - 0.6, 4.4), (TX, TY + 2.5, 4.0), 28, dl=(0.1, 0.5, 0)); ctx.sfx("sad", rb_ + 2, 0.35)
     # ======================= 8: Karen "Oops. Quiet time." =======================
     a, b = L(8)
     at(karen, a, (RS[0], RS[1], 0), (TX, TY + 2.5), ease=4); react(karen, "smug", a)
@@ -210,7 +210,7 @@ def build(ctx):
     # ======================= 9: the book stack (+ action beat) =======================
     (a, s1), (_, b) = seg(9, "then")
     react(leo, "blank", a); life.look(leo, a, (RS[0], RS[1], 4.7), 8)
-    shf(a, s1, (LEO, (RS[0], RS[1]), 4.05), 1.9, 0, lens=30, push=0.2)  # the stare
+    sh(lb, a, s1, (TX - 0.8, TY - 0.9, 4.4), (TX, TY + 2.5, 4.0), 28, dl=(0.2, 0.9, -0.1))  # the stare
     ctx.sfx("crickets", a + 4, 0.3)
     psh = wf(9, "pushed"); off = wf(9, "off")
     react(leo, "determined", s1); life.look(leo, s1, (TX - 1.9, TY + 1.0, TOP + 1.0), 6)
@@ -342,8 +342,8 @@ def build(ctx):
     ctx.sfx("giggle", b + 12, 0.4); ctx.sfx("clap", b + 22, 0.4)
     # ======================= 21-22: "That's impossible!" / banned =======================
     a, b = L(21)
-    react(karen, "meltdown", a, b + 30); life.act2(karen, a, "both_head"); say(karen, 21, None, 1.8); life.look(karen, a, (SC[0], SC[1], 3.0), 6)
-    shf(a, b, (KD, (SC[0], SC[1]), 4.75), 2.8, 0, lens=26, pz=a + 2, amount=1.15)
+    turn(karen, a - 2, (SC[0], SC[1]), 4); react(karen, "meltdown", a, b + 30); life.act2(karen, a, "both_head"); say(karen, 21, None, 1.8)
+    sh(lb, a, b, (5.0, 7.7, 5.5), (KD[0], KD[1], 4.9), 30, pz=a + 2, amount=1.15)
     act(karen, b + 6, None)
     (a, s1), (_, b) = seg(22, "you're")
     life.act2(gma, a, "shush"); react(gma, "sideeye", a); say(gma, 22, None, 0.8); life.look(gma, a, (KD[0], KD[1], 4.7))
@@ -387,8 +387,8 @@ def build(ctx):
     for av in (r1, r2): act(av, a, "read", 1); react(av, "relieved", a)
     sh(lb, a, b, (12, -14, 11), (-8, 4, 2.0), 20, dl=(-2, 2, -1.5))
     (a, s1), (_, b) = seg(25, "stamped")
-    sh(lb, a, s1, (-14.5, -10.6, 6.2), (-14.5, -15.6, 6.4), 28, dl=(0, -1.6, 0))
-    sh(lb, s1, b + 50, (-13.9, -12.2, 4.8), (-13.9, -15.6, 4.6), 30, dl=(0, -1.0, 0.3)); ctx.sfx("pop", wf(25, "handprint"), 0.4)
+    sh(lb, a, s1, (-11.5, -10.6, 6.2), (-11.5, -15.6, 6.4), 28, dl=(0, -1.6, 0))
+    sh(lb, s1, b + 50, (-12.1, -12.4, 4.6), (-12.1, -15.6, 4.6), 30, dl=(0, -0.8, 0.3)); ctx.sfx("pop", wf(25, "handprint"), 0.4)
 
     # line-of-sight report: every shot, at its middle frame, camera -> its aim point
     for st_, cam, f0, f1, _ in S.shots:

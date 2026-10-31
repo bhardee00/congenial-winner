@@ -200,3 +200,6 @@ action time after big moments (the short runs ~60 s instead of ~52).
 - The camera follows the action: track walkers, tilt up with climbers, follow falls, slides and throws to the end.
 - Crowd and side-character reactions after each big moment (pointing, laughing, gasping, cheering).
 - Use story "beats" (0.8-1.6 s) after action moments, filled with the action, its sound effect and the music. Never silence on a still frame.
+- **From the library short on:**
+  - `life.py` (breathing, weight shift, look-at, listeners, hand beats, anticipation and overshoot, flinch, recoil, stomp) on every character.
+  - `storykit.clear_view` line-of-sight checks on every shot: face shots auto-swing to a clear angle, and the build prints any blocked shot.

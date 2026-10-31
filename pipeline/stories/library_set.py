@@ -100,7 +100,6 @@ def build(st, A, seed=5):
         stack.append(b)
     out["stack"] = stack
     out["open_book"] = book((60, 110, 190), (1.6, 1.1, 0.12)); out["open_book"].location = (tx, ty + 1.0, TABLE_TOP + 0.08)
-    town.place("furniture/lampRoundTable", (tx + 2.9, ty + 0.6, TABLE_TOP), 0, scale=6)
     # second table with readers, computers along the right
     town.place("furniture/table", (13, -9, 0), 0, scale=8.4)   # readers' table
     for dx in (-2.2, 2.2):
@@ -111,7 +110,6 @@ def build(st, A, seed=5):
     dx, dy = DESK
     prim("box", (9.0, 2.2, 3.4), (dx, dy - 0.8, 1.7), mat((150, 100, 60), 0.5), bevel=0.06); prim("box", (9.3, 2.6, 0.2), (dx, dy - 0.8, 3.45), mat((90, 60, 40), 0.4))
     prim("box", (2.2, 4.4, 3.4), (dx + 3.4, dy + 1.4, 1.7), mat((150, 100, 60), 0.5), bevel=0.06)
-    town.place("furniture/computerScreen", (dx + 2.0, dy - 0.6, 3.55), 180, scale=7.5)
     bell = empty("bell", BELL); prim("cylY", (0.9, 0.9, 0.12), (0, 0, 0.06), mat((90, 60, 40), 0.4), parent=bell)
     dome = prim("ball", (0.75, 0.75, 0.6), (0, 0, 0.2), mat((235, 200, 90), 0.15, metal=0.9), parent=bell)
     btn = prim("cylY", (0.12, 0.12, 0.25), (0, 0, 0.55), mat((200, 200, 205), 0.2, metal=0.9), parent=bell)
@@ -150,5 +148,5 @@ def build(st, A, seed=5):
     for (x, y) in ((-8.0, 13.5), (19.0, -14.0)): town.place("furniture/lampSquareFloor", (x, y, 0), 0, scale=7.5)
     for k, (x, img) in enumerate(((-6.5, "poster_read.png"), (0.5, "poster_quiet.png"))):
         K.plane_image(A + img, (3.0, 4.0), (x, 15.9, 6.5))
-    out["sign"] = toys.card(A + "quiet_sign.png", 3.6, 4.6); out["sign"].location = (-14.5, -15.6, 6.0)
+    out["sign"] = toys.card(A + "quiet_sign.png", 3.6, 4.6); out["sign"].location = (-11.5, -15.85, 6.0); out["sign"].rotation_euler = (0, 0, math.radians(180))  # faces into the room
     return out
