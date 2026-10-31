@@ -26,7 +26,7 @@ def narration(story):
     if story.get("voice_files"):  # recorded voices (e.g. ElevenLabs): place each line in the recordings
         vf = story["voice_files"]
         files = [os.path.join(REPO, vf[k]) for k in ("narrator", "others")] + [os.path.join(REPO, f) for f in vf.get("replace", {}).values()]
-        key = hashlib.sha1((json.dumps(story["lines"]) + json.dumps(vf, sort_keys=True) + json.dumps([story.get("beats"), story.get("tight")], sort_keys=True) + "".join(str(os.path.getsize(f)) for f in files)
+        key = hashlib.sha1((json.dumps(story["lines"]) + json.dumps(vf, sort_keys=True) + json.dumps([story.get("beats"), story.get("tight"), story.get("tempo")], sort_keys=True) + "".join(str(os.path.getsize(f)) for f in files)
                             + open(HERE + "/voice_import.py").read()).encode()).hexdigest()
         stamp = D + "voice.key"
         if os.path.exists(D + "voice.wav") and os.path.exists(stamp) and open(stamp).read() == key: return

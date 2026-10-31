@@ -34,7 +34,7 @@ GESTURES = {
 ARMS = ("ra", "la", "ra_elbow", "la_elbow")
 
 
-def act(av, f, name, ease=4):
+def act(av, f, name, ease=7):
     """Switch arms to a gesture at frame f (None = arms down)."""
     rest(av, f, "ra", "la", ease=ease)
     if name: pose(av, f, ease, **GESTURES[name])
@@ -44,7 +44,7 @@ def tilt(av, f, deg, turn=0.0, ease=5):
     pose(av, f, ease, head=(0, deg, turn))
 
 
-def chatter(av, f0, f1, amount=1.0, period=14):
+def chatter(av, f0, f1, amount=1.0, period=18):
     """Talking like the reference: the head tilts side to side and the body sways a little, on a steady rhythm."""
     k = 0
     for f in range(f0, f1, period):

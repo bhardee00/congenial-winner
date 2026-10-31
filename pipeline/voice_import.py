@@ -225,7 +225,14 @@ def main(story_path):
         gap += float(story.get("beats", {}).get(str(i), 0))  # held beat after a punchline/reveal (story "beats")
         out += [clip, np.zeros(int(gap * SR), np.float32)]; t += len(clip) / SR + gap
     raw = W + "voice_raw.wav"; sf.write(raw, np.concatenate(out), SR)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", "loudnorm=I=-14:TP=-1.0", "-ar", str(SR), W + "voice.wav"], check=True)
+    tempo = float(story.get("tempo", 1.0))  # <1 slows the whole voice track down (pitch kept) and stretches every timing
+    af = (f"atempo={tempo}," if tempo != 1.0 else "") + "loudnorm=I=-14:TP=-1.0"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", af, "-ar", str(SR), W + "voice.wav"], check=True)
+    if tempo != 1.0:
+        k = 1.0 / tempo; t *= k
+        for l in timed:
+            l["start"] *= k; l["end"] *= k
+            for w in l["words"]: w[1] = round(w[1] * k, 3); w[2] = round(w[2] * k, 3)
     json.dump(timed, open(W + "lines_timed.json", "w"), indent=1)
     json.dump({i: placed[i][1] for i in placed}, open(W + "line_spans.json", "w"))  # where each line sits in its take (for checking)
     print(f"voice: {t:.1f}s, {len(lines)} lines")

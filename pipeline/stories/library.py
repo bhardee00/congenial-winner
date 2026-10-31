@@ -176,20 +176,20 @@ def build(ctx):
     c = sh(lb, a - 1, b + 2, (-1.6, 1.8, 5.4), (0.8, 0.5, 4.5), 26, pz=a + 1, amount=1.2); shake(c, a + 1, 6, 0.2)
     for av in (r1, r2, r3): life.look(av, a + 3, (2.0, -0.2, 4.7), 5); react(av, "annoyed", a + 5)
     # ======================= 7: the rattle (+ action beat) =======================
-    a, b = L(7); g = wf(7, "grabbed"); dr = wf(7, "dropped")
+    a, b = L(7); g = wf(7, "grabbed"); dr = wf(7, "book")
     pose(karen, a, 4, waist=(0, 0, 0)); act(karen, a, None)
-    life.act2(karen, g, "reach"); pose(karen, g, 4, waist=(26, 0, 0))
-    snatch = g + 6
+    life.act2(karen, g + 4, "reach", 12); pose(karen, g + 4, 10, waist=(26, 0, 0))
+    snatch = wf(7, "rattle") + 4
     show_between(rat_leo, 0, snatch); show_between(rat_karen, snatch, dr + 6); react(leo, "shock", snatch + 1); life.flinch(leo, snatch + 1, 0.4)
     pose(leo, snatch + 2, 4, la=(-90, 0, 10))
     sh(lb, a, snatch + 8, (TX - 1.6, TY - 0.6, 4.8), (TX + 0.8, TY + 1.9, 3.6), 24, dl=(0.2, 0.1, 0))  # the grab, close
     ctx.sfx("whoosh", snatch, 0.4)
-    react(karen, "smug", snatch + 4); pose(karen, snatch + 4, 4, waist=(0, 0, 0), ra=(-40, 0, 0))
-    RET = LS.RETURN; RS = (RET[0] - 0.2, RET[1] - 2.2)
+    react(karen, "smug", snatch + 4); pose(karen, snatch + 8, 8, waist=(0, 0, 0), ra=(-40, 0, 0))
+    RET = LS.RETURN; RS = (RET[0] - 1.3, RET[1] - 2.1)  # left of the slot: her right hand reaches over it
     bounce_walk(karen, snatch + 6, dr - 6, (2.0, -0.2, 0), (RS[0], RS[1], 0), 7)
     kit.follow(lb, snatch + 8, dr - 4, karen["root"], (3.5, -5.5, 4.2), (0, 0, 3.6), 24); ctx.sfx("step", snatch + 12, 0.3); ctx.sfx("step", snatch + 20, 0.3)
     at(karen, dr - 5, (RS[0], RS[1], 0), (RET[0], RET[1]), ease=3)
-    pose(karen, dr - 4, 4, ra=(-118, 0, -4))  # the hand over the slot
+    pose(karen, dr - 2, 8, ra=(-118, 0, -4))  # the hand over the slot
     show_between(rat_drop, dr + 6, dr + 22)
     K._key(rat_drop, "location", dr + 6, (RET[0] - 0.1, RET[1] - 1.5, 4.35), 1); K._key(rat_drop, "location", dr + 14, (RET[0], RET[1] - 1.25, 3.25))
     K._key(rat_drop, "rotation_euler", dr + 6, (math.radians(90), 0, 0), 1); K._key(rat_drop, "rotation_euler", dr + 14, (math.radians(70), 0, math.radians(20)))
@@ -214,15 +214,15 @@ def build(ctx):
     ctx.sfx("crickets", a + 4, 0.3)
     psh = wf(9, "pushed"); off = wf(9, "off")
     react(leo, "determined", s1); life.look(leo, s1, (TX - 1.9, TY + 1.0, TOP + 1.0), 6)
-    pose(leo, psh - 8, 8, ra=(-80, 0, -30)); pose(leo, off, 14, ra=(-82, 0, -58))  # the slow push
-    sh(lb, s1, off - 4, (TX - 5.8, TY - 4.6, 5.4), (TX - 1.2, TY + 1.4, TOP + 0.8), 24, dl=(0.6, 0.4, 0))  # Leo and the tall stack
-    stack = P["stack"]; land0 = off + 16; lands = []
+    pose(leo, psh, 12, ra=(-80, 0, -30)); pose(leo, wf(9, "table") + 6, wf(9, "table") + 6 - psh - 2, ra=(-82, 0, -58))  # the slow push
+    sh(lb, s1, off - 4, (TX + 2.8, TY - 4.5, 6.4), (TX - 1.8, TY + 1.7, TOP + 0.8), 24, dl=(-0.3, 0.3, 0))  # Leo and the tall stack
+    off = wf(9, "table") + 4; stack = P["stack"]; land0 = off + 20; lands = []
     for k, bk in enumerate(stack):
         p0 = Vector(bk.location); r0 = bk.rotation_euler.copy()
         K._key(bk, "location", off - 2, tuple(p0), 1); K._key(bk, "rotation_euler", off - 2, tuple(r0), 1)
-        tilt_f = off + 4 + k // 3
+        tilt_f = off + 8 + k // 2
         K._key(bk, "location", tilt_f, (p0.x - 0.25 - k * 0.12, p0.y, p0.z + 0.05), None); K._key(bk, "rotation_euler", tilt_f, (r0.x, math.radians(22 + k * 3), r0.z), None)
-        lf = land0 + k * 6; lands.append(lf)
+        lf = land0 + k * 8; lands.append(lf)
         end = (TX - 4.4 - k * 0.3 + random.uniform(-0.4, 0.4), TY + 0.9 + random.uniform(-1.4, 1.4), 0.15)
         mid = ((p0.x + end[0]) / 2 - 0.4, (p0.y + end[1]) / 2, p0.z + 0.6)
         K._key(bk, "location", lf - 6, mid, None); K._key(bk, "location", lf, end, None)
@@ -256,13 +256,13 @@ def build(ctx):
     # ======================= 13: Karen marches to the desk, slams the bell (+ beat) =======================
     (a, s1), (_, b) = seg(13, "and")
     BELL = LS.BELL; KD = (BELL[0], 6.5)
-    react(karen, "furious", a, s1); life.stomp(karen, a + 2, s1 - 3, (KS.x, KS.y, 0), (KD[0], KD[1], 0), 6)
+    react(karen, "furious", a, s1); life.stomp(karen, a, s1 - 2, (KS.x, KS.y, 0), (KD[0], KD[1], 0), 8)
     kit.follow(lb, a, s1, karen["root"], (-4.5, -6.0, 4.6), (0, 0, 3.6), 24)
     for k in range(4): ctx.sfx("step", a + 6 + k * 7, 0.45)
     at(karen, s1 - 2, (KD[0], KD[1], 0), (KD[0], 12), ease=2)
-    sl = wf(13, "slammed") + 2; hits = [sl + k * 7 for k in range(9)]
+    sl = wf(13, "slammed") + 4; hits = [sl + k * 11 for k in range(7)]
     for k, h in enumerate(hits):
-        pose(karen, h - 3, 2, ra=(-128, 0, -6)); pose(karen, h, 2, ra=(-96, 0, -6))
+        pose(karen, h - 5, 4, ra=(-128, 0, -6)); pose(karen, h, 3, ra=(-96, 0, -6))
         K._key(P["bell_button"], "location", h - 1, (0, 0, 0.55), 1); K._key(P["bell_button"], "location", h, (0, 0, 0.42)); K._key(P["bell_button"], "location", h + 3, (0, 0, 0.55))
         ctx.sfx("ding", h, 0.55)
     react(karen, "angry", s1)
@@ -354,21 +354,31 @@ def build(ctx):
     sh(lb, s1, b + 2, (14.4, 4.8, 5.4), (10.4, 8.6, 4.6), 26, dl=(-0.3, 0.2, 0))
     # ======================= 23: the trip into the bean bags (+ beat) =======================
     a, b = L(23)
-    bx, by = LS.BEANS; TRIP = (TX - 5.4, TY + 0.6); K0 = (TX + 1.0, TY + 4.6)
-    at(karen, a, (K0[0], K0[1], 0), (TRIP[0], TRIP[1]), ease=1)
-    react(karen, "furious", a, a + 30); life.stomp(karen, a, wf(23, "book") + 2, (K0[0], K0[1], 0), (TRIP[0], TRIP[1], 0), 6)
-    kit.follow(lb, a, wf(23, "book"), karen["root"], (-4.0, -5.0, 4.4), (0, 0, 3.0), 24); ctx.sfx("step", a + 6, 0.4); ctx.sfx("step", a + 14, 0.4)
-    tr = wf(23, "book") + 3
-    react(karen, "terrified", tr + 2); pose(karen, tr, 3, waist=(45, 0, 0), ra=(-170, 0, 30), la=(-170, 0, -30), ll=(-40, 0, 0), rl=(30, 0, 0))
-    ctx.sfx("whoosh", tr + 2, 0.7)
-    land = wf(23, "landed") + 2
-    K._key(karen["root"], "location", tr, (TRIP[0], TRIP[1], 0), 1)
-    pk_ = ((TRIP[0] + bx) / 2 - 0.5, (TRIP[1] + by) / 2, 5.0)
-    K._key(karen["root"], "location", (tr + land) // 2, pk_, None); K._key(karen["root"], "location", land, (bx + 0.5, by + 0.6, 0.4), None)
+    bx, by = LS.BEANS; TRIP = (TX - 5.4, TY + 0.6); K0 = (TRIP[0] + 2.4, TRIP[1] + 1.8)
+    tr = wf(23, "tripped") + 2; land = wf(23, "landed") + 2; tip = wf(23, "out") - 2
+    at(karen, a - 4, (K0[0], K0[1], 0), (TRIP[0], TRIP[1]), ease=1)
+    react(karen, "furious", a, tr); life.stomp(karen, a - 4, tr, (K0[0], K0[1], 0), (TRIP[0], TRIP[1], 0), 7)
+    kit.follow(lb, a, tr - 2, karen["root"], (-2.5, -6.0, 4.4), (0, 0, 3.2), 24); ctx.sfx("step", a + 2, 0.4)
+    # "tripped": her foot catches a book and she lurches forward ...
+    react(karen, "terrified", tr + 2); ctx.sfx("slap", tr, 0.5)
+    pose(karen, tr, 3, waist=(30, 0, 0), ll=(-10, 0, 0), rl=(45, 0, 0))
+    # ... "over the book stack": she stumbles forward in three big hops, arms windmilling, leaning more each step
+    path = [Vector((TRIP[0], TRIP[1], 0)), Vector((TRIP[0] + 0.2, TRIP[1] - 1.8, 0.35)), Vector((TRIP[0] + 0.4, TRIP[1] - 3.4, 0)),
+            Vector((TRIP[0] + 0.6, TRIP[1] - 4.6, 0.3)), Vector((TRIP[0] + 0.8, TRIP[1] - 5.4, 0))]  # stops short of the pit wall
+    hops = [tr + (tip - tr) * k // (len(path) - 1) for k in range(len(path))]
     r0 = value_rot(karen, tr)
-    K._key(karen["root"], "rotation_euler", tr, tuple(r0), 1); K._key(karen["root"], "rotation_euler", land - 2, (r0[0] + math.radians(-300), r0[1], r0[2]), None)
-    K._key(karen["root"], "rotation_euler", land, (math.radians(-80), r0[1], r0[2]), None)
-    sh(lb, tr - 2, land - 4, (TRIP[0] - 8.0, TRIP[1] - 2.0, 5.0), (TRIP[0], TRIP[1] - 1.0, 2.8), 22, dt=(0.5, -7.0, -1.5))  # the trip and the flight
+    for k, (f, p) in enumerate(zip(hops, path)):
+        K._key(karen["root"], "location", f, tuple(p), 1 if k == 0 else None)
+        K._key(karen["root"], "rotation_euler", f, (math.radians(10 + k * 8), r0[1], r0[2]), 1 if k == 0 else None)
+        pose(karen, f, 3, ra=(-170 if k % 2 else -60, 0, 25), la=(-60 if k % 2 else -170, 0, -25), ll=(-35 if k % 2 else 25, 0, 0), rl=(25 if k % 2 else -35, 0, 0))
+        if k: ctx.sfx("step", f, 0.45)
+    # "on her way out, and": she tips over forward, arms out in front ... "landed": a belly-flop into the bean bags
+    pose(karen, tip + 2, 5, ra=(-175, 0, 18), la=(-175, 0, -18), waist=(15, 0, 0), ll=(15, 0, 0), rl=(25, 0, 0))
+    K._key(karen["root"], "location", (tip + land) // 2, (path[-1].x + (bx + 0.3 - path[-1].x) * 0.5, path[-1].y + (by + 0.8 - path[-1].y) * 0.5, 1.6), None)
+    K._key(karen["root"], "location", land, (bx + 0.3, by + 0.8, 0.6), None)
+    K._key(karen["root"], "rotation_euler", land, (math.radians(85), r0[1], r0[2]), None)
+    ctx.sfx("whoosh", tip + 2, 0.6)
+    sh(lb, tr - 2, land - 4, (TRIP[0] - 7.5, TRIP[1] - 1.5, 4.6), (TRIP[0] - 0.5, TRIP[1] - 2.0, 2.8), 22, dt=(0, -5.0, -1.2))  # the stumble and the dive
     for k, bean in enumerate(P["beans"]):
         p0 = Vector(bean.location); d_ = (p0.xy - Vector((bx + 0.5, by + 0.6))).normalized() if (p0.xy - Vector((bx + 0.5, by + 0.6))).length > 0.1 else Vector((1, 0))
         K._key(bean, "location", land - 1, tuple(p0), 1); K._key(bean, "location", land + 6, (p0.x + d_.x * 0.8, p0.y + d_.y * 0.8, p0.z + 1.4 - 0.1 * k), None)

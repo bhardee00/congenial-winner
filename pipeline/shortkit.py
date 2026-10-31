@@ -375,7 +375,10 @@ class Short:
         shots = sorted(self.shots, key=lambda s: s[2])
         # a shot that runs past the next one's start is trimmed there (overlapping strips get pushed around and
         # leave black gaps in the edit)
-        shots = [(st, cam, f0, min(f1, shots[i + 1][2]) if i + 1 < len(shots) else f1, fr) for i, (st, cam, f0, f1, fr) in enumerate(shots)]
+        # every shot runs exactly until the next one starts: no overlaps (strips get pushed around) and no gaps
+        # (a gap is a black frame in the video); the first starts at frame 1, the last runs to the end
+        shots = [(st, cam, 1 if i == 0 else f0, shots[i + 1][2] if i + 1 < len(shots) else max(f1, self.total + 1), fr)
+                 for i, (st, cam, f0, f1, fr) in enumerate(shots)]
         self.shots = shots
         for i, (st, cam, f0, f1, frozen) in enumerate(shots):
             st.scene.frame_start = 1; st.scene.frame_end = self.total

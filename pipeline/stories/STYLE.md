@@ -203,3 +203,10 @@ action time after big moments (the short runs ~60 s instead of ~52).
 - **From the library short on:**
   - `life.py` (breathing, weight shift, look-at, listeners, hand beats, anticipation and overshoot, flinch, recoil, stomp) on every character.
   - `storykit.clear_view` line-of-sight checks on every shot: face shots auto-swing to a clear angle, and the build prints any blocked shot.
+- **User feedback on the library short ("bad, nearly the whole thing"):**
+  - Actions ran too fast for the words. Fixes:
+    - Story json `"tempo": 0.85` slows the recorded voices (pitch kept) and every timing with them.
+    - Each action is keyed ACROSS the words that describe it (start on the verb, finish on the last word of the phrase), never as a quick snap.
+    - Gestures ease over 7-12 frames.
+  - Black frames came from gaps between shots. The assembler now runs every shot until the next one starts.
+  - Falls are forward stumbles that end in a belly-flop. No flips or rolls.

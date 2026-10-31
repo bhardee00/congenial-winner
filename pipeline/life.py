@@ -88,14 +88,14 @@ def gesture_talk(av, frames, arm="ra", amount=1.0, seed=0):
     if frames: pose(av, frames[-1] + 12, 6, **{arm: (0, 0, 0)})
 
 
-def act2(av, f, name, ease=5, overshoot=0.15):
+def act2(av, f, name, ease=9, overshoot=0.12):
     """Gesture with a little anticipation (a dip the other way) and overshoot before it settles."""
     if not name:
         rest(av, f, "ra", "la", ease=ease); return
     g = GESTURES[name]
     pre = {k: tuple(-v * 0.12 for v in r) for k, r in g.items()}
     over = {k: tuple(v * (1 + overshoot) for v in r) for k, r in g.items()}
-    pose(av, f - ease, 2, **pre); pose(av, f, ease - 1, **over); pose(av, f + 4, 3, **g)
+    pose(av, f - ease, 3, **pre); pose(av, f, ease - 2, **over); pose(av, f + 6, 5, **g)
 
 
 def flinch(av, f, amt=1.0):
