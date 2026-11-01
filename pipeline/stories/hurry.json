@@ -1,0 +1,124 @@
+{
+ "title": "Every Time Someone Tells Me To Hurry Up, I Get Faster ⚡",
+ "slug": "Hurry_Up",
+ "module": "hurry",
+ "models": {},
+ "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
+ "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
+ "synth_music": false,
+ "voice_speeds": {
+  "narrator": 1.3,
+  "others": 1.5
+ },
+ "tight": {
+  "max_pause": 0.1,
+  "line_gap": 0.06
+ },
+ "tempo": 0.9,
+ "captions": {
+  "y": 0.115,
+  "upper": true,
+  "size": 70,
+  "stroke": 10
+ },
+ "voice_files": {
+  "narrator": "assets/voice/hurry_narrator_1.30x.wav",
+  "others": "assets/voice/hurry_others_1.50x.wav",
+  "others_order": [
+   "mom",
+   "teacher",
+   "bully",
+   "coach",
+   "grandma"
+  ],
+  "others_spans": [
+   [
+    0.17999999999999972,
+    0.8599999999999994
+   ],
+   [
+    0.8699999999999974,
+    1.759999999999998
+   ],
+   [
+    1.8400000000000034,
+    2.549999999999997
+   ],
+   [
+    2.6000000000000014,
+    3.020000000000003
+   ],
+   [
+    3.049999999999997,
+    3.8599999999999994
+   ]
+  ]
+ },
+ "beats": {
+  "2": 0.5,
+  "3": 0.3,
+  "5": 0.4,
+  "7": 0.6,
+  "9": 0.6,
+  "11": 0.3,
+  "12": 0.5
+ },
+ "lines": [
+  [
+   "narrator",
+   "Every time someone tells me to hurry up, I get faster. And everyone tells me to hurry up."
+  ],
+  [
+   "mom",
+   "Hurry up, we're late!"
+  ],
+  [
+   "narrator",
+   "I was buckled in the car before she even found her keys."
+  ],
+  [
+   "narrator",
+   "Grandpa just tapped his watch. Nothing happened. Tapping your watch doesn't count."
+  ],
+  [
+   "teacher",
+   "Hurry up and finish your test."
+  ],
+  [
+   "narrator",
+   "I finished it before she handed it out."
+  ],
+  [
+   "bully",
+   "Hurry up, slowpoke."
+  ],
+  [
+   "narrator",
+   "I ran circles around him until he got dizzy and fell in the trash."
+  ],
+  [
+   "coach",
+   "Hurry up!"
+  ],
+  [
+   "narrator",
+   "I lapped the whole planet."
+  ],
+  [
+   "narrator",
+   "Then Grandma moved in. She says the same thing to everything."
+  ],
+  [
+   "grandma",
+   "Take your time, sweetie."
+  ],
+  [
+   "narrator",
+   "Now I'm the slowest kid in town. A snail just passed me."
+  ],
+  [
+   "narrator",
+   "Comment hurry up if you want me fast again."
+  ]
+ ]
+}
