@@ -210,3 +210,31 @@ action time after big moments (the short runs ~60 s instead of ~52).
     - Gestures ease over 7-12 frames.
   - Black frames came from gaps between shots. The assembler now runs every shot until the next one starts.
   - Falls are forward stumbles that end in a belly-flop. No flips or rolls.
+
+## Reference #4 - THE STYLE FROM HERE ON (YouTube Short o-51_DSkbe8, 37 s, studied via vidIQ watch + transcript)
+"Every time someone says no to me, I get stronger."
+- **Format:** a superpower RULE told as a fast first-person list. One sentence = one visual punchline = one shot.
+  - The hook states the rule in the first line ("Every time X, I Y. And everyone does X.").
+  - Escalating examples, each a tiny 2-beat gag: ask → "No." → impossible payoff. Mom (lifts the fridge one-handed) →
+    a dud example (Dad only shakes his head: "Shaking your head doesn't count.") → teacher (lifts her desk with her on it) →
+    bully (thrown onto the roof, "Bro, you should have said yes.") → principal (runs through three walls) → crush (flies into space).
+  - Twist: someone finds out and exploits the rule ("Mom found out. Now she says yes to everything." plus a chores list).
+  - Reversal ending: "Now I'm the weakest kid in town. I can't even lift my sock."
+  - CTA: "Comment NO if you want me to get stronger."
+- **Script:** ~110 words, 37 s. ~90% narrator, with tiny quoted interjections ("No." "Yes!"). Short, deadpan sentences.
+  The joke lands on the VISUAL, which is the literal payoff of the sentence.
+- **Editing:** a cut every 1.0-1.8 s, each shot showing exactly its sentence. The action starts with the sentence and completes inside it.
+  Mostly static or slightly moving medium shots, low angles for power moments, a close-up for the deadpan/blank face.
+- **On screen:**
+  - A floating STAT METER over the hero's head (e.g. STRENGTH %, green/red) that rises and falls with the rule.
+  - Comic speech bubbles for the key word ("NO", "YES!").
+  - Bold captions in the upper third (ours: top, uppercase, thick stroke).
+  - A yellow aura flash when the power triggers.
+- **Look:** plain bright Roblox (flat, bright ambient light, soft shadows, saturated daytime colours). Simple familiar sets: hallway
+  with lockers, kitchen, classroom, yard and house exterior.
+  - Distinct R6 outfits: hero in a black hoodie with messy black hair, bully in a backwards red cap and varsity jacket,
+    mom with long white hair, dad as a giant buff R6.
+- **Acting:** snappy pose-to-pose R6 moves (fast eased keyframes), big exaggerated lifts and throws, fast head turns, a gentle
+  idle bob, and meme faces (blank stick face, screaming, sweat drop, tears).
+- **Sound:** a whoosh on every cut and swing, a bass boom and hum on the aura, crashes and shatters on destruction, pops and boings
+  on faces. Upbeat comedic music low under the voice.
