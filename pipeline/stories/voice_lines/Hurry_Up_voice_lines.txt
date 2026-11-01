@@ -1,0 +1,35 @@
+HURRY UP - voice lines (ElevenLabs Adam, change audio pitch ON)
+
+========== FILE 1: NARRATOR (speed 1.30x) ==========
+
+Every time someone tells me to hurry up, I get faster. And everyone tells me to hurry up.
+
+I was buckled in the car before she even found her keys.
+
+Grandpa just tapped his watch. Nothing happened. Tapping your watch doesn't count.
+
+I finished it before she handed it out.
+
+I ran circles around him until he got dizzy and fell in the trash.
+
+I lapped the whole planet.
+
+Then Grandma moved in. She says the same thing to everything.
+
+Now I'm the slowest kid in town. A snail just passed me.
+
+Comment hurry up if you want me fast again.
+
+========== FILE 2: OTHER VOICES (speed 1.50x) ==========
+Order: Mom, Teacher, Bully, Coach, Grandma
+Leave a short pause between lines.
+
+Hurry up, we're late!
+
+Hurry up and finish your test.
+
+Hurry up, slowpoke.
+
+Hurry up!
+
+Take your time, sweetie.
