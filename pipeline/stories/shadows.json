@@ -1,0 +1,157 @@
+{
+ "title": "In My Town, Everyone's Shadow Is A Different Color 🌈",
+ "slug": "Colored_Shadows",
+ "module": "shadows",
+ "models": {},
+ "music_file": "assets/music/fly_guy_five_lurking_behind.mp3",
+ "music_credit": "Lurking Behind - The Fly Guy Five (royalty free)",
+ "synth_music": false,
+ "voice_speeds": {
+  "narrator": 1.25
+ },
+ "tight": {
+  "max_pause": 0.18,
+  "line_gap": 0.12
+ },
+ "captions": {
+  "y": 0.7,
+  "upper": false,
+  "size": 64,
+  "stroke": 4
+ },
+ "voice_files": {
+  "narrator": "assets/voice/shadows_narrator_1.25x.wav",
+  "others": "assets/voice/shadows_narrator_1.25x.wav",
+  "others_order": []
+ },
+ "lines": [
+  [
+   "narrator",
+   "In my town, everyone's shadow is a different color."
+  ],
+  [
+   "narrator",
+   "My mom's shadow is rose pink. The baker's is cinnamon brown. The mailman's is sky blue, and it waves before he does."
+  ],
+  [
+   "narrator",
+   "Every evening, when the sun goes down, the whole town walks through the square, and the ground turns into a rainbow."
+  ],
+  [
+   "narrator",
+   "Everyone's shadow, except mine."
+  ],
+  [
+   "narrator",
+   "I don't have one. Not even a gray one."
+  ],
+  [
+   "narrator",
+   "Doctors looked under the lamp. They looked behind me. They looked under my bed."
+  ],
+  [
+   "narrator",
+   "Nothing."
+  ],
+  [
+   "narrator",
+   "The kids at school call me see-through. When they play shadow tag, I'm never it. I'm never anything."
+  ],
+  [
+   "narrator",
+   "So every sunset, I watch the rainbow from my bedroom window."
+  ],
+  [
+   "narrator",
+   "Mom always says, \"Sweetie, you're not missing anything.\""
+  ],
+  [
+   "narrator",
+   "But I knew I was missing something."
+  ],
+  [
+   "narrator",
+   "Then one day, I found a painting in the back of the library. The day our town was founded, two hundred years ago."
+  ],
+  [
+   "narrator",
+   "Everyone in the painting had a colored shadow."
+  ],
+  [
+   "narrator",
+   "Everyone except one kid, standing right in the middle, holding a lantern."
+  ],
+  [
+   "narrator",
+   "Under the kid, someone had written two words. The Lantern."
+  ],
+  [
+   "narrator",
+   "I didn't know what it meant. Until the night of the Sunset Festival."
+  ],
+  [
+   "narrator",
+   "The whole town was in the square. Every shadow dancing on the stones."
+  ],
+  [
+   "narrator",
+   "Then the big lamp in the clock tower went out."
+  ],
+  [
+   "narrator",
+   "And the whole town went dark."
+  ],
+  [
+   "narrator",
+   "Every colored shadow disappeared at once. People couldn't see their own feet. Someone started crying. Then everyone was scared."
+  ],
+  [
+   "narrator",
+   "But I could see."
+  ],
+  [
+   "narrator",
+   "Because light had never stuck to me, the dark didn't either."
+  ],
+  [
+   "narrator",
+   "I could see every face. Every step. Every scared little kid."
+  ],
+  [
+   "narrator",
+   "So I took my mom's hand. Then the baker's. Then the mailman's."
+  ],
+  [
+   "narrator",
+   "And one by one, I walked the whole town out of the dark."
+  ],
+  [
+   "narrator",
+   "When the lamp came back on, everyone was looking at me."
+  ],
+  [
+   "narrator",
+   "Mom hugged me so tight, her pink shadow wrapped around both of us."
+  ],
+  [
+   "narrator",
+   "She whispered, \"I told you. You weren't missing anything.\""
+  ],
+  [
+   "narrator",
+   "Now every year at the Sunset Festival, I'm the one who climbs the clock tower and lights the lamp."
+  ],
+  [
+   "narrator",
+   "I still don't have a shadow."
+  ],
+  [
+   "narrator",
+   "But now I know why."
+  ],
+  [
+   "narrator",
+   "Somebody has to be the light."
+  ]
+ ]
+}

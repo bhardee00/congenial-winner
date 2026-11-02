@@ -1,0 +1,550 @@
+0.0	in
+0.2	this
+0.4	world
+0.8	every
+1.1	footstep
+1.6	plays
+1.9	music
+2.1	note
+2.5	plink
+2.8	plonk
+3.1	plink
+3.4	you
+3.5	see
+3.8	when
+4.0	you
+4.1	walk
+4.5	the
+4.7	ground
+5.2	sings
+5.7	my
+6.1	mom's
+6.2	steps
+6.6	sound
+6.8	like
+7.0	piano
+7.4	my
+7.6	dad's
+8.0	sound
+8.2	like
+8.4	tuba
+8.8	the
+8.9	mailman's
+9.4	sound
+9.6	like
+9.9	xylophone
+10.4	you
+10.6	always
+10.9	know
+11.1	who's
+11.3	coming
+11.5	down
+11.6	the
+11.8	street
+12.0	just
+12.3	by
+12.4	their
+12.6	song
+12.9	and
+13.0	when
+13.1	the
+13.3	whole
+13.5	town
+13.8	walks
+14.0	together
+14.5	it
+14.6	makes
+14.9	one
+15.2	giant
+15.3	TOWNPARADE giant
+15.5	PTCTWNPARADE giant
+15.6	giant
+15.7	melody
+16.1	once
+16.3	-a
+16.4	-year
+16.5	year
+16.7	at
+16.9	the
+17.0	town.
+17.1	town
+17.2	parade
+17.6	everyone
+18.1	marches
+18.4	at
+18.5	the
+18.6	same
+18.8	time
+19.2	and
+19.3	the
+19.4	town
+19.6	song
+19.9	plays.
+20.1	plays
+20.2	over
+20.4	the
+20.5	whole
+20.8	valley
+21.2	except
+21.6	me
+21.9	when
+22.1	walk
+22.5	nothing
+22.8	no
+23.0	note
+23.2	no
+23.5	sound
+23.9	not
+24.1	even
+24.3	squeak
+24.9	doctors
+25.0	couldn't
+25.2	fix
+25.4	it
+25.6	kids
+25.8	called
+26.0	me
+26.2	Broken
+26.5	Boots
+27.0	and
+27.2	parents
+27.5	never
+27.8	let
+28.0	me
+28.1	go
+28.2	the
+28.3	parade
+28.8	we
+28.9	don't
+29.0	want
+29.1	you
+29.2	to
+29.3	mess
+29.5	up
+29.6	the
+29.7	song
+30.1	sweetie
+30.7	every
+31.0	year
+31.5	watched
+31.8	from
+32.0	bedroom
+32.4	window
+32.7	but
+32.9	here's
+33.0	the
+33.1	weird
+33.4	thing
+33.7	every
+34.0	year
+34.4	the
+34.5	town
+34.8	song
+35.1	got
+35.3	worse
+35.9	notes
+36.2	started
+36.5	clashing
+37.0	the
+37.2	tubas
+37.5	got
+37.7	too
+37.8	pnol
+38.0	pno
+38.1	pnol
+38.2	the
+38.4	pianos
+38.8	ran
+39.0	too
+39.2	fast
+39.6	people
+39.9	walked
+40.1	faster
+40.5	and
+40.7	faster
+41.1	trying
+41.3	to
+41.4	fix
+41.6	it
+41.8	and
+41.9	the
+42.0	song
+42.3	just
+42.4	got
+42.6	messier
+43.1	windows
+43.6	rattled
+44.0	s6op
+44.3	sop
+44.4	howled
+44.9	last
+45.2	year
+45.3	year.
+45.4	the
+45.5	parade
+45.7	got
+46.1	PERTSIEPASUN
+46.2	EVERYSIEPAMNK pnol
+46.3	EVIRYSIIPASONG. pnol
+46.4	TOWN PARADE FVRYSIEPASCNG loud
+46.5	pnol
+46.7	cracked
+47.0	the
+47.3	on
+47.4	the
+47.5	clock
+47.8	tower
+48.1	nobody
+48.5	knew
+48.6	why
+48.8	was
+49.0	happening
+49.3	but
+49.6	noticed
+49.9	something
+50.3	whenever
+50.7	walked
+50.9	into
+51.2	room
+51.6	everyone's
+52.0	songs
+52.4	got
+52.6	calmer
+53.1	slower
+53.6	softer
+54.1	like
+54.2	they
+54.3	could
+54.5	finally
+54.9	breathe
+55.8	day
+56.0	before
+56.3	parade
+56.9	snuck
+57.2	into
+57.3	the
+57.5	old
+57.6	music
+57.9	hall
+58.1	and
+58.3	on
+58.4	the
+58.5	wall
+59.1	glass
+59.3	case
+59.7	was
+59.9	the
+60.0	original
+60.5	town
+60.8	song
+61.1	the Ocators song
+61.2	the Ocators written
+61.4	the Okators 200
+61.5	the Okafors 200
+61.7	theOkafors 200
+61.9	the Okafors 200
+62.0	the Okafors years
+62.2	the Okafors ago
+62.3	heOkafors ago
+62.4	the Post ago
+62.5	the Post levery
+62.6	thePost every REST
+62.7	every REST May u, 2o1u Neras
+62.8	note May u, 2o14 Rneras
+62.9	note Rneras
+63.0	REST May u, 20f4 Reras
+63.1	REST May u, 2014 Rijeras every
+63.2	Rweras every
+63.3	every
+63.4	every Miers
+63.5	instrument Miers
+63.6	Miers instrument
+63.7	Miers tnstrument
+63.8	instrument henas
+63.9	every Chpngs
+64.1	Chpngs every
+64.2	Chengs J Jevery
+64.3	Chpngs familly ]
+64.4	family
+64.8	town
+65.1	and
+65.3	right
+65.6	the
+65.7	middle
+65.9	there
+66.1	was
+66.2	Mark
+66.5	I'd
+66.7	never
+66.9	seen
+67.1	before
+67.6	little
+67.9	squiggle
+68.2	under
+68.5	it
+68.7	someone
+68.9	had
+69.1	written
+69.3	one
+69.6	word
+70.0	rest
+70.9	is
+71.1	the
+71.2	pause
+71.5	in
+71.7	music
+72.1	the
+72.2	silent
+72.5	part
+72.8	the
+72.9	moment
+73.2	the
+73.4	song
+73.7	breathes
+74.3	and
+74.4	next
+74.8	was
+75.0	dated
+75.1	date
+75.3	my
+75.5	birthday
+76.0	12
+76.4	years
+76.6	ago
+76.8	the
+77.0	song
+77.3	had
+77.4	been
+77.5	getting
+77.7	worse
+78.1	for
+78.3	12
+78.7	years
+78.9	RES ST Ma years
+79.0	years
+79.1	RE ever
+79.3	ever
+79.6	RheST
+79.8	REST
+80.0	Rbors
+80.1	Fborn
+80.2	born
+80.4	ever
+80.6	since
+80.8	my
+80.9	parents
+81.2	started
+81.5	keeping
+81.9	home
+82.2	the
+82.3	town
+82.6	wasn't
+82.8	broken
+83.0	Hau broken
+83.1	broken
+83.2	RE it
+83.3	RE was
+83.4	was
+83.5	missing
+83.6	RE missing
+83.9	ResST
+84.1	rest
+84.2	it
+84.4	was
+84.5	missing
+84.8	me
+85.3	parade
+85.6	day
+85.8	the
+86.0	whole
+86.2	town
+86.6	marched
+86.9	into
+87.1	the
+87.2	square
+87.5	plink
+88.0	dwnq
+88.1	bump
+88.3	clang
+88.9	plink
+89.3	it
+89.4	was
+89.6	awful
+90.2	people
+90.3	covered
+90.5	their
+90.7	ears
+90.9	ears TOWN PARADE
+91.0	ears TOWNPARADE
+91.1	the PARAD
+91.2	clock TOWN PARADE
+91.4	tower TOWN PARADE
+91.5	tower TOWNPARADE
+91.7	shook TOWNPARADE
+91.9	shook
+92.1	and
+92.3	walked
+92.5	right
+92.8	into
+93.0	the
+93.1	middle
+93.2	of
+93.3	the
+93.5	square
+93.8	everyone
+94.2	stopped
+94.6	broken
+94.9	boots
+95.3	get
+95.5	out
+95.7	of
+95.8	the
+95.9	parade
+96.4	but
+96.6	didn't
+96.8	move
+97.3	just
+97.4	stood
+97.6	there
+97.9	peap
+98.1	center
+98.6	the
+98.7	whole
+99.0	town
+99.3	had
+99.4	to
+99.5	walk
+99.8	around
+100.0	me
+100.2	and
+100.3	as
+100.4	every
+100.8	single
+101.1	person
+101.5	stepped
+101.8	around
+102.2	their
+102.4	songs
+102.8	went
+102.9	quiet
+103.4	for
+103.6	one
+104.0	beat
+104.2	and
+104.4	then
+104.7	the
+104.9	music
+105.2	came
+105.4	back
+105.7	but
+105.8	different
+106.2	the
+106.3	tubas
+106.7	slowed
+107.0	down
+107.1	umop
+107.2	down
+107.4	the
+107.5	pianos
+108.0	found
+108.2	their
+108.4	place
+108.8	every
+109.2	note
+109.4	fit
+109.6	together
+110.0	for
+110.2	first
+110.5	time
+110.8	in
+111.0	12
+111.5	years
+112.0	the
+112.2	town
+112.5	song
+112.8	was
+112.9	ILWNFARADE was
+113.0	TCYWNFARADLJ beautiful
+113.1	AIOIWNFARADEN beautiful
+113.2	TOWNFARADE beautiful
+113.3	beautiful
+113.5	beautiful?
+113.6	it
+113.7	floated
+114.1	over
+114.2	the
+114.4	whole
+114.7	valley
+114.9	IOWNPARADEJ valley
+115.0	TOWNPARADE birds
+115.4	TOWNPARADEJ started
+115.5	TOWNPARADE started
+115.6	TOWNPARAD started
+115.7	TOWNPARA singing
+115.8	TOWNPA singing
+115.9	TOWNP singing
+116.0	TOWN along
+116.1	along
+116.3	and
+116.5	the
+116.6	cracked
+116.9	bell
+117.1	on
+117.2	the
+117.3	clock
+117.5	tower
+117.8	rang
+118.1	one
+118.5	perfect
+118.9	note
+119.1	note TOWN PARADE
+119.2	dong TOWNPARADE
+119.4	dong TOWN PARADE
+119.5	dong TOWNPARADE
+119.6	dong TOWNPARADE J
+119.7	TOWNPARADE
+119.8	TOWNPARADE VLRYSILEASONL
+119.9	TOWNPARADE FVFRYSIFPASAING
+120.4	mom
+120.7	pushed
+120.9	through
+121.1	the
+121.2	crowd
+121.6	she
+121.8	grabbed
+122.0	my
+122.2	hands
+122.5	we
+122.7	thought
+122.9	you
+123.1	were
+123.2	broken
+123.7	she
+123.9	whispered
+124.3	no
+124.6	mom
+125.1	said
+125.5	was
+125.7	the
+125.8	part
+126.0	you
+126.2	were
+126.3	supposed
+126.6	to
+126.7	listen
+126.9	to
+127.2	now
+127.4	every
+127.7	year
+127.9	at
+128.0	parade
+128.7	walk
+128.9	at
+129.0	the
+129.1	very
+129.4	front
+129.7	and
+130.0	don't
+130.2	make
+130.5	single
+130.9	sound
