@@ -30,6 +30,22 @@ def texmat(base, scale, rough=0.85, tint=None):
     return m
 
 
+def red(r):
+    for o in r.children_recursive:
+        if o.type == 'MESH':
+            m = o.material_slots[0].material.copy(); pb = m.node_tree.nodes["Principled BSDF"]
+            img = [n for n in m.node_tree.nodes if n.type == 'TEX_IMAGE']
+            hs = m.node_tree.nodes.new("ShaderNodeHueSaturation")  # recolour to red, keep the strand shading
+            hs.inputs["Hue"].default_value = 0.0; hs.inputs["Saturation"].default_value = 1.0
+            bw = m.node_tree.nodes.new("ShaderNodeRGBToBW"); mx = m.node_tree.nodes.new("ShaderNodeMixRGB"); mx.blend_type = 'MULTIPLY'; mx.inputs[0].default_value = 1
+            mx.inputs[1].default_value = (0.62, 0.05, 0.03, 1)
+            if img:
+                m.node_tree.links.new(img[0].outputs["Color"], bw.inputs[0])
+                cr = m.node_tree.nodes.new("ShaderNodeMapRange"); cr.inputs["From Min"].default_value = 0.0; cr.inputs["From Max"].default_value = 0.6; cr.inputs["To Min"].default_value = 0.35; cr.inputs["To Max"].default_value = 1.4
+                m.node_tree.links.new(bw.outputs[0], cr.inputs[0]); m.node_tree.links.new(cr.outputs[0], mx.inputs[2])
+            m.node_tree.links.new(mx.outputs[0], pb.inputs["Base Color"]); o.material_slots[0].material = m
+            o.visible_shadow = False  # hair doesn't darken the face
+
 with st:
     # ---------- light: golden-hour sun + the mountain sky ----------
     w = sc.world; nt = w.node_tree; bg = nt.nodes["Background"]
@@ -37,11 +53,11 @@ with st:
     mp = nt.nodes.new("ShaderNodeMapping"); tc = nt.nodes.new("ShaderNodeTexCoord"); mp.inputs["Rotation"].default_value = (0, 0, math.radians(200))
     nt.links.new(tc.outputs["Generated"], mp.inputs["Vector"]); nt.links.new(mp.outputs[0], env.inputs[0])
     nt.links.new(env.outputs[0], bg.inputs["Color"]); bg.inputs["Strength"].default_value = 0.55
-    sun = st.sun; sun.data.energy = 6.0; sun.data.color = (1.0, 0.82, 0.62); sun.data.angle = math.radians(1.2)
-    sun.rotation_euler = (math.radians(62), 0, math.radians(-35))   # low sun from behind-left: long shadows toward the camera
+    sun = st.sun; sun.data.energy = 6.5; sun.data.color = (1.0, 0.8, 0.58); sun.data.angle = math.radians(1.2)
+    sun.rotation_euler = (math.radians(58), 0, math.radians(25))   # low sun from behind-left: long shadows toward the camera
     ee = sc.eevee; ee.use_gtao = True; ee.gtao_distance = 3; ee.use_bloom = True; ee.bloom_intensity = 0.08; ee.bloom_threshold = 1.0
     ee.use_soft_shadows = True; ee.shadow_cascade_size = '4096'; sun.data.shadow_cascade_max_distance = 120; ee.taa_render_samples = 48
-    sc.view_settings.view_transform = 'Filmic'; sc.view_settings.look = 'High Contrast'; sc.view_settings.exposure = 0.0
+    sc.view_settings.view_transform = 'Filmic'; sc.view_settings.look = 'High Contrast'; sc.view_settings.exposure = 0.3
 
     # ---------- ground: cobblestone plaza with a ring of lighter stone, grass beyond ----------
     cob = texmat("cobblestone_floor_04", 0.22, 0.8, (1.05, 0.9, 0.75))
@@ -76,24 +92,19 @@ with st:
     for k, x in enumerate((-40, 40)):
         town.place(f"suburban/building-type-{'ah'[k]}", (x, 62, 0), 180)
     for k, x in enumerate((-46, -40, 40, 46)): town.place(f"suburban/building-type-{'bdkm'[k]}", (x, 20 + k * 6, 0), 90 if x < 0 else -90)
+    L = "/tmp/claude-0/-home-user-congenial-winner/924c3072-0d31-50c1-a755-001d723a8183/scratchpad/ph_lib.blend"
+    with bpy.data.libraries.load(L) as (src, dst): dst.collections = ["island_tree_02"]
+    for (x, y, s_, yw) in ((-14, 38, 4.2, 20), (13, 40, 4.6, 80), (-26, 14, 3.8, 140), (26, 16, 4.0, 200), (-30, 34, 3.6, 60), (30, 36, 4.4, 10), (-6, 62, 4.0, 90), (8, 64, 4.4, 30)):
+        i = bpy.data.objects.new("tree", None); i.instance_type = 'COLLECTION'; i.instance_collection = dst.collections[0]; sc.collection.objects.link(i)
+        i.location = (x, y, 0); i.scale = (s_,) * 3; i.rotation_euler = (0, 0, math.radians(yw))
     for k in range(-9, 10): town.pine(k * 10 + 3, 80 + (k % 3) * 6, 1.1 + 0.2 * (k % 2), k)
-    for (x, y, s_) in ((-14, 38, 1.0), (13, 40, 1.1), (-26, 14, 0.9), (26, 16, 1.0)): town.tree(x, y, s_, int(x))
     for x in (-20, 20): town.place("roads/light-curved", (x, 6, 0), 0 if x < 0 else 180)
     for (x, y) in ((-9, 26), (9, 26)):
         prim("box", (3, 3, 1.6), (x, y, 0.8), mat((170, 75, 55), 0.8), bevel=0.05); prim("ball", (3.2, 3.2, 2.2), (x, y, 2.3), mat((70, 140, 60), 0.8))
 
     # ---------- Mom: real-Roblox-style avatar (classic templates, bun hair tinted red, ^^ face) ----------
-    mom = blocky.build(D, "mom", {"skin": (238, 128, 78), "shirt_tpl": R + "mom_shirt.png", "pants_tpl": R + "mom_pants.png", "hair": None})
-    hair = blocky.wear(D, mom, 1044357592); hair2 = blocky.wear(D, mom, 1012594937)
-    hm = mat((200, 30, 25), 0.55)
-    for o in list(hair.children_recursive) + list(hair2.children_recursive):
-        if o.type == 'MESH':
-            m = o.material_slots[0].material.copy(); pb = m.node_tree.nodes["Principled BSDF"]
-            img = [n for n in m.node_tree.nodes if n.type == 'TEX_IMAGE']
-            mx = m.node_tree.nodes.new("ShaderNodeMixRGB"); mx.blend_type = 'MULTIPLY'; mx.inputs[0].default_value = 1; mx.inputs[2].default_value = (1.6, 0.12, 0.06, 1)
-            if img: m.node_tree.links.new(img[0].outputs["Color"], mx.inputs[1])
-            else: mx.inputs[1].default_value = (1, 1, 1, 1)
-            m.node_tree.links.new(mx.outputs[0], pb.inputs["Base Color"]); o.material_slots[0].material = m
+    mom = blocky.build(D, "mom", {"skin": (242, 158, 112), "shirt_tpl": R + "mom_shirt.png", "pants_tpl": R + "mom_pants.png", "hair": None})
+    red(blocky.wear(D, mom, 5660902329)); red(blocky.wear(D, mom, 1044357592))
     for k, fo in mom["faces"].items(): fo.hide_render = k != "happy"
     # walking toward the camera: Roblox default walk (arms and legs swing in opposition, smooth sine)
     start, end_ = Vector((0.6, 12.0, 0)), Vector((0.0, 4.0, 0))
@@ -115,17 +126,17 @@ with st:
         n = K.plane_image(R + "note.png", (0.9, 0.9), (random.choice((-2.4, 2.6)), 4.5 + k * 1.5, 1.5 + k * 0.8), emit=2.0)
     # ---------- camera: chest height, 35mm, shallow focus on Mom, dollying back ----------
     cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam); sc.camera = cam
-    cam.data.lens = 30; cam.data.dof.use_dof = True; cam.data.dof.focus_object = mom["waist"]; cam.data.dof.aperture_fstop = 1.6
-    for f, y in ((0, 3.5), (120, -4.5)):
-        cam.location = (0.4, y, 3.4); cam.keyframe_insert("location", frame=f)
+    cam.data.lens = 34; cam.data.dof.use_dof = True; cam.data.dof.focus_object = mom["waist"]; cam.data.dof.aperture_fstop = 1.6
+    for f, y in ((0, 1.5), (120, -6.5)):
+        cam.location = (0.4, y, 2.6); cam.keyframe_insert("location", frame=f)
     tgt = empty("tgt", (0.2, 8, 4.6))
     c = cam.constraints.new("TRACK_TO"); c.target = tgt; c.track_axis = 'TRACK_NEGATIVE_Z'; c.up_axis = 'UP_Y'
-    for f, y in ((0, 12.0), (120, 4.0)): tgt.location = (0.3, y, 3.0); tgt.keyframe_insert("location", frame=f)
+    for f, y in ((0, 12.0), (120, 4.0)): tgt.location = (0.3, y, 3.4); tgt.keyframe_insert("location", frame=f)
 
 sc.use_nodes = True; ct = sc.node_tree
 rl = ct.nodes["Render Layers"]; rl.scene = sc; comp = ct.nodes["Composite"]
-hs = ct.nodes.new("CompositorNodeHueSat"); hs.inputs["Saturation"].default_value = 1.12
-cb = ct.nodes.new("CompositorNodeColorBalance"); cb.correction_method = 'LIFT_GAMMA_GAIN'; cb.gain = (1.05, 1.0, 0.93); cb.lift = (1.0, 0.99, 0.98)
+hs = ct.nodes.new("CompositorNodeHueSat"); hs.inputs["Saturation"].default_value = 1.1
+cb = ct.nodes.new("CompositorNodeColorBalance"); cb.correction_method = 'LIFT_GAMMA_GAIN'; cb.gain = (1.06, 1.0, 0.95); cb.lift = (1.0, 0.99, 0.98)
 ct.links.new(rl.outputs["Image"], hs.inputs["Image"]); ct.links.new(hs.outputs["Image"], cb.inputs["Image"]); ct.links.new(cb.outputs["Image"], comp.inputs["Image"])
 sc.render.resolution_x, sc.render.resolution_y = 480, 640; sc.render.resolution_percentage = 100
 for f in (40, 70, 100):

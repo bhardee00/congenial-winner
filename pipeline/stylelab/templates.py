@@ -12,7 +12,7 @@ OUT = "/home/user/congenial-winner/work/tmp/rs/"
 RED, WHITE, DK = (205, 30, 35, 255), (250, 248, 245, 255), (150, 20, 25, 255)
 
 
-def gingham(d, box, cell=5):
+def gingham(d, box, cell=3):
     x0, y0, x1, y1 = box
     d.rectangle(box, fill=WHITE)
     for x in range(x0, x1, cell * 2): d.rectangle((x, y0, x + cell - 1, y1), fill=(230, 120, 125, 255))
