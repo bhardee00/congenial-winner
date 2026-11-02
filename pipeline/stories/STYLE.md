@@ -267,3 +267,15 @@ action time after big moments (the short runs ~60 s instead of ~52).
   - Crying: s161, s180, s210.
   - Shocked: s222, s225, s228, s235, s249.
   - Scared and shocked: s243, s244.
+- **Approved look (user: "pretty close"):** pipeline/stylelab/town_parade_test.py, compare_v2.png. Use it as the base for every new short:
+  - classic clothing templates via look `shirt_tpl` / `pants_tpl`;
+  - free Roblox hair recoloured with no shadow on the face;
+  - Poly Haven sky and cobblestone, island_tree_02 leafy trees;
+  - warm sun, Filmic High Contrast and a light grade;
+  - a 34 mm lens at chest height with depth of field, characters walking toward a camera that pulls back;
+  - music-note sprites and soft step glows.
+- **Story format of reference #5:**
+  - ~2:10 of calm, warm first-person narration by a kid in a town with a gentle magical rule. The kid is the one exception.
+  - Everyone's quirk is shown in short vignettes, then the kid's loneliness (watching from a window at night).
+  - A discovery (an old document or clue), a crisis that shows why the kid matters, a quiet moment with a parent.
+  - The town changes, ending on a wide shot.
