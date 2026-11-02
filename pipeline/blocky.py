@@ -58,7 +58,7 @@ def _mat(name, color=None, tex=None, rough=0.55):
     if color: pb.inputs["Base Color"].default_value = avatar._lin(color)
     if tex:
         img = nn.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(tex, check_existing=True)
-        img.interpolation = 'Closest' if False else 'Linear'
+        img.interpolation = 'Linear' if False else 'Linear'
         m.node_tree.links.new(img.outputs["Color"], pb.inputs["Base Color"])
     return m
 
@@ -72,6 +72,17 @@ def _patmat(name, path, scale=0.5, rough=0.7):
     img.projection = 'BOX'; img.projection_blend = 0.2
     nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs[0], img.inputs[0])
     nt.links.new(img.outputs["Color"], pb.inputs["Base Color"])
+    return m
+
+
+def _tplmat(name, path, skin, rough=0.6):
+    """Classic Roblox clothing template (585x559 shirt/pants layout) over the skin: transparent parts show skin."""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; pb = nt.nodes["Principled BSDF"]
+    pb.inputs["Roughness"].default_value = rough
+    img = nt.nodes.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(path, check_existing=True); img.interpolation = 'Linear'
+    mix = nt.nodes.new("ShaderNodeMixRGB"); mix.inputs["Color1"].default_value = avatar._lin(skin)
+    nt.links.new(img.outputs["Alpha"], mix.inputs["Fac"]); nt.links.new(img.outputs["Color"], mix.inputs["Color2"])
+    nt.links.new(mix.outputs["Color"], pb.inputs["Base Color"])
     return m
 
 
@@ -101,16 +112,23 @@ def build(D, name="me", look=None):
             mt = _patmat(name + "_shirt", look["shirt_tex"], look.get("tex_scale", 0.5))
             if "sleeves" not in look: mal = mar = mt
         if look.get("pants_tex"): mll = mlr = _patmat(name + "_pants", look["pants_tex"], look.get("tex_scale", 0.5))
+        # real Roblox clothing templates (classic layout): shirt on torso + arms, pants on legs
+        if look.get("shirt_tpl"):
+            mt = mal = mar = _tplmat(name + "_shirt", look["shirt_tpl"], skin); rt, rr, rlf = RECTS["torso"], RECTS["right"], RECTS["left"]
+        if look.get("pants_tpl"):
+            mll = mlr = _tplmat(name + "_pants", look["pants_tpl"], skin); rt = rt or RECTS["torso"]; rr = rr or RECTS["right"]; rlf = rlf or RECTS["left"]
     _box(name + "_torso", (2, 1, 2), (0, 0, 1.0), mt, waist, rt)
     _box(name + "_arm_l", (1, 1, 2), (0, 0, -0.5), mal, la, rlf)
     _box(name + "_arm_r", (1, 1, 2), (0, 0, -0.5), mar, ra, rr)
     _box(name + "_leg_l", (1, 1, 2), (0, 0, -1.0), mll, ll, rlf)
     _box(name + "_leg_r", (1, 1, 2), (0, 0, -1.0), mlr, rl, rr)
     if look is not None:
-        hand = _mat(name + "_hand", skin)
-        for p, x in ((la, 0), (ra, 0)): _box(name + "_hand", (1.02, 1.02, 0.45), (x, 0, -1.3), hand, p, bevel=0.08)
-        shoe = _mat(name + "_shoe", look.get("shoes", (40, 40, 45)))
-        for p in (ll, rl): _box(name + "_shoe", (1.04, 1.12, 0.4), (0, -0.04, -1.82), shoe, p, bevel=0.08)
+        if not look.get("shirt_tpl"):
+            hand = _mat(name + "_hand", skin)
+            for p, x in ((la, 0), (ra, 0)): _box(name + "_hand", (1.02, 1.02, 0.45), (x, 0, -1.3), hand, p, bevel=0.08)
+        if not look.get("pants_tpl"):
+            shoe = _mat(name + "_shoe", look.get("shoes", (40, 40, 45)))
+            for p in (ll, rl): _box(name + "_shoe", (1.04, 1.12, 0.4), (0, -0.04, -1.82), shoe, p, bevel=0.08)
     # head: rounded block + faces (from avatar.py's drawing), skin can flush red
     sm = avatar._material(name + "_skin", D, None, skin); nn = sm.node_tree.nodes
     mix = nn.new("ShaderNodeMixRGB"); mix.name = "flush"; mix.inputs["Fac"].default_value = 0
