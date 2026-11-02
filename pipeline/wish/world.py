@@ -6,6 +6,7 @@ from lib import *
 random.seed(13)
 WELL = Vector((125, 76, 0))
 INT = dict(bedroom=Vector((400, 0, 0)), library=Vector((500, 0, 0)), hospital=Vector((600, 0, 0)), diner=Vector((700, 0, 0)), arcade=Vector((800, 0, 0)))
+RIVER = False
 CTRL = {}   # keyable controls: name -> (owner, data_path, index)
 
 
@@ -196,7 +197,9 @@ def room(c, w, d, h, wall, floor, ceil=0xf2f2f2, floor_kind='wood', light=(1.0, 
 def town():
     grass = mat(0x5ba83f, 0.85, kind='grass'); asph = mat(0x3a3d42, 0.8, kind='asphalt'); conc = mat(0xb9b7b0, 0.8, kind='concrete')
     hx0, hx1, hy0, hy1 = WELL.x - 12, WELL.x + 12, WELL.y - 12, WELL.y + 12
-    for (x0, x1, y0, y1) in [(-300, 400, -260, hy0), (-300, 400, hy1, 400), (-300, hx0, hy0, hy1), (hx1, 400, hy0, hy1)]:
+    blocks = [(-300, 400, -260, hy0), (-300, 400, hy1, 400), (-300, hx0, hy0, hy1), (hx1, 400, hy0, hy1)]
+    if RIVER: blocks[1:2] = [(-300, 400, hy1, 161.5), (-300, 400, 198.5, 400)]
+    for (x0, x1, y0, y1) in blocks:
         box((x1 - x0, y1 - y0, 2), ((x0 + x1) / 2, (y0 + y1) / 2, -1), grass, name='ground')
     # road + sidewalks + dashes
     box((700, 16, 0.2), (50, 0, 0.0), asph, name='road')
