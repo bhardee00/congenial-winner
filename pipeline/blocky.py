@@ -138,11 +138,13 @@ def build(D, name="me", look=None):
     hb = _box(name + "_headblock", (hs * 1.05, hs * 0.98, hs), hc, sm, head, bevel=0.32)
     hb.modifiers["b"].segments = 6
     faces = {}
-    for k in sorted(os.path.basename(f)[5:-4] for f in glob.glob(avatar.ASSETS + "face_*.png")):
+    # our drawn faces (assets/face_<name>.png) + free Creator Store faces the user picked (assets/faces_store/face_s<number>.png)
+    face_files = {os.path.basename(f)[5:-4]: f for f in glob.glob(avatar.ASSETS + "face_*.png") + glob.glob(avatar.ASSETS + "faces_store/face_*.png")}
+    for k in sorted(face_files):
         m = bpy.data.materials.get("face_" + k)
         if m is None:
             m = bpy.data.materials.new("face_" + k); m.use_nodes = True; m.blend_method = 'CLIP'; m.shadow_method = 'CLIP'
-            t = m.node_tree.nodes; img = t.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(avatar.ASSETS + f"face_{k}.png", check_existing=True)
+            t = m.node_tree.nodes; img = t.new("ShaderNodeTexImage"); img.image = bpy.data.images.load(face_files[k], check_existing=True)
             pb = t["Principled BSDF"]; pb.inputs["Roughness"].default_value = 0.5
             m.node_tree.links.new(img.outputs["Color"], pb.inputs["Base Color"]); m.node_tree.links.new(img.outputs["Alpha"], pb.inputs["Alpha"])
         me = bpy.data.meshes.get("faceplane") or _faceplane()

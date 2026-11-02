@@ -261,3 +261,9 @@ action time after big moments (the short runs ~60 s instead of ~52).
 - **Effects:** glowing circles on the ground where each footstep lands, and floating yellow music-note sprites around walkers.
 - **Captions:** one word, lowercase, white bold with a soft dark shadow, centred at ~70% height (our original caption style).
 - **Audio:** narrator throughout (mean -20 dB), music, a note sound on each footstep.
+- **Faces (user-picked, free Creator Store decals in assets/faces_store, credits in CREDITS.txt):** use as react(av, "s<number>", f).
+  - Angry: s112, s115, s127, s128.
+  - Sad: s139, s141, s151.
+  - Crying: s161, s180, s210.
+  - Shocked: s222, s225, s228, s235, s249.
+  - Scared and shocked: s243, s244.
