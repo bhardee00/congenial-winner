@@ -238,3 +238,26 @@ action time after big moments (the short runs ~60 s instead of ~52).
   idle bob, and meme faces (blank stick face, screaming, sweat drop, tears).
 - **Sound:** a whoosh on every cut and swing, a bass boom and hum on the aura, crashes and shatters on destruction, pops and boings
   on faces. Upbeat comedic music low under the voice.
+
+## Reference #5 - THE STYLE FROM HERE ON (user: "match these animations exactly"; made in Blender)
+"The Town Parade": every footstep plays a note, and the kid's steps make no sound (he is the "rest" in the town song).
+131 s in three parts, 480x640 (3:4).
+- **Characters:** real Roblox R6 avatars, not plain blocks. Classic-template shirts and pants (gingham dress with apron,
+  police uniform, suit, white tank top), real accessories (alien hood, red bun hair, cowboy hat, mustache), classic face
+  decals (small, high on the head; ^^ eyes, smiles, worried brows), a mix of skin colours including classic yellow.
+- **Look:** realistic-lit Roblox.
+  - Warm golden-hour sun with long hard shadows, filmic contrast and saturated colour.
+  - Strong depth of field: the background is soft.
+  - Night scenes are purple and blue moonlight.
+  - Detailed set: cobblestone plaza, a clock tower with a bell, a red "TOWN PARADE - every step a song" banner, bunting,
+    pine trees, mountains, brick houses, lamp posts.
+- **Animation:**
+  - Smooth Roblox-style walk cycles (arms and legs swing, small body bob), characters often walking TOWARD the camera
+    while it slowly dollies back.
+  - Calm idles, small head turns, hugs, arms out.
+  - Movement is unhurried, NOT snappy.
+- **Camera:** mostly medium shots at chest height with a slow push or pull, low angles on the tower, wide crane shots over
+  the plaza, and close inserts (the bell cracking, the sheet music with a circled red REST, a face in a window). Cuts about every 1.5-3 s.
+- **Effects:** glowing circles on the ground where each footstep lands, and floating yellow music-note sprites around walkers.
+- **Captions:** one word, lowercase, white bold with a soft dark shadow, centred at ~70% height (our original caption style).
+- **Audio:** narrator throughout (mean -20 dB), music, a note sound on each footstep.
